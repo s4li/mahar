@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import jwt, json
 
 app = Flask(__name__)
-app.secret_key = 'parastu'
+app.secret_key = 'mahar'
 
 # enable CORS
 CORS(app)
