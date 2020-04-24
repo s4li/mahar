@@ -4,7 +4,7 @@
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="login100-form validate-form">
-                    <div class="wrap-input100 validate-input my-4" data-validate="holder">
+                    <div class="wrap-input100 validate-input my-2" data-validate="این فیلد را پر کنید" :class="{'alert-validate':$v.data.$error}">
                         <input :type="type" @blur="$v.data.$touch()" :class="{'has-val':checking}" class="input100" v-model="data" v-on:keyup="emitToParent">
                         <span class="focus-input100" :data-placeholder="lable"></span>
                     </div>
@@ -16,10 +16,7 @@
 </template>
 
 <script>
-import {
-    required,
-    minLength
-} from 'vuelidate/lib/validators'
+import {required} from 'vuelidate/lib/validators'
 export default {
     props: {
         lable: {
@@ -48,65 +45,8 @@ export default {
     validations: {
         data: {
             required,
-            minlin: minLength(6)
         }
     }
-
-    //(function ($) {
-    //    "use strict";
-    //    /*==================================================================
-    //    [ Focus input ]*/
-    //    $('.input100').each(function () {
-    //        $(this).on('blur', function () {
-    //            if ($(this).val().trim() != "") {
-    //                $(this).addClass('has-val');
-    //            } else {
-    //                $(this).removeClass('has-val');
-    //            }
-    //        })
-    //    })
-    //    /*==================================================================
-    //    [ Validate ]*/
-    //    var input = $('.validate-input .input100');
-    //    $('.validate-form').on('submit', function () {
-    //        var check = true;
-    //        for (var i = 0; i < input.length; i++) {
-    //            if (validate(input[i]) == false) {
-    //                showValidate(input[i]);
-    //                check = false;
-    //            }
-    //        }
-    //        return check;
-    //    });
-    //    $('.validate-form .input100').each(function () {
-    //        $(this).focus(function () {
-    //            hideValidate(this);
-    //        });
-    //    });
-    //
-    //    function validate(input) {
-    //        if ($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
-    //            if ($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
-    //                return false;
-    //            }
-    //        } else {
-    //            if ($(input).val().trim() == '') {
-    //                return false;
-    //            }
-    //        }
-    //    }
-    //
-    //    function showValidate(input) {
-    //        var thisAlert = $(input).parent();
-    //        $(thisAlert).addClass('alert-validate');
-    //    }
-    //
-    //    function hideValidate(input) {
-    //        var thisAlert = $(input).parent();
-    //
-    //        $(thisAlert).removeClass('alert-validate');
-    //    }
-    //})(jQuery);
 }
 </script>
 
@@ -129,12 +69,10 @@ export default {
     justify-content: center;
     align-items: center;
     padding: 15px;
-    background: #fff;
 }
 
 .wrap-login100 {
     width: 390px;
-    background: #fff;
 }
 
 /*------------------------------------------------------------------
@@ -155,12 +93,12 @@ input {
 .wrap-input100 {
     width: 100%;
     position: relative;
-    border-bottom: 2px solid #d9d9d9;
+    border-bottom: 2px solid #e6cf8b;
 }
 
 .input100 {
     font-size: 14px;
-    color: #707070;
+    color: #2b2b28;
     line-height: 1.2;
     display: block;
     width: 100%;
@@ -193,12 +131,12 @@ input {
     -o-transition: all 0.4s;
     -moz-transition: all 0.4s;
     transition: all 0.4s;
-    background: #fab700;
+    background: #f0a500;
 }
 
 .focus-input100::after {
     font-size: 14px;
-    color: #B2B2B2;
+    color: #2b2b28;
     line-height: 1.2;
     content: attr(data-placeholder);
     display: block;
@@ -243,7 +181,7 @@ input {
     position: absolute;
     max-width: 70%;
     background-color: #fff;
-    border: 1px solid #c80000;
+    border: 1px solid #f0a500;
     border-radius: 2px;
     padding: 4px 10px 4px 25px;
     top: 50%;
@@ -254,7 +192,7 @@ input {
     transform: translateY(-50%);
     left: 0px;
     pointer-events: none;
-    color: #c80000;
+    color: #f0a500;
     font-size: 13px;
     line-height: 1.4;
     text-align: left;
@@ -268,9 +206,9 @@ input {
 
 .alert-validate::after {
     content: "\f06a";
-    font-family: FontAwesome;
+    font-family: "Font Awesome 5 Pro";
     font-size: 14px;
-    color: #c80000;
+    color: #f0a500;
     display: block;
     position: absolute;
     background-color: #fff;

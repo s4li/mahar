@@ -26,6 +26,11 @@ Vue.use(VueRouter)
     component: () => import('../views/Grades.vue')
   },
   {
+    path: '/Guids',
+    name: 'Guids',
+    component: () => import('../views/Guids.vue')
+  },
+  {
     path: '*',redirect:'/MyAccount'
   }
 ]

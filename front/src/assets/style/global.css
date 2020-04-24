@@ -39,7 +39,10 @@
   }
   
   body {
-    background-color: #ffffff;
+    background-image: url(../image/11.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
   
   html, body {
@@ -48,11 +51,11 @@
     min-width: 290px;
     font-size: 14px;
     direction: rtl;
-    color: #626261;
+    color: #2b2b28;
     text-align: right;
   }
   a{
-    color: #626261;
+    color: #2b2b28;
   }
   a:hover{
     text-decoration: none;
