@@ -27,6 +27,7 @@ export default new Vuex.Store({
   },
   actions: {
     signup ({commit, dispatch}, authData) {
+      console.log(authData.Password)
       axios.post('/api/register', {
         full_name : authData.FullName,
         mobile : authData.Mobile,
@@ -96,7 +97,7 @@ export default new Vuex.Store({
       axios.get('/api/get-user-information/' + state.userId)
         .then(res => {
           console.log(res)
-          //commit('storeUser', users[0])
+          //commit('storeUser', res.data)
         })
         .catch(error => console.log(error))
     }
