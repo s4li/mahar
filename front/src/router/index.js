@@ -1,6 +1,7 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Landingpage.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import store from '../store/index';
+import Home from '../views/Landingpage.vue';
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/Guids',
+    name: 'Guids',
+    component: () => import('../views/Guids.vue')
   },
   {
     path: '/login',
@@ -23,15 +29,17 @@ Vue.use(VueRouter)
   {
     path: '/Grades',
     name: 'Grades',
-    component: () => import('../views/Grades.vue')
+    component: () => import('../views/Grades.vue'),
+    beforeEnter (to, from, next) {
+      if (store.state.idToken) {
+        next();
+      } else {
+        next('/login');
+      }
+    }
   },
   {
-    path: '/Guids',
-    name: 'Guids',
-    component: () => import('../views/Guids.vue')
-  },
-  {
-    path: '*',redirect:'/MyAccount'
+    path: '*',redirect:'/Grades'
   }
 ]
 

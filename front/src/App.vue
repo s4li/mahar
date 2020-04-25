@@ -10,6 +10,15 @@
   </div>
 </template>
 
+<script>
+  export default {
+    name: 'app',
+    created () {
+      this.$store.dispatch('tryAutoLogin')
+    }
+  }
+</script>
+
 <style>
   @import './assets/style/fontawesome.min.css';
   @import './assets/style/global.css';

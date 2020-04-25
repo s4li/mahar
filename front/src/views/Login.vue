@@ -2,7 +2,7 @@
 <div class="outter">
     <div class="inner">
         <form @submit="onSubmit">
-            <CInput lable="نام کاربری" @inputdata="LoginForm.Username=$event"></CInput>
+            <CInput lable="شماره موبایل" @inputdata="LoginForm.Mobile=$event" type="number"></CInput>
             <CInput lable="کلمه عبور" type="password" @inputdata="LoginForm.Password=$event"></CInput>
             <div class="btn-box">
                 <button class="btn" type="submit">ورود</button>
@@ -13,6 +13,41 @@
     </div>
 </div>
 </template>
+
+<script>
+import CustomInput from '../components/CustomInput'
+export default {
+    data() {
+        return {
+            LoginForm: {
+                Mobile: '',
+                Password: ''
+            },
+        }
+    },
+    components: {
+        CInput: CustomInput,
+    },
+    methods: {
+        onSubmit(evt) {
+            evt.preventDefault();
+            const payload = {
+                Mobile: this.LoginForm.Mobile,
+                Password: this.LoginForm.Password,
+            };
+            this.$store.dispatch('login', {
+                Mobile: payload.Mobile,
+                Password: payload.Password
+            })
+            this.initForm();
+        },
+        initForm() {
+            this.LoginForm.Mobile = '';
+            this.LoginForm.Password = '';
+        },
+    },
+}
+</script>
 
 <style lang="css" scoped>
 .outter {
@@ -40,51 +75,3 @@
     margin-bottom: 15px;
 }
 </style>
-
-<script>
-import CustomInput from '../components/CustomInput'
-import axios from 'axios';
-export default {
-    data() {
-        return {
-            LoginForm: {
-                Username: '',
-                Password: ''
-            },
-        }
-    },
-    components: {
-        CInput: CustomInput,
-    },
-    methods: {
-        Login(payload) {
-            //const path = 'http://localhost:5000/api/login';
-            const path = '/api/login';
-            axios.post(path, payload)
-                .then((res) => {
-                    if (res.data.user) {
-                        this.$router.push('/AllOrder');
-                    } else {
-                        console.log('error1')
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        onSubmit(evt) {
-            evt.preventDefault();
-            const payload = {
-                Username: this.LoginForm.Username,
-                Password: this.LoginForm.Password,
-            };
-            this.Login(payload);
-            this.initForm();
-        },
-        initForm() {
-            this.LoginForm.Username = '';
-            this.LoginForm.Password = '';
-        },
-    },
-}
-</script>
