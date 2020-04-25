@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from functools import wraps
-from Back.models import session, User
+from models import session, User
 from datetime import datetime, timedelta
 import jwt, json
 
@@ -46,11 +46,7 @@ def token_required(f):
             return jsonify(invalid_msg), 401
 
     return _verify
-
-@app.route('/api/home', methods=('GET',))
-@token_required
-def home(): 
-    return jsonify('hello')   
+  
     
 @app.route('/api/register', methods=('POST',))
 def register():
@@ -96,6 +92,17 @@ def login():
         response = {'result':'nouser'}          
     return jsonify(response), status_code
 
+@app.route('/api/get-user-information', methods=('GET',))
+def user_information(): 
+    user_id = int(request.args['id'])
+    user = session.query(User).filter(User.id == user_id).first()
+    if user:
+        response = {'result': 'success', 'full_name': user.full_name, 'mobile': user.mobile}
+        status_code = 200
+    else:
+        status_code = 401
+        response = {'result':'nouser'}          
+    return jsonify(response), status_code     
 
 if __name__ == '__main__':
     app.run()
