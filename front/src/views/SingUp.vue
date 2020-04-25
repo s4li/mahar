@@ -3,7 +3,7 @@
     <div class="inner">
         <form @submit="onSubmit">
             <CInput lable="نام کاربری" @inputdata="SingupForm.FullName=$event"></CInput>
-            <CInput lable="کلمه عبور" @inputdata="SingupForm.Mobile=$event"></CInput>
+            <CInput lable="کلمه عبور" @inputdata="SingupForm.Mobile=$event" type="password"></CInput>
             <CInput lable="شماره موبایل" @inputdata="SingupForm.Password=$event" type="number"></CInput>
             <div class="btn-box">
                 <button class="btn" type="submit">ثبت نام</button>

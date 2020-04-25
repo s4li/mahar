@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import BootstrapVue from 'bootstrap-vue';
 import Vue from 'vue';
 import App from './App.vue';
-import axios from 'axios'
+import axios from 'axios';
 import store from './store';
 import router from './router';
 import Vuelidate from 'vuelidate';
