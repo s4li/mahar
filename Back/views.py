@@ -50,8 +50,7 @@ def token_required(f):
     
 @app.route('/api/register', methods=('POST',))
 def register():
-    json_data = request.get_json()
-    data = json.loads(json_data)
+    data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user == None:
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
@@ -65,7 +64,7 @@ def register():
                             app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
-        response = {'result':'success', 'full_name': user.full_name, 'token':token.decode('UTF-8')}
+        response = {'result':'success', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
     else:
         response = {'result':'user_exists'}
         status_code = 401
@@ -74,8 +73,7 @@ def register():
 
 @app.route('/api/login', methods=('POST',))
 def login(): 
-    json_data = request.get_json()
-    data = json.loads(json_data)
+    data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
     if user:
         token = jwt.encode({ 
@@ -86,7 +84,7 @@ def login():
                             app.secret_key  
                           )
         status_code = 200                  
-        response = {'result': 'success', 'token': token.decode('UTF-8'), 'full_name': user.full_name} 
+        response = {'result': 'success', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
     else:
         status_code = 401
         response = {'result':'nouser'}          
