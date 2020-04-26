@@ -88,6 +88,7 @@ export default new Vuex.Store({
       }
     },
     fetchUser ({state}) {
+      console.log('error1')
       if (!state.idToken) {
         return
       }
@@ -98,7 +99,7 @@ export default new Vuex.Store({
           console.log(res)
           //commit('storeUser', user)
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error,'error2'))
     }
   },
   getters: {

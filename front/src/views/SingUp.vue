@@ -1,20 +1,24 @@
 <template>
-<div class="outter">
-    <div class="inner">
-        <form @submit="onSubmit">
-            <CInput lable="نام کاربری" @inputdata="SingupForm.FullName=$event"></CInput>
-            <CInput lable="کلمه عبور" @inputdata="SingupForm.Password=$event" type="password"></CInput>
-            <CInput lable="شماره موبایل" @inputdata="SingupForm.Mobile=$event" type="number"></CInput>
-            <div class="btn-box">
-                <button class="btn" type="submit">ثبت نام</button>
-            </div>
-        </form>
+<div>
+    <Header title="ثبت نام"></Header>
+    <div class="outter">
+        <div class="inner">
+            <form @submit="onSubmit">
+                <CInput lable="نام کاربری" @inputdata="SingupForm.FullName=$event"></CInput>
+                <CInput lable="کلمه عبور" @inputdata="SingupForm.Password=$event" type="password"></CInput>
+                <CInput lable="شماره موبایل" @inputdata="SingupForm.Mobile=$event" type="number"></CInput>
+                <div class="btn-box">
+                    <button class="btn" type="submit">ثبت نام</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </template>
 
 <script>
 import CustomInput from '../components/CustomInput';
+import Header from '@/components/Header.vue'
 export default {
     data() {
         return {
@@ -27,6 +31,7 @@ export default {
     },
     components: {
         CInput: CustomInput,
+        Header
     },
     methods: {
         onSubmit(evt) {
@@ -56,7 +61,7 @@ export default {
 .inner {
     background-color: #f1d6ab66;
     border-radius: 4px;
-    margin-top: 40%;
+    margin-top: 20%;
 }
 
 .btn-box {
