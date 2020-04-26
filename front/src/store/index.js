@@ -92,7 +92,7 @@ export default new Vuex.Store({
       if (!state.idToken) {
         return
       }
-      axios.get('/api/get-user-information/' + state.userId)
+      axios.get('/api/get-user-information?id=' + state.userId)
         .then(res => {
           
           //const user = res.data.full_name
