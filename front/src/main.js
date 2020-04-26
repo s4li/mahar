@@ -13,6 +13,14 @@ Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
 
+Vue.prototype.$http = axios;
+
+const token = localStorage.getItem('token')
+
+if (token) {
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = `Bearer: ${token}`
+}
+
 axios.defaults.baseURL = 'http://localhost:5555';
 axios.defaults.headers.get['Accepts'] = 'application/json';
 

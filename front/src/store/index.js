@@ -92,11 +92,11 @@ export default new Vuex.Store({
       if (!state.idToken) {
         return
       }
-      axios.get('/api/get-user-information?id=' + state.userId)
+      axios.get('/api/get-user-information',{params: {id: state.userId}})
         .then(res => {
           
           //const user = res.data.full_name
-          console.log(res)
+          console.log(res,'ok')
           //commit('storeUser', user)
         })
         .catch(error => console.log(error,'error2'))
