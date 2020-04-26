@@ -31,7 +31,7 @@ Vue.use(VueRouter)
     name: 'Grades',
     component: () => import('../views/Grades.vue'),
     beforeEnter (to, from, next) {
-      if (store.state.token) {
+      if (store.state.idToken) {
         next();
       } else {
         next('/login');
