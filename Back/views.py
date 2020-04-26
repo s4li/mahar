@@ -90,7 +90,8 @@ def login():
         response = {'result':'nouser'}          
     return jsonify(response), status_code
 
-@app.route('/api/get-user-information', methods=('GET',))
+@app.route('/api/get-user-information')
+@token_required
 def user_information(): 
     user_id = int(request.args['id'])
     user = session.query(User).filter(User.id == user_id).first()
