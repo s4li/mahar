@@ -92,7 +92,7 @@ def login():
 
 @app.route('/api/get-user-information')
 @token_required
-def user_information(user_id):
+def user_information(cuser):
     user_id = int(request.args['id']) 
     user = session.query(User).filter(User.id == user_id).first()
     if user:
