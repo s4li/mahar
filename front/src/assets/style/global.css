@@ -39,11 +39,9 @@
   }
   
   body {
-    background-image: url(../image/2.png);
+    background-image: url(../image/background.png);
     background-color: #ffffff;
     background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
   }
   
   html, body {
@@ -84,6 +82,17 @@
   margin-top: 0.65rem;
   color: #dc3545;
   font-size: 13px;
+}
+.btn-warning {
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+.btn-warning:focus, .btn-warning.focus {
+  color: #212529;
+  background-color: #ffc107;
+  border-color: #ffc107;
+  box-shadow: none;
 }
 .shakeError {
   animation-name: shakeError;

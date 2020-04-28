@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-
 import router from '../router/index'
 
 Vue.use(Vuex)
@@ -10,7 +9,8 @@ export default new Vuex.Store({
   state: {
     idToken: null,
     userId: null,
-    user: null
+    user: null,
+    showAlert : false
   },
   mutations: {
     authUser (state, userData) {
@@ -60,9 +60,13 @@ export default new Vuex.Store({
             token: res.data.token,
             userId: res.data.id
           });
+          this.state.showAlert = true
           router.replace('/Grades')
         })
-        .catch(error => console.log(error))
+        .catch(error =>{
+          this.state.showAlert = true
+          console.log(error)
+        })
     },
     tryAutoLogin ({commit}) {
       const token = localStorage.getItem('token')
@@ -80,6 +84,7 @@ export default new Vuex.Store({
       localStorage.removeItem('FullName')
       localStorage.removeItem('token')
       localStorage.removeItem('userId')
+      this.state.showAlert = false
       router.replace('/login')
     },
     storeUser ({state}) {
@@ -87,17 +92,17 @@ export default new Vuex.Store({
         return
       }
     },
-    fetchUser ({state}) {
-      console.log('error1')
+    fetchUser ({state,commit}) {
       if (!state.idToken) {
         return
       }
       axios.get('/api/get-user-information',{params: {id: state.userId}})
         .then(res => {
-          
-          //const user = res.data.full_name
-          console.log(res,'ok')
-          //commit('storeUser', user)
+          const user = {
+            FullName:res.data.full_name,
+            Mobile:res.data.full_name
+          }
+          commit('storeUser', user)
         })
         .catch(error => console.log(error,'error2'))
     }

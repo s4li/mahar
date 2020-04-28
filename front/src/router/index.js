@@ -51,6 +51,18 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/ExamType/:id',
+    name: 'ExamType',
+    component: () => import('../views/ExamType.vue'),
+    beforeEnter (to, from, next) {
+      if (store.state.idToken) {
+        next();
+      } else {
+        next('/login');
+      }
+    }
+  },
+  {
     path: '*',redirect:'/Grades'
   }
 ]

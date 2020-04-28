@@ -1,0 +1,157 @@
+<template>
+<div>
+    <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
+    <div class="btn-box">
+        <b-button @click="unlockCheck(grad.id)" variant="warning" v-for="(grad, index) in grads" :key="index">
+            <i class="far fa-lock icon" :class="{'d-none':grad.unlock}"></i>
+            درس {{grad.title}}
+        </b-button>
+    </div>
+    <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
+        <template v-slot:modal-header="{ close }">
+            <h5 class="w-100 m-0 text-center">توجه!</h5>
+            <!-- Emulate built in modal header close button action -->
+            <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
+        </template>
+        <h4 class="text-center h6">شما پایه <span style="font-weight:bold">{{gardnum | translate}}</span> را انتخاب کرده اید محتویات این پایه در صورت خریداری شدن فعال خواهد شد</h4>
+        <div class="buy-box">
+            <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
+                <h5>فعالسازی این پایه</h5>
+                <button class="btn btn-primary">۲۰۰۰ تومان</button>
+            </div>
+            <div class="buy-box-child">
+                <h5>فعالسازی کل برنامه</h5>
+                <button class="btn btn-success">۵۰۰۰ تومان</button>
+            </div>
+        </div>
+    </b-modal>
+</div>
+</template>
+
+<script>
+import Header from '@/components/Header.vue'
+export default {
+    //${this.$route.params.id}
+    components: {
+        Header
+    },
+    data() {
+        return {
+            gardnum: this.$route.params.id,
+            show: false,
+            gradData: [],
+            grads: [{
+                title: 'اول',
+                id: 1,
+                unlock: true
+            }, {
+                title: 'دوم',
+                id: 2,
+                unlock: false
+            }, {
+                title: 'سوم',
+                id: 3,
+                unlock: false
+            }, {
+                title: 'چهارم',
+                id: 4,
+                unlock: false
+            }, {
+                title: 'پنجم',
+                id: 5,
+                unlock: false
+            }, {
+                title: 'ششم',
+                id: 6,
+                unlock: false
+            }, {
+                title: 'هفتم',
+                id: 7,
+                unlock: false
+            }, {
+                title: 'هشتم',
+                id: 8,
+                unlock: false
+            }]
+        }
+    },
+    computed: {
+        auth() {
+            return this.$store.getters.isAuthenticated
+        },
+    },
+    methods: {
+        unlockCheck(checkid) {
+            const grads = this.grads
+            for (let key in grads) {
+                const grad = grads[key]
+                if (grad.id == checkid) {
+                    this.gradData = grad
+                }
+            }
+            if (this.gradData.unlock) {
+                this.$router.push('/ExamType/' + checkid);
+            } else {
+                this.show = true
+            }
+        }
+    },
+    created() {
+        this.$store.dispatch('fetchUser')
+    },
+}
+</script>
+
+<style>
+.btn-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px;
+    margin-top: 30%;
+    background-color: #f8f9fa99;
+    border-radius: 4px;
+}
+
+.btn-box button {
+    width: 45%;
+    margin: 20px 0 0;
+    padding: 8px;
+}
+
+.icon {
+    width: 20px;
+    text-align: center;
+}
+
+.modal-backdrop {
+    background-color: #0006 !important;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 4px;
+}
+
+.modal-body h4 {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.buy-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.buy-box-child {
+    padding: 10px 20px;
+    margin: 15px 0;
+}
+
+.buy-box-child h5 {
+    font-size: 14px;
+}
+</style>

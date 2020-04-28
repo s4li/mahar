@@ -22,3 +22,20 @@ Vue.filter('truncate', function (value) {
   if (value.length>300) shortText += "..."
   return shortText
 })
+Vue.filter('translate', function (value) {
+  let Text;
+  if (value == 7) {
+    Text = 'هفتم'
+  } else if (value == 8) {
+      Text = 'هشتم'
+  } else if (value == 9) {
+      Text = 'نهم'
+  } else if (value == 10) {
+      Text = 'دهم'
+  } else if (value == 11) {
+      Text = 'یازدهم'
+  } else if (value == 12) {
+      Text = 'دوازدهم'
+  }
+return Text
+})

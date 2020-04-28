@@ -13,7 +13,7 @@
                     </svg>
                 </div>
                 <h1><span>م</span>رکز <span>ه</span>وشمند سازی <span>آ</span>موزش های <span>ر</span>سانه ای</h1>
-                <p>جهت ورود به اپلیکیشن کلیک کنید</p>
+                <p>ورود</p>
             </div>
         </div>
     </div>
@@ -34,8 +34,9 @@
     align-items: center;
     flex-wrap: wrap;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.1);
+    background: #f8f9fa99;
     border-radius: 4px;
+    box-shadow: 0 5px 15px #dedede;
 }
 
 #logo {
@@ -56,11 +57,8 @@
 .welcome h1 {
     font-size: 18px;
     text-align: center;
-    margin: 40px auto;
     font-weight: 600;
-    border-top: 2px solid #ffffff;
     padding: 15px;
-    width: fit-content;
 }
 
 .welcome h1 span {
@@ -71,8 +69,15 @@
     height: 100%;
 }
 
-p {
+.welcome p {
     text-align: center;
-    margin-top: 200px;
+    background: #fbb901;
+    width: 40%;
+    display: block;
+    margin: 200px auto 20px;
+    padding: 8px;
+    border-radius: 4px;
+    max-width: 230px;
+    box-shadow: 0 0px 10px #d3a92e;
 }
 </style>

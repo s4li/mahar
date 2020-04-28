@@ -93,7 +93,7 @@ input {
 .wrap-input100 {
     width: 100%;
     position: relative;
-    border-bottom: 2px solid #e6cf8b;
+    border-bottom: 2px solid #ffd76a;
 }
 
 .input100 {
@@ -131,7 +131,7 @@ input {
     -o-transition: all 0.4s;
     -moz-transition: all 0.4s;
     transition: all 0.4s;
-    background: #f0a500;
+    background: #fbb901;
 }
 
 .focus-input100::after {
@@ -181,7 +181,7 @@ input {
     position: absolute;
     max-width: 70%;
     background-color: #fff;
-    border: 1px solid #f0a500;
+    border: 1px solid #dc3545;
     border-radius: 2px;
     padding: 4px 10px 4px 25px;
     top: 50%;
@@ -192,7 +192,7 @@ input {
     transform: translateY(-50%);
     left: 0px;
     pointer-events: none;
-    color: #f0a500;
+    color: #dc3545;
     font-size: 13px;
     line-height: 1.4;
     text-align: left;
@@ -208,7 +208,7 @@ input {
     content: "\f06a";
     font-family: "Font Awesome 5 Pro";
     font-size: 14px;
-    color: #f0a500;
+    color: #dc3545;
     display: block;
     position: absolute;
     background-color: #fff;

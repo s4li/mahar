@@ -2,14 +2,15 @@
 <div>
     <Header title="ورود"></Header>
     <div class="outter">
+        <b-alert class="shakeError" variant="danger" dismissible fade :show="this.$store.state.showAlert">لطفا فرم را به درستی پر کنید.</b-alert>
         <div class="inner">
             <form @submit="onSubmit">
                 <CInput lable="شماره موبایل" @inputdata="LoginForm.Mobile=$event" type="number"></CInput>
                 <CInput lable="کلمه عبور" type="password" @inputdata="LoginForm.Password=$event"></CInput>
                 <div class="btn-box">
-                    <button class="btn" type="submit">ورود</button>
-                    <router-link to="/Singup" class="btn">ثبت نام</router-link>
-                    <router-link to="/Guids" class="btn">راهنمای استفاده</router-link>
+                    <router-link to="/Singup" id="singupbtn" class="btn">ثبت نام</router-link>
+                    <button class="btn" id="loginbtn" type="submit">ورود</button>
+                    <router-link to="/Guids" id="infobtn" class="btn">راهنمای استفاده</router-link>
                 </div>
             </form>
         </div>
@@ -40,27 +41,42 @@ export default {
                 Mobile: this.LoginForm.Mobile,
                 Password: this.LoginForm.Password,
             };
-            this.$store.dispatch('login', {
-                Mobile: payload.Mobile,
-                Password: payload.Password
-            })
-            this.initForm();
-        },
-        initForm() {
-            this.LoginForm.Mobile = '';
-            this.LoginForm.Password = '';
+            if (payload.Mobile && payload.Password != '') {
+                console.log('ok')
+                this.$store.dispatch('login', {
+                    Mobile: payload.Mobile,
+                    Password: payload.Password
+                })
+            } else {
+                this.$store.state.showAlert = true
+                console.log('nok')
+            }
         },
     },
 }
 </script>
 
 <style lang="css" scoped>
+#infobtn {
+    border: 1px solid #e0e0d8;
+    background: #e2dfd6;
+}
+
+#loginbtn {
+    background-color: #fbb901;
+}
+
+#singupbtn {
+    border: 1px solid #fbb901;
+    background: #faf9f6;
+}
+
 .outter {
     padding: 15px;
 }
 
 .inner {
-    background-color: #f1d6ab66;
+    background-color: #f8f9fa99;
     border-radius: 4px;
     margin-top: 30%;
 }
@@ -75,7 +91,7 @@ export default {
 
 .btn-box button,
 .btn-box a {
-    background-color: #f0a500;
+    background-color: #fbb901;
     min-width: 120px;
     margin-bottom: 15px;
 }

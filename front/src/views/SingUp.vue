@@ -8,7 +8,7 @@
                 <CInput lable="کلمه عبور" @inputdata="SingupForm.Password=$event" type="password"></CInput>
                 <CInput lable="شماره موبایل" @inputdata="SingupForm.Mobile=$event" type="number"></CInput>
                 <div class="btn-box">
-                    <button class="btn" type="submit">ثبت نام</button>
+                    <button class="btn" :disabled="$v.$invalid" type="submit">ثبت نام</button>
                 </div>
             </form>
         </div>
@@ -59,7 +59,7 @@ export default {
 }
 
 .inner {
-    background-color: #f1d6ab66;
+    background-color: #f8f9fa99;
     border-radius: 4px;
     margin-top: 20%;
 }
@@ -74,7 +74,7 @@ export default {
 
 .btn-box button,
 .btn-box a {
-    background-color: #f0a500;
+    background-color: #fbb901;
     min-width: 120px;
     margin-bottom: 15px;
 }
