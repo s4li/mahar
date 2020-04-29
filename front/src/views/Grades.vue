@@ -7,6 +7,7 @@
             <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
             پایه {{grad.title}}
         </router-link>
+        <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-5 d-block w-25 btn-sm">خروج</button>
     </div>
 </div>
 </template>
@@ -15,7 +16,7 @@
 import Header from '@/components/Header.vue'
 import axios from 'axios'
 export default {
-    //<button @click="onLogout" class="logout">Logout</button>
+
     //<p v-if="FullName">Your email address: {{ FullName }}</p>
     components: {
         Header
@@ -34,9 +35,9 @@ export default {
         //}
     },
     methods: {
-        //onLogout() {
-        //    this.$store.dispatch('logout')
-        //},
+        onLogout() {
+            this.$store.dispatch('logout')
+        },
         getgrads() {
             const url = this.$route.path
             this.$store.commit('StoreCurrentUrl', url);
@@ -56,7 +57,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .btn-box {
     display: flex;
     justify-content: space-between;
@@ -72,5 +73,22 @@ export default {
     width: 45%;
     margin: 20px 0 0;
     padding: 8px;
+}
+
+.btn-warning {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-warning:focus,
+.btn-warning.focus {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+    box-shadow: none;
+}
+.logout{
+
 }
 </style>

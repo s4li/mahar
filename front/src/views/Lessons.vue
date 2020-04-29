@@ -4,7 +4,7 @@
     <div class="btn-box">
         <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
             <i class="far fa-lock icon" :class="{'d-none':lesson.has_content}"></i>{{lesson.title}}</b-button>
-    </div>{{this.$store.state.currenturl}}
+    </div>
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
         <template v-slot:modal-header="{ close }">
             <h5 class="w-100 m-0 text-center">توجه!</h5>

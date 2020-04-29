@@ -38,17 +38,24 @@ export default new Vuex.Store({
         returnSecureToken: true
       })
         .then(res => {
+          const token = res.data.token
+          localStorage.setItem('token', res.data.token)
+          localStorage.setItem('userId', res.data.id)
+          localStorage.setItem('FullName', res.data.full_name)
+          axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
           commit('authUser', {
             token: res.data.token,
             userId: res.data.id
           });
-          localStorage.setItem('token', res.data.token)
-          localStorage.setItem('userId', res.data.id)
-          localStorage.setItem('FullName', res.data.full_name)
           dispatch('storeUser', authData);
           router.replace('/Grades')
         })
-        .catch(error => console.log(error,'error'))
+        .catch(error => {
+          console.log(error,'error')
+          localStorage.removeItem('FullName')
+          localStorage.removeItem('token')
+          localStorage.removeItem('userId')
+        })
     },
     login ({commit}, authData) {
       axios.post('/login', {
@@ -57,21 +64,24 @@ export default new Vuex.Store({
         returnSecureToken: true
       })
         .then(res => {
+          const token = res.data.token
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
-          setTimeout(() => {
+          axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
             commit('authUser', {
             token: res.data.token,
             userId: res.data.id
             });
         this.state.showAlert = true
           router.replace('/Grades')
-        }, 20)
         })
         .catch(error =>{
           this.state.showAlert = true
           console.log(error)
+          localStorage.removeItem('FullName')
+          localStorage.removeItem('token')
+          localStorage.removeItem('userId')
         })
     },
     tryAutoLogin ({commit}) {
@@ -90,6 +100,7 @@ export default new Vuex.Store({
       localStorage.removeItem('token')
       localStorage.removeItem('userId')
       this.state.showAlert = false
+      delete axios.defaults.headers.common['Authorization']
       router.replace('/login')
     },
     storeUser ({state}) {
