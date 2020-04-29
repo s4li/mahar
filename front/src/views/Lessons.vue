@@ -2,9 +2,10 @@
 <div>
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
     <div class="btn-box">
-        <b-button @click="unlockCheck(grad.id)" variant="warning" v-for="(grad, index) in grads" :key="index">
-            <i class="far fa-lock icon" :class="{'d-none':grad.unlock}"></i>
-            درس {{grad.title}}
+        <p>{{gardnum}}</p><p>{{userid}}</p>
+        <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
+            <i class="far fa-lock icon" :class="{'d-none':lesson.has_content}"></i>
+            درس {{lesson.title}}
         </b-button>
     </div>
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
@@ -32,48 +33,16 @@
 import Header from '@/components/Header.vue'
 import axios from 'axios'
 export default {
-    //${this.$route.params.id}
     components: {
         Header
     },
     data() {
         return {
             gardnum: this.$route.params.id,
+            userid: this.$store.state.userId,
             show: false,
-            gradData: [],
-            grads: [{
-                title: 'اول',
-                id: 1,
-                unlock: true
-            }, {
-                title: 'دوم',
-                id: 2,
-                unlock: false
-            }, {
-                title: 'سوم',
-                id: 3,
-                unlock: false
-            }, {
-                title: 'چهارم',
-                id: 4,
-                unlock: false
-            }, {
-                title: 'پنجم',
-                id: 5,
-                unlock: false
-            }, {
-                title: 'ششم',
-                id: 6,
-                unlock: false
-            }, {
-                title: 'هفتم',
-                id: 7,
-                unlock: false
-            }, {
-                title: 'هشتم',
-                id: 8,
-                unlock: false
-            }]
+            lessonsData: [],
+            lessons: []
         }
     },
     computed: {
@@ -83,34 +52,34 @@ export default {
     },
     methods: {
         unlockCheck(checkid) {
-            const grads = this.grads
+            const grads = this.lessons
             for (let key in grads) {
                 const grad = grads[key]
                 if (grad.id == checkid) {
-                    this.gradData = grad
+                    this.lessonsData = grad
                 }
             }
-            if (this.gradData.unlock) {
+            if (this.lessonsData.unlock) {
                 this.$router.push('/ExamType/' + checkid);
             } else {
                 this.show = true
             }
         },
-        getgrads() {
-            const path = '/lessons';
-            axios.get(path)
+        getlessons() {
+            axios.get('/lessons', {
+                    user_id: this.gardnum,
+                    course_id: this.userid,
+                })
                 .then((res) => {
                     console.log(res)
-                    //this.grads = res.data;
+                    this.lessons = res.data;
+                    console.log(this.lessons)
                 })
                 .catch((error) => {
                     console.error(error);
                 });
-        },
-    },
-    created() {
-        this.$store.dispatch('fetchUser')
-    },
+        }
+    }
 }
 </script>
 
