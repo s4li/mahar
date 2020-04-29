@@ -50,6 +50,8 @@ def token_required(f):
     
 @app.route('/api/register', methods=('POST',))
 def register():
+    #j_data = request.get_json()
+    #data = json.loads(j_data)
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     session.commit()
@@ -110,7 +112,7 @@ def user_information(cuser):
 
 @app.route('/api/courses')     
 @token_required
-def courses():
+def courses(cuser):
     all_courses = []
     courses = session.query(Course)
     for course in courses:
@@ -123,7 +125,7 @@ def courses():
 
 @app.route('/api/lessens')     
 @token_required
-def lessons():
+def lessons(cuser):
     course_id = int(request.args['course_id'])
     user_id = int(request.args['user_id'])
     all_lessons = []
