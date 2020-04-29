@@ -7,7 +7,7 @@
                 <CInput lable="نام کاربری" @inputdata="SingupForm.FullName=$event"></CInput>
                 <CInput lable="کلمه عبور" @inputdata="SingupForm.Password=$event" type="password"></CInput>
                 <CInput lable="شماره موبایل" @inputdata="SingupForm.Mobile=$event" type="number"></CInput>
-                <div class="btn-box">
+                <div class="btn-box1">
                     <button class="btn" type="submit">ثبت نام</button>
                 </div>
             </form>
@@ -72,8 +72,8 @@ export default {
     padding: 15px;
 }
 
-.btn-box button,
-.btn-box a {
+.btn-box1 button,
+.btn-box1 a {
     background-color: #fbb901;
     min-width: 120px;
     margin-bottom: 15px;

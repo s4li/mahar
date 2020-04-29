@@ -3,7 +3,7 @@
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
     <div class="btn-box">
         <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
-            <i class="far fa-lock icon" :class="{'d-none':lesson.has_content}"></i>{{lesson.title}}</b-button>
+            <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
     </div>
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
         <template v-slot:modal-header="{ close }">
@@ -50,7 +50,7 @@ export default {
                     this.lessonsData = grad
                 }
             }
-            if (this.lessonsData.unlock) {
+            if (this.lessonsData.show_lesson) {
                 this.$router.push('/ExamType/' + checkid);
             } else {
                 this.show = true

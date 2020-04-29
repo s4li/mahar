@@ -31,11 +31,13 @@ export default {
 
 .btn-box button,
 .btn-box a {
-    margin: 10px 0 10px;
+    margin: 15px 0;
     padding: 8px;
     width: 80%;
     color: #212529;
     background-color: #ffc107;
     border-color: #ffc107;
+    text-align: center;
+    border-radius: 4px;
 }
 </style>
