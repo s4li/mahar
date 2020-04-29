@@ -4,7 +4,7 @@
     <b-alert class="shakeError text-center mt-2" variant="success" :show="5">خوش آمدید</b-alert>
     <div class="btn-box">
             <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
-            <!--<i class="far fa-lock icon" :class="{'d-none':grad.unlock}"></i>-->
+            <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
             پایه {{grad.title}}
         </router-link>
     </div>

@@ -12,10 +12,9 @@
 
 <script>
   export default {
-    name: 'app',
-    created () {
+    created() {
       this.$store.dispatch('tryAutoLogin')
-    }
+    },
   }
 </script>
 

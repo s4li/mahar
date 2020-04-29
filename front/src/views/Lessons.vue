@@ -2,7 +2,6 @@
 <div>
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
     <div class="btn-box">
-        <p>{{gardnum}}</p><p>{{userid}}</p>
         <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
             <i class="far fa-lock icon" :class="{'d-none':lesson.has_content}"></i>
             درس {{lesson.title}}
@@ -11,7 +10,6 @@
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
         <template v-slot:modal-header="{ close }">
             <h5 class="w-100 m-0 text-center">توجه!</h5>
-            <!-- Emulate built in modal header close button action -->
             <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
         </template>
         <h4 class="text-center h6">شما پایه <span style="font-weight:bold">{{gardnum | translate}}</span> را انتخاب کرده اید محتویات این پایه در صورت خریداری شدن فعال خواهد شد</h4>
@@ -45,11 +43,7 @@ export default {
             lessons: []
         }
     },
-    computed: {
-        auth() {
-            return this.$store.getters.isAuthenticated
-        },
-    },
+    computed: {},
     methods: {
         unlockCheck(checkid) {
             const grads = this.lessons
@@ -66,7 +60,12 @@ export default {
             }
         },
         getlessons() {
-            axios.get('/lessens',{params: {user_id: this.gardnum,course_id: this.userid}})
+            axios.get('/lessons', {
+                    params: {
+                        user_id: this.userid,
+                        course_id: this.gardnum 
+                    }
+                })
                 .then((res) => {
                     console.log(res)
                     this.lessons = res.data;
