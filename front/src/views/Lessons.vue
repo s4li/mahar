@@ -66,10 +66,7 @@ export default {
             }
         },
         getlessons() {
-            axios.get('/lessons', {
-                    user_id: this.gardnum,
-                    course_id: this.userid,
-                })
+            axios.get('/lessens',{params: {user_id: this.gardnum,course_id: this.userid}})
                 .then((res) => {
                     console.log(res)
                     this.lessons = res.data;
@@ -79,7 +76,10 @@ export default {
                     console.error(error);
                 });
         }
-    }
+    },
+    created() {
+        this.getlessons();
+    },
 }
 </script>
 
