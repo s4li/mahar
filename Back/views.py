@@ -74,8 +74,7 @@ def register():
 
 @app.route('/api/login', methods=('POST',))
 def login(): 
-    json_data = request.get_json()
-    data = json.loads(json_data)
+    data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
     if user:
         token = jwt.encode({ 
