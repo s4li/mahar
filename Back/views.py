@@ -158,7 +158,7 @@ def status_question(cuser):
 def previous_questions(cuser): 
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
+    result = {"check_new_question":'check_new_question', "review_previous_questions":'review_previous_questions', "check_wrong_questions":'check_wrong_questions'}
     return jsonify(result)
 
 
