@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from functools import wraps
-from models import session, User, Course, Lesson
+from .models import session, User, Course, Lesson
 from datetime import datetime, timedelta
 import jwt, json
 
@@ -95,7 +95,7 @@ def login():
 
 @app.route('/api/get-user-information')
 @token_required
-def user_information():
+def user_information(cuser):
     user_id = int(request.args['id']) 
     user = session.query(User).filter(User.id == user_id).first()
     if user:
