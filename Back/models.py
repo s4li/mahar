@@ -16,18 +16,23 @@ class User(Base):
    full_name = Column(String)
    mobile = Column(String)
    password = Column(String)
+   purchased_lessons = Column(String)
+   user_answer = relationship('User_answer') 
+   invoice = relationship('Invoice')  
 
 class Course(Base):
    __tablename__ = 'tbl_courses'
    id = Column(Integer, primary_key=True)  
    title = Column(String)
+   lesson = relationship('Lesson')
 
 class Lesson(Base):
    __tablename__ = 'tbl_lessons'
    id = Column(Integer, primary_key=True)  
    title = Column(String)
    course_id = Column(Integer,ForeignKey('tbl_courses.id', ondelete='CASCADE'))
-   course = relationship('Course', backref='lessons')
+   voice = relationship('Voice') 
+   question = relationship('Question')    
 
 class Voice(Base):
    __tablename__ = 'tbl_voices'
@@ -35,7 +40,8 @@ class Voice(Base):
    title = Column(String)
    path = Column(String)
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE'))
-   lesson = relationship('Lesson', backref='voices')   
+   question = relationship('Question') 
+   
 
 class Question(Base):
    __tablename__ = 'tbl_questions'
@@ -43,8 +49,8 @@ class Question(Base):
    text = Column(String)
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE'))
    voice_id = Column(Integer,ForeignKey('tbl_voices.id', ondelete='CASCADE'))
-   lesson = relationship('Lesson', backref='questions')  
-   voice = relationship('Voice', backref='questions') 
+   question = relationship('User_answer')
+   answer = relationship('Answer') 
 
 class Answer(Base):
    __tablename__ = 'tbl_answers'
@@ -52,7 +58,7 @@ class Answer(Base):
    ans_text = Column(String)
    check_ans = Column(String)
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
-   question = relationship('Question', backref='answers')
+   
 
 class User_answer(Base):
    __tablename__ = 'tbl_users_answers'
@@ -60,14 +66,15 @@ class User_answer(Base):
    ans_no = Column(String)
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
-   user = relationship('User', backref='answers')  
-   question = relationship('Question', backref='answers') 
+    
+   
 
 class Sale_plan(Base):
    __tablename__ = 'tbl_sale_plan'
    id = Column(Integer, primary_key=True)  
    title = Column(String)
    price = Column(String)
+   invoice = relationship('Invoice') 
 
 class Invoice(Base):
    __tablename__ = 'tbl_invoices'
@@ -79,8 +86,7 @@ class Invoice(Base):
    status = Column(String)
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    sale_plan_id = Column(Integer,ForeignKey('tbl_sale_plan.id', ondelete='CASCADE'))
-   user = relationship('User', backref='invoices')  
-   sale_plan = relationship('Sale_plan', backref='invoices')    
+     
 
 
 

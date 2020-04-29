@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from functools import wraps
-from Back.models import session, User, Course
+from models import session, User, Course, Lesson
 from datetime import datetime, timedelta
 import jwt, json
 
@@ -74,7 +74,8 @@ def register():
 
 @app.route('/api/login', methods=('POST',))
 def login(): 
-    data = request.get_json()
+    json_data = request.get_json()
+    data = json.loads(json_data)
     user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
     if user:
         token = jwt.encode({ 
@@ -114,10 +115,28 @@ def courses():
     all_courses = []
     courses = session.query(Course)
     for course in courses:
-        all_courses.append({"id": course.id, "title":course.title})
+        lesson = session.query(Lesson).filter(Lesson.course_id == course.id).first()
+        has_content = True if lesson else False
+        all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
     session.commit()    
     session.close() 
     return jsonify(all_courses)
+
+@app.route('/api/lessens')     
+@token_required
+def lessons():
+    course_id = int(request.args['course_id'])
+    user_id = int(request.args['user_id'])
+    all_lessons = []
+    lessons = session.query(Lesson).filter(Lesson.course_id == course_id)
+    session.commit() 
+    user_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == user_id).first()
+    purchased_lessons = user_purchased_lessons.split(',')
+    for lesson in lessons:
+        show_lesson = True if lesson.id in purchased_lessons else False
+        all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson})   
+    session.close() 
+    return jsonify(all_lessons)    
 
 if __name__ == '__main__':
     app.run(debug=True)
