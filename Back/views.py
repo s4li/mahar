@@ -123,7 +123,7 @@ def courses(cuser):
     session.close() 
     return jsonify(all_courses)
 
-@app.route('/api/lessens')     
+@app.route('/api/lessons')     
 @token_required
 def lessons(cuser):
     course_id = int(request.args['course_id'])
