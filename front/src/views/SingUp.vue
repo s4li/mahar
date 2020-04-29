@@ -8,7 +8,7 @@
                 <CInput lable="کلمه عبور" @inputdata="SingupForm.Password=$event" type="password"></CInput>
                 <CInput lable="شماره موبایل" @inputdata="SingupForm.Mobile=$event" type="number"></CInput>
                 <div class="btn-box">
-                    <button class="btn" :disabled="$v.$invalid" type="submit">ثبت نام</button>
+                    <button class="btn" type="submit">ثبت نام</button>
                 </div>
             </form>
         </div>

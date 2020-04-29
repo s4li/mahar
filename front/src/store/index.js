@@ -27,7 +27,7 @@ export default new Vuex.Store({
   },
   actions: {
     signup ({commit, dispatch}, authData) {
-      axios.post('/api/register', {
+      axios.post('/register', {
         full_name : authData.FullName,
         mobile : authData.Mobile,
         password : authData.Password,
@@ -47,7 +47,7 @@ export default new Vuex.Store({
         .catch(error => console.log(error,'error'))
     },
     login ({commit}, authData) {
-      axios.post('/api/login', {
+      axios.post('/login', {
         mobile : authData.Mobile,
         password : authData.Password,
         returnSecureToken: true
@@ -96,7 +96,7 @@ export default new Vuex.Store({
       if (!state.idToken) {
         return
       }
-      axios.get('/api/get-user-information',{params: {id: state.userId}})
+      axios.get('/get-user-information',{params: {id: state.userId}})
         .then(res => {
           const user = {
             FullName:res.data.full_name,

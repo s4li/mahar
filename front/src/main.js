@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
 
-axios.defaults.baseURL = 'http://localhost:5555'
+axios.defaults.baseURL = 'http://localhost:5555/api'
 axios.defaults.headers.get['Accepts'] = 'application/json'
 
 const token = localStorage.getItem('token')

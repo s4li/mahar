@@ -62,7 +62,7 @@ export default {
         //    this.$store.dispatch('logout')
         //},
         getgrads() {
-            const path = '/api/courses';
+            const path = '/courses';
             axios.get(path)
                 .then((res) => {
                     console.log(res)
