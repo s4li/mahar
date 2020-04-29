@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base #class stores a catlog of classes and mapped tables in the Declarative system
 from sqlalchemy.orm import sessionmaker, relationship
 import pymysql
-from conection_info import password, user
+from .conection_info import password, user
 
 
 engine = create_engine(f'mysql+pymysql://{user}:{password}@localhost/mahar?charset=utf8') # Create the database in memory
@@ -16,7 +16,7 @@ class User(Base):
    full_name = Column(String)
    mobile = Column(String)
    password = Column(String)
-   purchased_lessons = Column(String)
+   purchased_lessons = Column(String,  default='1,9,16')
    user_answer = relationship('User_answer') 
    invoice = relationship('Invoice')  
 
