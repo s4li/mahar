@@ -24,17 +24,17 @@ Vue.filter('truncate', function (value) {
 })
 Vue.filter('translate', function (value) {
   let Text;
-  if (value == 7) {
+  if (value == 1) {
     Text = 'هفتم'
-  } else if (value == 8) {
+  } else if (value == 2) {
       Text = 'هشتم'
-  } else if (value == 9) {
+  } else if (value == 3) {
       Text = 'نهم'
-  } else if (value == 10) {
+  } else if (value == 5) {
       Text = 'دهم'
-  } else if (value == 11) {
+  } else if (value == 6) {
       Text = 'یازدهم'
-  } else if (value == 12) {
+  } else if (value == 7) {
       Text = 'دوازدهم'
   }
 return Text

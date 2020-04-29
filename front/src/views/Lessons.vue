@@ -3,10 +3,8 @@
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
     <div class="btn-box">
         <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
-            <i class="far fa-lock icon" :class="{'d-none':lesson.has_content}"></i>
-            درس {{lesson.title}}
-        </b-button>
-    </div>
+            <i class="far fa-lock icon" :class="{'d-none':lesson.has_content}"></i>{{lesson.title}}</b-button>
+    </div>{{this.$store.state.currenturl}}
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
         <template v-slot:modal-header="{ close }">
             <h5 class="w-100 m-0 text-center">توجه!</h5>
@@ -60,16 +58,16 @@ export default {
             }
         },
         getlessons() {
+            const url = this.$route.path
+            this.$store.commit('StoreCurrentUrl', url);
             axios.get('/lessons', {
                     params: {
                         user_id: this.userid,
-                        course_id: this.gardnum 
+                        course_id: this.gardnum
                     }
                 })
                 .then((res) => {
-                    console.log(res)
                     this.lessons = res.data;
-                    console.log(this.lessons)
                 })
                 .catch((error) => {
                     console.error(error);

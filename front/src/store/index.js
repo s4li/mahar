@@ -10,7 +10,8 @@ export default new Vuex.Store({
     idToken: null,
     userId: null,
     user: null,
-    showAlert : false
+    showAlert : false,
+    currenturl:'/Grades'
   },
   mutations: {
     authUser (state, userData) {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     clearAuthData (state) {
       state.idToken = null
       state.userId = null
+    },
+    StoreCurrentUrl(state,newurl){
+      state.currenturl = newurl
     }
   },
   actions: {
@@ -56,12 +60,14 @@ export default new Vuex.Store({
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
-          commit('authUser', {
+          setTimeout(() => {
+            commit('authUser', {
             token: res.data.token,
             userId: res.data.id
-          });
-          this.state.showAlert = true
+            });
+        this.state.showAlert = true
           router.replace('/Grades')
+        }, 20)
         })
         .catch(error =>{
           this.state.showAlert = true
@@ -73,11 +79,10 @@ export default new Vuex.Store({
       const userId = localStorage.getItem('userId')
       if (!token) {
         return
+      }else{
+        commit('authUser', {token: token,userId: userId})
+        router.replace(this.state.currenturl)
       }
-      commit('authUser', {
-        token: token,
-        userId: userId
-      })
     },
     logout ({commit}) {
       commit('clearAuthData')

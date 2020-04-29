@@ -3,7 +3,7 @@
     <Header title="پایه مورد نظر خود را انتخاب کنید"></Header>
     <b-alert class="shakeError text-center mt-2" variant="success" :show="5">خوش آمدید</b-alert>
     <div class="btn-box">
-            <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
+        <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
             <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
             پایه {{grad.title}}
         </router-link>
@@ -22,7 +22,7 @@ export default {
     },
     data() {
         return {
-            grads: []
+            grads: [],
         }
     },
     computed: {
@@ -38,8 +38,9 @@ export default {
         //    this.$store.dispatch('logout')
         //},
         getgrads() {
-            const path = '/courses';
-            axios.get(path)
+            const url = this.$route.path
+            this.$store.commit('StoreCurrentUrl', url);
+            axios.get('/courses')
                 .then((res) => {
                     this.grads = res.data;
                 })
@@ -49,7 +50,7 @@ export default {
         },
     },
     created() {
-        this.$store.dispatch('fetchUser');
+        //this.$store.dispatch('fetchUser');
         this.getgrads();
     },
 }
