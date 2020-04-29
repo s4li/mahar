@@ -32,7 +32,8 @@ class Lesson(Base):
    title = Column(String)
    course_id = Column(Integer,ForeignKey('tbl_courses.id', ondelete='CASCADE'))
    voice = relationship('Voice') 
-   question = relationship('Question')    
+   question = relationship('Question') 
+   user_answer = relationship('User_answer') 
 
 class Voice(Base):
    __tablename__ = 'tbl_voices'
@@ -66,7 +67,7 @@ class User_answer(Base):
    ans_no = Column(String)
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
-    
+   lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE'))
    
 
 class Sale_plan(Base):

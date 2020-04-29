@@ -146,13 +146,20 @@ def status_question(cuser):
     user_id = int(request.args['user_id'])
     new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
     check_new_question = True if new_question else False
-    user_answer = session.query(User_answer.question_id).filter(User_answer.user_id == user_id).first()
+    user_answer = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
     review_previous_questions = True if user_answer else False
-    wrong_questions = session.query(User_answer.question_id).filter(User_answer.ans_no == 1).first()
+    wrong_questions = session.query(User_answer.question_id).filter(User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
     check_wrong_questions = True if wrong_questions else False
     result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
     return jsonify(result)
 
+@app.route('/api/get-previous-questions')     
+@token_required
+def previous_questions(cuser): 
+    user_id = int(request.args['user_id'])
+    lesson_id = int(request.args['lesson_id'])
+    result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
+    return jsonify(result)
 
 
 if __name__ == '__main__':
