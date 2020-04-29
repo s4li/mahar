@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from functools import wraps
-from .models import session, User, Course, Lesson
+from .models import session, User, Course, Lesson, Answer, Question, User_answer
 from datetime import datetime, timedelta
 import jwt, json
 
@@ -138,6 +138,22 @@ def lessons(cuser):
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson})   
     session.close() 
     return jsonify(all_lessons)    
+
+@app.route('/api/get-status-question-user')     
+@token_required
+def status_question(cuser):
+    lesson_id = int(request.args['lesson_id'])
+    user_id = int(request.args['user_id'])
+    new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
+    check_new_question = True if new_question else False
+    user_answer = session.query(User_answer.question_id).filter(User_answer.user_id == user_id).first()
+    review_previous_questions = True if user_answer else False
+    wrong_questions = session.query(User_answer.question_id).filter(User_answer.ans_no == 1).first()
+    check_wrong_questions = True if wrong_questions else False
+    result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
+    return jsonify(result)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
