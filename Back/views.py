@@ -132,7 +132,7 @@ def lessons(cuser):
     lessons = session.query(Lesson).filter(Lesson.course_id == course_id)
     session.commit() 
     user_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == user_id).first()
-    purchased_lessons = user_purchased_lessons.split(',')
+    purchased_lessons = user_purchased_lessons[0].split(',')
     for lesson in lessons:
         show_lesson = True if lesson.id in purchased_lessons else False
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson})   
