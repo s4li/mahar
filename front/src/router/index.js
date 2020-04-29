@@ -63,6 +63,18 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/Courses/:type',
+    name: 'Courses',
+    component: () => import('../views/Courses.vue'),
+    beforeEnter (to, from, next) {
+      if (store.state.idToken) {
+        next();
+      } else {
+        next('/login');
+      }
+    }
+  },
+  {
     path: '*',redirect:'/Grades'
   }
 ]

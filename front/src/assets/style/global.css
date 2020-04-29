@@ -67,22 +67,7 @@
   outline: none;
   box-shadow: none;
 }
-.divider {
-  border-bottom: 1px dashed #e0e0e0;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  height: 2px;
-}
-.hidden{
-  display: none;
-}
-.invalidFeedback {
-  display: block;
-  width: 100%;
-  margin-top: 0.65rem;
-  color: #dc3545;
-  font-size: 13px;
-}
+
 .btn-warning {
   color: #212529;
   background-color: #ffc107;

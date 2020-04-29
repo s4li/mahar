@@ -1,10 +1,10 @@
 <template>
 <div>
-    <Header title="نوع پرسش خود را انتخاب کنید"></Header>
+    <Header title="نوع آزمون خود را انتخاب کنید"></Header>
     <div class="btn-box">
-        <b-button>پرسش جدید</b-button>
-        <b-button>ادامه پرسش قبلی</b-button>
-        <b-button>مرور غلط های این بخش</b-button>
+        <router-link to="/Courses/check_new_question">پرسش جدید</router-link>
+        <router-link to="/Courses/review_previous_questions">ادامه پرسش قبلی</router-link>
+        <router-link to="/Courses/check_wrong_questions">مرور غلط های این بخش</router-link>
     </div>
 </div>
 </template>
@@ -14,15 +14,7 @@ import Header from '@/components/Header.vue'
 export default {
     components: {
         Header
-    },
-    data() {
-        return {}
-    },
-    computed: {},
-    methods: {},
-    created() {
-        this.$store.dispatch('fetchUser')
-    },
+    }
 }
 </script>
 
@@ -37,7 +29,8 @@ export default {
     border-radius: 4px;
 }
 
-.btn-box button {
+.btn-box button,
+.btn-box a {
     margin: 10px 0 10px;
     padding: 8px;
     width: 80%;

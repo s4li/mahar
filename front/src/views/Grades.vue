@@ -16,8 +16,6 @@
 import Header from '@/components/Header.vue'
 import axios from 'axios'
 export default {
-
-    //<p v-if="FullName">Your email address: {{ FullName }}</p>
     components: {
         Header
     },
@@ -26,14 +24,7 @@ export default {
             grads: [],
         }
     },
-    computed: {
-        //FullName() {
-        //    return !this.$store.getters.user ? false : this.$store.getters.user.FullName
-        //},
-        //auth() {
-        //    return this.$store.getters.isAuthenticated
-        //}
-    },
+    computed: {},
     methods: {
         onLogout() {
             this.$store.dispatch('logout')
@@ -51,7 +42,6 @@ export default {
         },
     },
     created() {
-        //this.$store.dispatch('fetchUser');
         this.getgrads();
     },
 }
@@ -87,8 +77,5 @@ export default {
     background-color: #ffc107;
     border-color: #ffc107;
     box-shadow: none;
-}
-.logout{
-
 }
 </style>

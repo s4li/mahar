@@ -41,7 +41,6 @@ export default {
             lessons: []
         }
     },
-    computed: {},
     methods: {
         unlockCheck(checkid) {
             const grads = this.lessons
