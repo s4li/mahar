@@ -59,9 +59,9 @@ class User_answer(Base):
    id = Column(Integer, primary_key=True)  
    ans_no = Column(String)
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
-   answer_id = Column(Integer,ForeignKey('tbl_answers.id', ondelete='CASCADE'))
+   question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
    user = relationship('User', backref='answers')  
-   answer = relationship('Answer', backref='answers') 
+   question = relationship('Question', backref='answers') 
 
 class Sale_plan(Base):
    __tablename__ = 'tbl_sale_plan'

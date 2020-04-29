@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from functools import wraps
-from Back.models import session, User
+from Back.models import session, User, Course
 from datetime import datetime, timedelta
 import jwt, json
 
@@ -52,6 +52,7 @@ def token_required(f):
 def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
+    session.commit()
     if user == None:
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
         session.add(user)
@@ -87,12 +88,14 @@ def login():
         response = {'result': 'success', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
     else:
         status_code = 401
-        response = {'result':'nouser'}          
+        response = {'result':'nouser'} 
+    session.commit()     
+    session.close()             
     return jsonify(response), status_code
 
 @app.route('/api/get-user-information')
 @token_required
-def user_information(cuser):
+def user_information():
     user_id = int(request.args['id']) 
     user = session.query(User).filter(User.id == user_id).first()
     if user:
@@ -100,8 +103,21 @@ def user_information(cuser):
         status_code = 200
     else:
         status_code = 401
-        response = {'result':'nouser'}          
-    return jsonify(response), status_code     
+        response = {'result':'nouser'}
+    session.commit()      
+    session.close()             
+    return jsonify(response), status_code    
+
+@app.route('/api/courses')     
+@token_required
+def courses():
+    all_courses = []
+    courses = session.query(Course)
+    for course in courses:
+        all_courses.append({"id": course.id, "title":course.title})
+    session.commit()    
+    session.close() 
+    return jsonify(all_courses)
 
 if __name__ == '__main__':
     app.run(debug=True)
