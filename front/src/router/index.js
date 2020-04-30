@@ -51,7 +51,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/ExamType/:id',
+    path: '/ExamType/:lessonId',
     name: 'ExamType',
     component: () => import('../views/ExamType.vue'),
     beforeEnter (to, from, next) {

@@ -67,7 +67,6 @@ export default {
                 })
                 .then((res) => {
                     this.lessons = res.data;
-                    console.table(res.data)
                 })
                 .catch((error) => {
                     console.error(error);
