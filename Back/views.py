@@ -161,7 +161,7 @@ def all_questions(cuser):
     index = int(request.args['lesson_id'])
     next_voice = session.query(Voice).order_by(Voice.title.asc()).filter(Voice.title > f'{index}', Voice.lesson_id == lesson_id).first()
     next_question = session.query(Question).filter(Question.voice_id == next_voice.id).first()
-    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_voice.title}
+    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_voice.title, "question_id": next_question.id}
     return jsonify(result)    
 
 @app.route('/api/get-previous-questions')     
@@ -173,7 +173,7 @@ def previous_questions(cuser):
     previous_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}').first()
     next_previous_question = session.query(Question).filter(Question.id == previous_answer.question_id).first()
     next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
-    result = {"question":next_previous_question.text, "voice": next_previous_voice, "next_index": previous_answer.question_id }
+    result = {"question":next_previous_question.text, "voice": next_previous_voice, "next_index": previous_answer.question_id , "question_id": next_previous_question.id}
     return jsonify(result)
 
 @app.route('/api/get-wrong-questions')     
@@ -183,9 +183,9 @@ def wronge_questions(cuser):
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['lesson_id'])
     wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1')
-    wrong_previous_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
-    wrong_previous_voice = session.query(Voice).filter(Voice.id == wrong_previous_question.voice_id).first()
-    result = {"question":wrong_previous_question.text, "voice": wrong_previous_voice, "next_index": wrong_answer.question_id }
+    wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
+    wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
+    result = {"question":wrong_question.text, "voice": wrong_voice, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
     return jsonify(result)
 
 
@@ -209,6 +209,8 @@ def user_answer(cuser):
     session.commit()
     session.close()
     return  jsonify('True')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True) 
