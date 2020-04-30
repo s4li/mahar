@@ -1,18 +1,16 @@
 <template>
-<div class="position-relative">
-    <transition name="slideout" type="animation" appear>
-        <div class="back first" v-if="show">
+<div class="hereparent">
+    <transition name="slideInUp" appear mode="out-in">
+        <div class="back" v-if="show" key="first">
             <h3>الغیم</h3>
             <button class="btn play" @click.prevent="playSound('https://s3-us-west-2.amazonaws.com/s.cdpn.io/28963/rain.mp3')"><i class="fas fa-volume"></i></button>
             <button class="btn btn-warning" @click.prevent="show=false">معنیش چیه؟</button>
         </div>
-    </transition>
-    <transition name="slidein" type="animation">
-        <div class="back seconde" v-if="!show">
+        <div class="back" v-if="!show" key="seconde">
             <h3>ابر</h3>
             <div>
-                <button class="btn true"><i class="far fa-check"></i>درسته</button>
-                <button class="btn false"><i class="far fa-times"></i>غلطه</button>
+                <button @click.prevent="show=true" class="btn true"><i class="far fa-check"></i>درسته</button>
+                <button @click.prevent="show=true" class="btn false"><i class="far fa-times"></i>غلطه</button>
             </div>
         </div>
     </transition>
@@ -53,12 +51,21 @@ export default {
 </script>
 
 <style lang="css">
+.hereparent {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .back {
     padding: 15px;
-    margin-top: 30%;
     background-color: #f8f9facc;
     border-radius: 4px;
     text-align: center;
+    width: 70%;
 }
 
 .play {
@@ -95,57 +102,38 @@ export default {
     color: #ffffff;
 }
 
-.slidein-enter {
-    opacity: 0;
+.slideInUp-enter-active {
+    -webkit-animation-name: slideInUp;
+    animation-name: slideInUp;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
 }
 
-.slidein-enter-active {
-    animation: slide-in 1s ease-in forwards;
-    transition: opacity 1s;
-}
-
-.slidein-leave {}
-
-.slidein-leave-active {
-    animation: slide-out 1s ease-in forwards;
-    transition: opacity 1s;
-
-}
-
-.slideout-enter {
-    opacity: 0;
-}
-
-.slideout-enter-active {
-    animation: slide-in 1.5s ease-in forwards;
-    transition: opacity 1.5s;
-}
-
-.slideout-leave {}
-
-.slideout-leave-active {
-    animation: slide-out 1.5s ease-in forwards;
-    transition: opacity 1s;
-
-}
-
-@keyframes slide-in {
+@-webkit-keyframes slideInUp {
     from {
-        transform: translateY(100px);
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
+        visibility: visible;
     }
 
     to {
-        transform: translateY(0);
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
-@keyframes slide-out {
+@keyframes slideInUp {
     from {
-        transform: translateY(0);
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
+        visibility: visible;
     }
 
     to {
-        transform: translateY(-100px);
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
     }
 }
 </style>

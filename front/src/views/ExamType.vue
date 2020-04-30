@@ -1,11 +1,13 @@
 <template>
 <div>
     <Header title="نوع آزمون خود را انتخاب کنید"></Header>
-    <div class="btn-box">
-        <router-link class="btn" :class="{disabled:!Status.check_new_question}" to="/Courses/check_new_question">پرسش جدید</router-link>
-        <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" to="/Courses/review_previous_questions">ادامه پرسش قبلی</router-link>
-        <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" to="/Courses/check_wrong_questions">مرور غلط های این بخش</router-link>
-    </div>
+    <transition name="fadeIn" appear>
+        <div class="btn-box">
+            <router-link class="btn" :class="{disabled:!Status.check_new_question}" to="/Courses/check_new_question">پرسش جدید</router-link>
+            <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" to="/Courses/review_previous_questions">ادامه پرسش قبلی</router-link>
+            <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" to="/Courses/check_wrong_questions">مرور غلط های این بخش</router-link>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -68,7 +70,9 @@ export default {
     text-align: center;
     border-radius: 4px;
 }
-a.btn.disabled, fieldset:disabled a.btn {
+
+a.btn.disabled,
+fieldset:disabled a.btn {
     pointer-events: none;
 }
 </style>

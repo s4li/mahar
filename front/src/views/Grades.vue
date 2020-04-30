@@ -1,14 +1,17 @@
 <template>
 <div>
     <Header title="پایه مورد نظر خود را انتخاب کنید"></Header>
-    <b-alert class="shakeError text-center mt-2" variant="success" :show="5">خوش آمدید</b-alert>
-    <div class="btn-box">
-        <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
-            <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
-            پایه {{grad.title}}
-        </router-link>
-        <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-5 d-block w-25 btn-sm">خروج</button>
-    </div>
+    <transition name="fadeIn" appear>
+        <div class="parent">
+            <div class="btn-box" v-if="show">
+                <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
+                    <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
+                    پایه {{grad.title}}
+                </router-link>
+                <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-5 d-block w-25 btn-sm">خروج</button>
+            </div>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -22,6 +25,7 @@ export default {
     data() {
         return {
             grads: [],
+            show: true
         }
     },
     computed: {},
@@ -54,7 +58,6 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     padding: 15px;
-    margin-top: 30%;
     background-color: #f8f9fa99;
     border-radius: 4px;
 }
