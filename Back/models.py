@@ -62,7 +62,7 @@ class Answer(Base):
    
 
 class User_answer(Base):
-   __tablename__ = 'tbl_users_answers'
+   __tablename__ = 'tbl_user_answers'
    id = Column(Integer, primary_key=True)  
    ans_no = Column(String)
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))

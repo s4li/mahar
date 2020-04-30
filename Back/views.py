@@ -135,7 +135,7 @@ def lessons(cuser):
     user_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == user_id).first()
     purchased_lessons = user_purchased_lessons[0].split(',')
     for lesson in lessons:
-        show_lesson = True if '{}'.format(lesson.id) in purchased_lessons else False
+        show_lesson = True if f'{lesson.id}' in purchased_lessons else False
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson})   
     session.close() 
     return jsonify(all_lessons)    
@@ -154,16 +154,14 @@ def status_question(cuser):
     result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
     return jsonify(result)
 
-@app.route('/api/all-questions')     
+@app.route('/api/new-questions')     
 @token_required
 def all_questions(cuser): 
     lesson_id = int(request.args['lesson_id'])
-    questions = session.query(Question).filter(Question.lesson_id ==lesson_id)
-    voices = session.query(Voice).filter(Voice.lesson_id ==lesson_id)
-    max_question_id = session.query(func.max(Question.id)).scalar()
-    min_question_id = session.query(func.min(Question.id)).scalar()
-    answers = session.query(Answer).filter(Answer.question_id ==lesson_id)
-    result = {"question":questions, "voices":voices}
+    index = int(request.args['lesson_id'])
+    next_voice = session.query(Voice).order_by(Voice.title.asc()).filter(Voice.title > f'{index}', Voice.lesson_id == lesson_id).first()
+    next_question = session.query(Question).filter(Question.voice_id == next_voice.id).first()
+    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_voice.title}
     return jsonify(result)    
 
 @app.route('/api/get-previous-questions')     
@@ -171,9 +169,11 @@ def all_questions(cuser):
 def previous_questions(cuser): 
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    max_previous_question_id = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).scalar()
-    questions = session.query(Question).filter(Question.lesson_id ==lesson_id).limit(max_previous_question_id).all()
-    result = {"question":questions}
+    index = int(request.args['lesson_id'])
+    previous_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}').first()
+    next_previous_question = session.query(Question).filter(Question.id == previous_answer.question_id).first()
+    next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
+    result = {"question":next_previous_question.text, "voice": next_previous_voice, "next_index": previous_answer.question_id }
     return jsonify(result)
 
 @app.route('/api/get-wrong-questions')     
@@ -181,11 +181,34 @@ def previous_questions(cuser):
 def wronge_questions(cuser): 
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    wrong_question_id = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id)
-    questions = session.query(Question).filter(Question.lesson_id ==lesson_id, Question.id.in_(wrong_question_id)).all()
-    result = {"question":questions}
+    index = int(request.args['lesson_id'])
+    wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1')
+    wrong_previous_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
+    wrong_previous_voice = session.query(Voice).filter(Voice.id == wrong_previous_question.voice_id).first()
+    result = {"question":wrong_previous_question.text, "voice": wrong_previous_voice, "next_index": wrong_answer.question_id }
     return jsonify(result)
 
+
+@app.route('/api/get-answer')     
+@token_required
+def answer(cuser): 
+    question_id = int(request.args['question_id'])
+    answer = session.query(Answer).filter(Answer.question_id == question_id).first()
+    result = {"answer": answer}
+    return  jsonify(result)
+
+@app.route('/api/set-user-answer', methods=('POST',))    
+@token_required
+def user_answer(cuser): 
+    question_id = int(request.args['question_id'])
+    user_id = int(request.args['user_id'])
+    lesson_id = int(request.args['lesson_id'])
+    data = request.get_json()
+    user_answer = User_answer(ans_no=data.ans_no, user_id=user_id, question_id=question_id, lesson_id=lesson_id)
+    session.add(user_answer)
+    session.commit()
+    session.close()
+    return  jsonify('True')
 
 if __name__ == '__main__':
     app.run(debug=True) 
