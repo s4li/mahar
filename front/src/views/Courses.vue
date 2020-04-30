@@ -1,30 +1,34 @@
 <template>
 <div class="position-relative">
-    <div class="back first show-box">
-        <h3>الغیم</h3>
-        <button class="btn play" @click.prevent="playSound('http://soundbible.com/mp3/Elevator Ding-SoundBible.com-685385892.mp3')"><i class="fas fa-volume"></i></button>
-        <button class="btn btn-warning">معنیش چیه؟</button>
-    </div>
-    <div class="back seconde ">
-        <h3>ابر</h3>
-        <div>
-            <button class="btn true"><i class="far fa-check"></i>درسته</button>
-            <button class="btn false"><i class="far fa-times"></i>غلطه</button>
+    <transition name="slideout" type="animation" appear>
+        <div class="back first" v-if="show">
+            <h3>الغیم</h3>
+            <button class="btn play" @click.prevent="playSound('https://s3-us-west-2.amazonaws.com/s.cdpn.io/28963/rain.mp3')"><i class="fas fa-volume"></i></button>
+            <button class="btn btn-warning" @click.prevent="show=false">معنیش چیه؟</button>
         </div>
-    </div>
+    </transition>
+    <transition name="slidein" type="animation">
+        <div class="back seconde" v-if="!show">
+            <h3>ابر</h3>
+            <div>
+                <button class="btn true"><i class="far fa-check"></i>درسته</button>
+                <button class="btn false"><i class="far fa-times"></i>غلطه</button>
+            </div>
+        </div>
+    </transition>
 </div>
 </template>
 
 <script>
 //import axios from 'axios'
 export default {
-    //data() {
-    //    return {
-    //        Courses: [],
-    //        CoursesType: this.$route.params.Type,
-    //
-    //    }
-    //},
+    data() {
+        return {
+            Courses: [],
+            CoursesType: this.$route.params.Type,
+            show: true
+        }
+    },
     methods: {
         //    getCourses() {
         //        axios.get('/courses')
@@ -62,17 +66,13 @@ export default {
     margin: 15px auto;
     padding: 8px 12px;
     border: 1px solid #909090;
-    background: #fff;
+    background: #f8f9fa;
 }
 
 .play i {
     vertical-align: middle;
     font-size: 18px;
 }
-
-.first {}
-
-.seconde {}
 
 .true {
     padding: 5px 15px;
@@ -95,11 +95,57 @@ export default {
     color: #ffffff;
 }
 
-.show-box {
-    display: block;
+.slidein-enter {
+    opacity: 0;
 }
 
-.hidden-box {
-    display: none;
+.slidein-enter-active {
+    animation: slide-in 1s ease-in forwards;
+    transition: opacity 1s;
+}
+
+.slidein-leave {}
+
+.slidein-leave-active {
+    animation: slide-out 1s ease-in forwards;
+    transition: opacity 1s;
+
+}
+
+.slideout-enter {
+    opacity: 0;
+}
+
+.slideout-enter-active {
+    animation: slide-in 1.5s ease-in forwards;
+    transition: opacity 1.5s;
+}
+
+.slideout-leave {}
+
+.slideout-leave-active {
+    animation: slide-out 1.5s ease-in forwards;
+    transition: opacity 1s;
+
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(100px);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-100px);
+    }
 }
 </style>
