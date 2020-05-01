@@ -30,6 +30,7 @@ export default {
             gradId: this.$route.params.gradId,
             answer: '',
             questionId: '',
+            userid: this.$store.state.userId,
         }
     },
     methods: {
@@ -50,7 +51,11 @@ export default {
                 });
         },
         getanswerdata() {
-            axios.get('/get-answer', {params: {question_id: this.questionId}})
+            axios.get('/get-answer', {
+                    params: {
+                        question_id: this.questionId
+                    }
+                })
                 .then((res) => {
                     this.show = false
                     this.answer = res.data
@@ -60,10 +65,15 @@ export default {
                 });
         },
         SendAnswer(num) {
-            console.log(num)
-            axios.get('/set-user-answer/', {params: {answer: num}})
-                .then((res) => {
-                    console.log(res)
+            axios.post('/set-user-answer', {
+                    params: {
+                        user_id: this.userid,
+                        question_id: this.questionId,
+                        lesson_id: this.lessonId,
+                        ans_no: num,
+                    }
+                })
+                .then(() => {
                     this.initForm();
                     this.getCourses()
                     this.show = true
