@@ -66,14 +66,13 @@ export default {
         },
         SendAnswer(num) {
             axios.post('/set-user-answer', {
-                    params: {
-                        user_id: this.userid,
-                        question_id: this.questionId,
-                        lesson_id: this.lessonId,
-                        ans_no: num,
-                    }
+                    user_id: this.userid,
+                    question_id: this.questionId,
+                    lesson_id: this.lessonId,
+                    ans_no: num,
                 })
-                .then(() => {
+                .then(res => {
+                    console.log(res)
                     this.initForm();
                     this.getCourses()
                     this.show = true
