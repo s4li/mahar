@@ -7,7 +7,7 @@
             <form @submit="onSubmit">
                 <CInput lable="شماره موبایل" @inputdata="LoginForm.Mobile=$event" type="number"></CInput>
                 <CInput lable="کلمه عبور" type="password" @inputdata="LoginForm.Password=$event"></CInput>
-                <div class="btn-box">
+                <div class="btn-boxl">
                     <router-link to="/Singup" id="singupbtn" class="btn">ثبت نام</router-link>
                     <button class="btn" id="loginbtn" type="submit">ورود</button>
                     <router-link to="/Guids" id="infobtn" class="btn">راهنمای استفاده</router-link>
@@ -81,7 +81,7 @@ export default {
     margin-top: 30%;
 }
 
-.btn-box {
+.btn-boxl {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -89,8 +89,8 @@ export default {
     padding: 15px;
 }
 
-.btn-box button,
-.btn-box a {
+.btn-boxl button,
+.btn-boxl a {
     background-color: #fbb901;
     min-width: 120px;
     margin-bottom: 15px;

@@ -51,7 +51,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/ExamType/:lessonId',
+    path: '/ExamType/:lessonId/:gradId',
     name: 'ExamType',
     component: () => import('../views/ExamType.vue'),
     beforeEnter (to, from, next) {
@@ -63,7 +63,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/Courses/:type',
+    path: '/Courses/:type/:lessonId/:gradId',
     name: 'Courses',
     component: () => import('../views/Courses.vue'),
     beforeEnter (to, from, next) {

@@ -2,10 +2,12 @@
 <div>
     <Header title="نوع آزمون خود را انتخاب کنید"></Header>
     <transition name="fadeIn" appear>
-        <div class="btn-box">
-            <router-link class="btn" :class="{disabled:!Status.check_new_question}" to="/Courses/check_new_question">پرسش جدید</router-link>
-            <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" to="/Courses/review_previous_questions">ادامه پرسش قبلی</router-link>
-            <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" to="/Courses/check_wrong_questions">مرور غلط های این بخش</router-link>
+        <div class="parent">
+            <div class="btn-box">
+                <router-link class="btn" :class="{disabled:!Status.check_new_question}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
+                <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
+                <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
+            </div>
         </div>
     </transition>
 </div>
@@ -22,6 +24,7 @@ export default {
         return {
             Status: [],
             lessonId: this.$route.params.lessonId,
+            gradId: this.$route.params.gradId,
             userid: this.$store.state.userId,
         }
     },
@@ -35,7 +38,6 @@ export default {
                 })
                 .then((res) => {
                     this.Status = res.data;
-                    console.table(res.data)
                 })
                 .catch((error) => {
                     console.error(error);
@@ -54,7 +56,6 @@ export default {
     justify-content: center;
     align-items: center;
     padding: 15px;
-    margin-top: 30%;
     background-color: #f8f9fa99;
     border-radius: 4px;
 }

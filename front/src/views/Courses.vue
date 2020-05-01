@@ -2,15 +2,15 @@
 <div class="hereparent">
     <transition name="slideInUp" appear mode="out-in">
         <div class="back" v-if="show" key="first">
-            <h3>الغیم</h3>
-            <button class="btn play" @click.prevent="playSound('https://s3-us-west-2.amazonaws.com/s.cdpn.io/28963/rain.mp3')"><i class="fas fa-volume"></i></button>
-            <button class="btn btn-warning" @click.prevent="show=false">معنیش چیه؟</button>
+            <h3>{{Courses.question}}</h3>
+            <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
+            <button class="btn btn-warning" @click.prevent="getanswerdata()">معنیش چیه؟</button>
         </div>
         <div class="back" v-if="!show" key="seconde">
-            <h3>ابر</h3>
+            <h3>{{answer}}</h3>
             <div>
-                <button @click.prevent="show=true" class="btn true"><i class="far fa-check"></i>درسته</button>
-                <button @click.prevent="show=true" class="btn false"><i class="far fa-times"></i>غلطه</button>
+                <button @click.prevent="SendAnswer(1)" class="btn true"><i class="far fa-check"></i>درسته</button>
+                <button @click.prevent="SendAnswer(0)" class="btn false"><i class="far fa-times"></i>غلطه</button>
             </div>
         </div>
     </transition>
@@ -18,35 +18,73 @@
 </template>
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 export default {
     data() {
         return {
+            show: true,
+            index: -1,
             Courses: [],
             CoursesType: this.$route.params.Type,
-            show: true
+            lessonId: this.$route.params.lessonId,
+            gradId: this.$route.params.gradId,
+            answer: [],
+            questionId: '',
         }
     },
     methods: {
-        //    getCourses() {
-        //        axios.get('/courses')
-        //            .then((res) => {
-        //                this.Courses = res.data;
-        //            })
-        //            .catch((error) => {
-        //                console.error(error);
-        //            });
-        //    },
-        playSound(sound) {
-            if (sound) {
-                var audio = new Audio(sound);
-                audio.play();
-            }
-        }
+        getCourses() {
+            axios.get('/new-questions', {
+                    params: {
+                        index: this.index,
+                        lesson_id: this.lessonId
+                    }
+                })
+                .then((res) => {
+                    this.Courses = res.data;
+                    this.index = res.data.next_index
+                    this.questionId = res.data.question_id
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        getanswerdata() {
+            axios.get('/get-answer/')
+                .then((res) => {
+                    this.show = false
+                    this.answer = res.data
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        SendAnswer(num) {
+            console.log(num)
+            axios.get('/set-user-answer/', {params: {answer: num}})
+                .then((res) => {
+                    console.log(res)
+                    this.initForm();
+                    this.getCourses()
+                    this.show = true
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        playSound() {
+            var audio = new Audio(require(`../assets/${this.Courses.voice}`));
+            audio.play();
+        },
+        initForm() {
+            this.Courses = [];
+            this.answer = [];
+            this.questionId = '';
+        },
     },
-    //created() {
-    //    this.getCourses();
-    //},
+    created() {
+        this.getCourses();
+    },
 }
 </script>
 

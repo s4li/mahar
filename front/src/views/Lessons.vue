@@ -2,9 +2,11 @@
 <div>
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
     <transition name="fadeIn" appear>
-        <div class="btn-box">
-            <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
-                <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
+        <div class="parent">
+            <div class="btn-box">
+                <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
+                    <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
+            </div>
         </div>
     </transition>
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
@@ -53,7 +55,7 @@ export default {
                 }
             }
             if (this.lessonsData.show_lesson) {
-                this.$router.push('/ExamType/' + checkid);
+                this.$router.push('/ExamType/' + checkid +'/'+ this.gardnum);
             } else {
                 this.show = true
             }
@@ -88,7 +90,6 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     padding: 15px;
-    margin-top: 30%;
     background-color: #f8f9fa99;
     border-radius: 4px;
 }

@@ -78,6 +78,5 @@
     padding: 8px;
     border-radius: 4px;
     max-width: 230px;
-    box-shadow: 0 0px 10px #d3a92e;
 }
 </style>
