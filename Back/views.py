@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from functools import wraps
-from .models import session, User, Course, Lesson, Answer, Question, User_answer, Voice
+from suds.client import Client
+from .models import session, User, Course, Lesson, Answer, Question, User_answer, Voice, Sale_plan, Invoice
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 import jwt, json
@@ -12,6 +13,7 @@ app.secret_key = 'mahar'
 # enable CORS
 CORS(app)
 
+root_url = 'http://localhost:8080'
 
 def token_required(f):
     @wraps(f)
@@ -152,6 +154,8 @@ def status_question(cuser):
     wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
     check_wrong_questions = True if wrong_questions else False
     result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
+    session.commit()
+    session.close()
     return jsonify(result)
 
 @app.route('/api/new-questions')     
@@ -159,9 +163,11 @@ def status_question(cuser):
 def all_questions(cuser): 
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['lesson_id'])
-    next_voice = session.query(Voice).order_by(Voice.title.asc()).filter(Voice.title > f'{index}', Voice.lesson_id == lesson_id).first()
-    next_question = session.query(Question).filter(Question.voice_id == next_voice.id).first()
-    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_voice.title, "question_id": next_question.id}
+    next_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
+    next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
+    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id}
+    session.commit()
+    session.close()
     return jsonify(result)    
 
 @app.route('/api/get-previous-questions')     
@@ -174,6 +180,8 @@ def previous_questions(cuser):
     next_previous_question = session.query(Question).filter(Question.id == previous_answer.question_id).first()
     next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
     result = {"question":next_previous_question.text, "voice": next_previous_voice, "next_index": previous_answer.question_id , "question_id": next_previous_question.id}
+    session.commit()
+    session.close()
     return jsonify(result)
 
 @app.route('/api/get-wrong-questions')     
@@ -186,6 +194,8 @@ def wronge_questions(cuser):
     wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
     wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
     result = {"question":wrong_question.text, "voice": wrong_voice, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
+    session.commit()
+    session.close()
     return jsonify(result)
 
 
@@ -194,7 +204,9 @@ def wronge_questions(cuser):
 def answer(cuser): 
     question_id = int(request.args['question_id'])
     answer = session.query(Answer).filter(Answer.question_id == question_id).first()
-    result = {"answer": answer}
+    result = {"answer": answer.ans_text}
+    session.commit()
+    session.close()
     return  jsonify(result)
 
 @app.route('/api/set-user-answer', methods=('POST',))    
@@ -210,6 +222,74 @@ def user_answer(cuser):
     session.close()
     return  jsonify('True')
 
+@app.route('/api/zarinpall')    
+@token_required
+def zarinpal(cuser): 
+    user_id = int(request.args['user_id'])
+    sale_plan_id = int(request.args['sale_plane_id'])
+    sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
+    user = session.query(User).filter(User.id == user_id).first()
+    if not (sale_plan or user):
+        result = {"result":"user or sale plane id not found"}
+        status_code = 401
+    else:
+        ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
+        MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
+        callback_url = f'{root_url}/api/zarinpal-callback' 
+        invoice_date= datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+        client = Client(ZARINPAL_WEBSERVICE)
+        result = client.service.PaymentRequest(MMERCHANT_ID,
+                                           sale_plan.price,
+                                           sale_plan.title,
+                                           user.mobile,
+                                           'parastoo.rambarzini@gmail.com',
+                                           callback_url)
+        if result.Status == 100:
+            invoice = Invoice( invoice_no = result.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id)
+            session.add(invoice)
+            session.commit()
+            session.close()
+            zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result.Authority}'
+            return redirect(zarinpal_url)
+        else:
+            result = {"result":"faild"}
+            status_code = 401
+    return jsonify(result)        
+
+@app.route('/api/zarinpal-callback')    
+@token_required
+def zarinpal_callback(cuser):
+    ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
+    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
+    client = Client(ZARINPAL_WEBSERVICE)
+    Status = request.query.get('Status', None) 
+    Authority = request.query.get('Authority', None) 
+    invoice_date= datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+    if Status == 'OK':
+        check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
+        if check_invoice:
+            result = client.service.PaymentVerification(MMERCHANT_ID,
+                                                        Authority,
+                                                        check_invoice.price)                                                                                                                                   
+            if result.Status == 100:  
+                result = {'result': 'success'} 
+                status_code = 200 
+                #return 'Transaction success. RefID: ' + str(result.RefID)   
+            elif result.Status == 101:
+                result = {'result': 'success'} 
+                status_code = 200 
+                #return 'Transaction submitted : ' + str(result.Status)
+            else:
+                result = {'result': 'feild'} 
+                status_code = 401 
+                #return 'Transaction failed. Status: ' + str(result.Status)
+            invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : result.Status, Invoice.transaction_reference_id: result.RefID})       
+    else:
+        invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status, Invoice.transaction_reference_id: result.RefID})   
+        result = {'result': 'feild'} 
+        status_code = 401 
+        #return 'Transaction failed or canceled by user' 
+    return jsonify(result), status_code    
 
 
 if __name__ == '__main__':
