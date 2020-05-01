@@ -7,7 +7,7 @@
             <button class="btn btn-warning" @click.prevent="getanswerdata()">معنیش چیه؟</button>
         </div>
         <div class="back" v-if="!show" key="seconde">
-            <h3>{{answer}}</h3>
+            <h3>{{answer.answer}}</h3>
             <div>
                 <button @click.prevent="SendAnswer(1)" class="btn true"><i class="far fa-check"></i>درسته</button>
                 <button @click.prevent="SendAnswer(0)" class="btn false"><i class="far fa-times"></i>غلطه</button>
@@ -28,7 +28,7 @@ export default {
             CoursesType: this.$route.params.Type,
             lessonId: this.$route.params.lessonId,
             gradId: this.$route.params.gradId,
-            answer: [],
+            answer: '',
             questionId: '',
         }
     },
@@ -50,7 +50,7 @@ export default {
                 });
         },
         getanswerdata() {
-            axios.get('/get-answer/')
+            axios.get('/get-answer', {params: {question_id: this.questionId}})
                 .then((res) => {
                     this.show = false
                     this.answer = res.data
@@ -78,7 +78,7 @@ export default {
         },
         initForm() {
             this.Courses = [];
-            this.answer = [];
+            this.answer = '';
             this.questionId = '';
         },
     },
