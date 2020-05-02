@@ -4,10 +4,11 @@
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="login100-form validate-form">
-                    <div class="wrap-input100 validate-input my-2" data-validate="این فیلد را پر کنید" :class="{'alert-validate':$v.data.$error}">
+                    <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.data.$error}">
                         <input :type="type" @blur="$v.data.$touch()" :class="{'has-val':checking}" class="input100" v-model="data" v-on:keyup="emitToParent">
                         <span class="focus-input100" :data-placeholder="lable"></span>
                     </div>
+                    <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
                 </div>
             </div>
         </div>
@@ -16,7 +17,10 @@
 </template>
 
 <script>
-import {required} from 'vuelidate/lib/validators'
+import {
+    required,
+    minLength
+} from 'vuelidate/lib/validators'
 export default {
     props: {
         lable: {
@@ -29,15 +33,15 @@ export default {
     data() {
         return {
             data: '',
-            checking:false
+            checking: false
         }
     },
     methods: {
         emitToParent() {
             this.$emit('inputdata', this.data);
-            if( this.data != '' ){
+            if (this.data != '') {
                 this.checking = true
-            }else{
+            } else {
                 this.checking = false
             }
         }
@@ -45,6 +49,7 @@ export default {
     validations: {
         data: {
             required,
+            minlin: minLength(5)
         }
     }
 }

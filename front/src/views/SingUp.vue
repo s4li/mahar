@@ -64,7 +64,7 @@ export default {
     margin-top: 20%;
 }
 
-.btn-box {
+.btn-box1 {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
