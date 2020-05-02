@@ -89,6 +89,8 @@ export default {
                 })
                 .then((res) => {
                     this.lessons = res.data;
+                    const URL = res.data.zarinpal_url
+                    window.location = URL
                 })
                 .catch((error) => {
                     console.error(error);
