@@ -75,6 +75,7 @@ class Sale_plan(Base):
    id = Column(Integer, primary_key=True)  
    title = Column(String)
    price = Column(String)
+   lessons = Column(String)
    invoice = relationship('Invoice') 
 
 class Invoice(Base):
@@ -85,8 +86,12 @@ class Invoice(Base):
    datetime = Column(String)
    transaction_reference_id = Column(String)
    status = Column(String)
+   lessons = Column(String)
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    sale_plan_id = Column(Integer,ForeignKey('tbl_sale_plan.id', ondelete='CASCADE'))
+
+
+
      
 
 
