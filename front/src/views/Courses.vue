@@ -25,7 +25,7 @@ export default {
             show: true,
             index: -1,
             Courses: [],
-            CoursesType: this.$route.params.Type,
+            CoursesType: this.$route.params.type,
             lessonId: this.$route.params.lessonId,
             gradId: this.$route.params.gradId,
             answer: '',
@@ -34,9 +34,10 @@ export default {
         }
     },
     methods: {
-        getCourses() {
-            axios.get('/new-questions', {
+        getCourses(URL) {
+            axios.get(URL, {
                     params: {
+                        user_id : this.userid,
                         index: this.index,
                         lesson_id: this.lessonId
                     }
@@ -92,7 +93,16 @@ export default {
         },
     },
     created() {
-        this.getCourses();
+        if (this.CoursesType == 'check_new_question') {
+            this.getCourses('/new-questions');
+            console.log('new-questions')
+        } else if (this.CoursesType == 'review_previous_questions') {
+            this.getCourses('/get-previous-questions');
+            console.log('previous')
+        } else {
+            this.getCourses('/get-wrong-questions');
+            console.log('wrong')
+        }
     },
 }
 </script>
