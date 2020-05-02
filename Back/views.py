@@ -163,6 +163,7 @@ def status_question(cuser):
 def all_questions(cuser): 
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['lesson_id'])
+    user_id = int(request.args['user_id'])
     next_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
     next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
     result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id}
@@ -212,11 +213,8 @@ def answer(cuser):
 @app.route('/api/set-user-answer', methods=('POST',))    
 @token_required
 def user_answer(cuser): 
-    question_id = int(request.args['question_id'])
-    user_id = int(request.args['user_id'])
-    lesson_id = int(request.args['lesson_id'])
     data = request.get_json()
-    user_answer = User_answer(ans_no=data.ans_no, user_id=user_id, question_id=question_id, lesson_id=lesson_id)
+    user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
     session.add(user_answer)
     session.commit()
     session.close()
