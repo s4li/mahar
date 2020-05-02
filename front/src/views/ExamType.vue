@@ -38,7 +38,6 @@ export default {
                 })
                 .then((res) => {
                     this.Status = res.data;
-                    console.log(this.Status)
                 })
                 .catch((error) => {
                     console.error(error);
