@@ -19,11 +19,11 @@
         <div class="buy-box">
             <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
                 <h5>فعالسازی این پایه</h5>
-                <button class="btn btn-primary">۲۰۰۰ تومان</button>
+                <button class="btn btn-primary" @click.prevent="buyPlan(gardnum,2)" >۲۰۰۰ تومان</button>
             </div>
             <div class="buy-box-child">
                 <h5>فعالسازی کل برنامه</h5>
-                <button class="btn btn-success">۵۰۰۰ تومان</button>
+                <button class="btn btn-success" @click.prevent="buyPlan(0,1)" >۵۰۰۰ تومان</button>
             </div>
         </div>
     </b-modal>
@@ -43,11 +43,13 @@ export default {
             userid: this.$store.state.userId,
             show: false,
             lessonsData: [],
-            lessons: []
+            lessons: [],
+            courseId: 0, 
         }
     },
     methods: {
         unlockCheck(checkid) {
+            this.courseId = checkid
             const grads = this.lessons
             for (let key in grads) {
                 const grad = grads[key]
@@ -68,6 +70,22 @@ export default {
                     params: {
                         user_id: this.userid,
                         course_id: this.gardnum
+                    }
+                })
+                .then((res) => {
+                    this.lessons = res.data;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        buyPlan(grad,plan){
+            console.log(grad,plan)
+            axios.get('/zarinpall ', {
+                    params: {
+                        user_id: this.userid,
+                        course_id: grad,
+                        sale_plan_id : plan,
                     }
                 })
                 .then((res) => {
