@@ -37,6 +37,7 @@ export default {
             userid: this.$store.state.userId,
             path: '',
             ModalShow: false,
+            questionType:0
         }
     },
     methods: {
@@ -78,8 +79,10 @@ export default {
                     question_id: this.questionId,
                     lesson_id: this.lessonId,
                     ans_no: num,
+                    question_type:this.questionType
                 })
                 .then((res) => {
+                    console.log(res)
                     if (res.data.has_next_question) {
                         this.initForm();
                         this.getCourses(this.path)
@@ -109,14 +112,14 @@ export default {
     },
     created() {
         if (this.CoursesType == 'check_new_question') {
+            this.questionType = 1
             this.getCourses('/new-questions');
-            console.log('new-questions')
         } else if (this.CoursesType == 'review_previous_questions') {
+            this.questionType = 2
             this.getCourses('/get-previous-questions');
-            console.log('previous')
         } else {
+            this.questionType = 3
             this.getCourses('/get-wrong-questions');
-            console.log('wrong')
         }
     },
 }
