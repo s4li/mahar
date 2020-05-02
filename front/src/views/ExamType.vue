@@ -5,8 +5,8 @@
         <div class="parent">
             <div class="btn-box">
                 <router-link class="btn" :class="{disabled:!Status.check_new_question}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
-                <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
-                <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
+                <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
+                <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
             </div>
         </div>
     </transition>
@@ -38,6 +38,7 @@ export default {
                 })
                 .then((res) => {
                     this.Status = res.data;
+                    console.log(this.Status)
                 })
                 .catch((error) => {
                     console.error(error);
