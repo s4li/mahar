@@ -13,7 +13,7 @@ app.secret_key = 'mahar'
 # enable CORS
 CORS(app)
 
-root_url = 'http://localhost:8080'
+root_url = 'http://localhost:5555'
 
 def token_required(f):
     @wraps(f)
@@ -251,7 +251,7 @@ def zarinpal(cuser):
     else:
         ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
         MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
-        callback_url = f'{root_url}/zarinpal-callback' 
+        callback_url = f'{root_url}/api/zarinpal-callback' 
         invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         client = Client(ZARINPAL_WEBSERVICE)
         result = client.service.PaymentRequest(MMERCHANT_ID,
@@ -265,7 +265,8 @@ def zarinpal(cuser):
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
                 str_lesson = ''
                 for lesson_id in lesson_ids:
-                    str_lesson = str_lesson + str(lesson_id[0])
+                    if str(lesson_id[0]) not in ['1','9','16']:
+                        str_lesson = str_lesson +str(lesson_id[0]) + ","
                 lesson_ids = str_lesson
             else:
                 lesson_ids = sale_plan.lessons        
@@ -282,29 +283,31 @@ def zarinpal(cuser):
     return jsonify(result), status_code   
 
 @app.route('/api/zarinpal-callback')    
-@token_required
-def zarinpal_callback(cuser):
+def zarinpal_callback():
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
     MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.args['Status'] 
     Authority = request.args['Authority']
-    invoice_date= datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+    invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     if Status == 'OK':
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
         if check_invoice:
+            sale_plan = session.query(Sale_plan.price).filter(check_invoice.sale_plan_id == Sale_plan.id).first()
             result = client.service.PaymentVerification(MMERCHANT_ID,
                                                         Authority,
-                                                        check_invoice.price)                                                                                                                                   
-            if result.Status == 100:  
+                                                        sale_plan[0])                                                                                                                                   
+            if result.Status:  
                 result = {'result': 'success'} 
                 status_code = 200 
-                if check_invoice.sale_plan_id == 2:
+                if check_invoice.sale_plan_id == 1:
                     purchased_lessons = check_invoice.lessons
                 else : 
                     purchased_lessons_user = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
-                    purchased_lessons = purchased_lessons_user[0] + check_invoice.lessons
+                    purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
                 update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
+                session.commit()
+                session.close()
                 #return 'Transaction success. RefID: ' + str(result.RefID)   
             elif result.Status == 101:
                 result = {'result': 'success'} 
@@ -316,7 +319,9 @@ def zarinpal_callback(cuser):
                 #return 'Transaction failed. Status: ' + str(result.Status)
             invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : result.Status, Invoice.transaction_reference_id: result.RefID})       
     else:
-        invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status, Invoice.transaction_reference_id: result.RefID})   
+        invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status})   
+        session.commit()
+        session.close()
         result = {'result': 'feild'} 
         status_code = 401 
         #return 'Transaction failed or canceled by user' 
