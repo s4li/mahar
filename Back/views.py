@@ -176,11 +176,11 @@ def all_questions(cuser):
 def previous_questions(cuser): 
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    index = int(request.args['lesson_id'])
+    index = int(request.args['index'])
     previous_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}').first()
     next_previous_question = session.query(Question).filter(Question.id == previous_answer.question_id).first()
     next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
-    result = {"question":next_previous_question.text, "voice": next_previous_voice, "next_index": previous_answer.question_id , "question_id": next_previous_question.id}
+    result = {"question":next_previous_question.text, "voice": next_previous_voice.path, "next_index": previous_answer.question_id , "question_id": next_previous_question.id}
     session.commit()
     session.close()
     return jsonify(result)
@@ -190,11 +190,11 @@ def previous_questions(cuser):
 def wronge_questions(cuser): 
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    index = int(request.args['lesson_id'])
-    wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1')
+    index = int(request.args['index'])
+    wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1').first()
     wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
     wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
-    result = {"question":wrong_question.text, "voice": wrong_voice, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
+    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
     session.commit()
     session.close()
     return jsonify(result)
