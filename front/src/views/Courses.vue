@@ -31,15 +31,17 @@ export default {
             answer: '',
             questionId: '',
             userid: this.$store.state.userId,
+            path:'',
         }
     },
     methods: {
         getCourses(URL) {
+            this.path = URL
             axios.get(URL, {
                     params: {
                         user_id : this.userid,
+                        lesson_id: this.lessonId,
                         index: this.index,
-                        lesson_id: this.lessonId
                     }
                 })
                 .then((res) => {
@@ -72,10 +74,9 @@ export default {
                     lesson_id: this.lessonId,
                     ans_no: num,
                 })
-                .then(res => {
-                    console.log(res)
+                .then(() => {
                     this.initForm();
-                    this.getCourses()
+                    this.getCourses(this.path)
                     this.show = true
                 })
                 .catch((error) => {
