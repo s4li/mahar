@@ -287,8 +287,8 @@ def zarinpal_callback(cuser):
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
     MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     client = Client(ZARINPAL_WEBSERVICE)
-    Status = request.query.get('Status', None) 
-    Authority = request.query.get('Authority', None) 
+    Status = request.args['Status'] 
+    Authority = request.args['Authority']
     invoice_date= datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     if Status == 'OK':
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
