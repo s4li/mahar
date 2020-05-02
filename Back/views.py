@@ -149,8 +149,9 @@ def status_question(cuser):
     user_id = int(request.args['user_id'])
     new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
     check_new_question = True if new_question else False
-    user_answer = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
-    review_previous_questions = True if user_answer else False
+    max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
+    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
+    review_previous_questions = True if next_previous_question else False
     wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
     check_wrong_questions = True if wrong_questions else False
     result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
@@ -191,7 +192,7 @@ def wronge_questions(cuser):
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
-    wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1').first()
+    wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
     wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
     wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
     result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
@@ -214,21 +215,21 @@ def answer(cuser):
 @token_required
 def user_answer(cuser): 
     data = request.get_json()
-    if data['question_type'] == 1 or data['question_type'] == 2:
+    previous_user_answer = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
+    if not previous_user_answer :
         user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
         session.add(user_answer)
         session.commit()
     else:
-        previous_user_answer = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
         update_user_answer = session.query(User_answer).filter(User_answer.id == previous_user_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
         session.commit()
     if data['question_type'] == 1:
         next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
     elif data['question_type'] == 2:
         max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == data['user_id'], User_answer.lesson_id == data['lesson_id']).first()
-        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0] ).first()
+        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0] , Question.lesson_id == data['lesson_id']).first()
     else:
-        next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1').first()
+        next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
     if next_content:
         result = {"has_next_question":"True"}
     else:
@@ -240,8 +241,8 @@ def user_answer(cuser):
 @token_required
 def zarinpal(cuser): 
     user_id = int(request.args['user_id'])
-    sale_plan_id = int(request.args['sale_plane_id'])
     course_id = int(request.args['course_id'])
+    sale_plan_id = int(request.args['sale_plan_id'])
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
     user = session.query(User).filter(User.id == user_id).first()
     if not (sale_plan or user):
@@ -251,7 +252,7 @@ def zarinpal(cuser):
         ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
         MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
         callback_url = f'{root_url}/api/zarinpal-callback' 
-        invoice_date= datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+        invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         client = Client(ZARINPAL_WEBSERVICE)
         result = client.service.PaymentRequest(MMERCHANT_ID,
                                            sale_plan.price,
@@ -262,10 +263,10 @@ def zarinpal(cuser):
         if result.Status == 100:
             if sale_plan_id == 2 : 
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
-                result = ''
+                str_lesson = ''
                 for lesson_id in lesson_ids:
-                    result = result + lesson_id
-                lesson_ids = result
+                    str_lesson = str_lesson + str(lesson_id[0])
+                lesson_ids = str_lesson
             else:
                 lesson_ids = sale_plan.lessons        
             invoice = Invoice( invoice_no = result.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lesson_ids)
@@ -273,11 +274,12 @@ def zarinpal(cuser):
             session.commit()
             session.close()
             zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result.Authority}'
-            return redirect(zarinpal_url)
+            result = {"result":"success", "zarinpal_url":zarinpal_url}
+            status_code = 200
         else:
             result = {"result":"faild"}
             status_code = 401
-    return jsonify(result)        
+    return jsonify(result), status_code   
 
 @app.route('/api/zarinpal-callback')    
 @token_required
