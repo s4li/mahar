@@ -162,7 +162,7 @@ def status_question(cuser):
 @token_required
 def all_questions(cuser): 
     lesson_id = int(request.args['lesson_id'])
-    index = int(request.args['lesson_id'])
+    index = int(request.args['index'])
     user_id = int(request.args['user_id'])
     next_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
     next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
