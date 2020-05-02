@@ -19,12 +19,15 @@
         <div class="buy-box">
             <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
                 <h5>فعالسازی این پایه</h5>
-                <button class="btn btn-primary" @click.prevent="buyPlan(gardnum,2)" >۲۰۰۰ تومان</button>
+                <button class="btn btn-primary" @click.prevent="buyPlan(gardnum,2)">۲۰۰۰ تومان</button>
             </div>
             <div class="buy-box-child">
                 <h5>فعالسازی کل برنامه</h5>
-                <button class="btn btn-success" @click.prevent="buyPlan(0,1)" >۵۰۰۰ تومان</button>
+                <button class="btn btn-success" @click.prevent="buyPlan(0,1)">۵۰۰۰ تومان</button>
             </div>
+        </div>
+        <div class="text-center" v-if="spinnerShow">
+            <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
         </div>
     </b-modal>
 </div>
@@ -44,7 +47,8 @@ export default {
             show: false,
             lessonsData: [],
             lessons: [],
-            courseId: 0, 
+            courseId: 0,
+            spinnerShow:false
         }
     },
     methods: {
@@ -58,7 +62,7 @@ export default {
                 }
             }
             if (this.lessonsData.show_lesson) {
-                this.$router.push('/ExamType/' + checkid +'/'+ this.gardnum);
+                this.$router.push('/ExamType/' + checkid + '/' + this.gardnum);
             } else {
                 this.show = true
             }
@@ -79,12 +83,13 @@ export default {
                     console.error(error);
                 });
         },
-        buyPlan(grad,plan){
+        buyPlan(grad, plan) {
+            this.spinnerShow = true
             axios.get('/zarinpall', {
                     params: {
                         user_id: this.userid,
                         course_id: grad,
-                        sale_plan_id : plan,
+                        sale_plan_id: plan,
                     }
                 })
                 .then((res) => {

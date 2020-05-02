@@ -75,6 +75,18 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/zarinpal-callback',
+    name: 'zarinpal',
+    component: () => import('../views/Zarinpal.vue'),
+    beforeEnter (to, from, next) {
+      if (store.state.idToken) {
+        next();
+      } else {
+        next('/login');
+      }
+    }
+  },
+  {
     path: '*',redirect:'/Grades'
   }
 ]
