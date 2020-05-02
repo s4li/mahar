@@ -13,14 +13,6 @@ export default {
 </script>
 
 <style>
-.back-btn {
-    font-size: 18px;
-    color: #fff;
-    padding: 10px;
-    position: absolute;
-    left: 20px;
-    top: 13px;
-}
 
 .header {
     text-align: center;

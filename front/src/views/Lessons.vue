@@ -1,6 +1,7 @@
 <template>
 <div>
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
+    <router-link class="back-btn" to="/Grades"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" appear>
         <div class="parent">
             <div class="btn-box">

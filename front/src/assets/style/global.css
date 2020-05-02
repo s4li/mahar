@@ -75,13 +75,27 @@
   align-items: center;
   justify-content: center;
 }
+.back-btn {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  background-color: #ffc107;
+  color: var(--light);
+  border: none;
+  border-radius: 50%;
+  font-size: 16px;
+  padding: 6px 11px;
+}
+.back-btn i{
+  vertical-align: middle;
+}
 .btn-warning {
-  color: #212529;
+  color: #2b2b28;
   background-color: #ffc107;
   border-color: #ffc107;
 }
 .btn-warning:focus, .btn-warning.focus {
-  color: #212529;
+  color: #2b2b28;
   background-color: #ffc107;
   border-color: #ffc107;
   box-shadow: none;

@@ -1,5 +1,6 @@
 <template>
 <div class="hereparent">
+    <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="slideInUp" appear mode="out-in">
         <div class="back" v-if="show" key="first">
             <h3>{{Courses.question}}</h3>
