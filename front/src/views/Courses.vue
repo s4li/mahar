@@ -14,6 +14,10 @@
             </div>
         </div>
     </transition>
+    <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer hide-header centered title="">
+        <h4 class="my-4 text-center">شما به پایان این دوره از کلمات رسیدید</h4>
+        <button class="btn btn-primary d-block m-auto w-25" @click.prevent="redirect()">بستن</button>
+    </b-modal>
 </div>
 </template>
 
@@ -31,7 +35,8 @@ export default {
             answer: '',
             questionId: '',
             userid: this.$store.state.userId,
-            path:'',
+            path: '',
+            ModalShow: false,
         }
     },
     methods: {
@@ -39,7 +44,7 @@ export default {
             this.path = URL
             axios.get(URL, {
                     params: {
-                        user_id : this.userid,
+                        user_id: this.userid,
                         lesson_id: this.lessonId,
                         index: this.index,
                     }
@@ -74,14 +79,23 @@ export default {
                     lesson_id: this.lessonId,
                     ans_no: num,
                 })
-                .then(() => {
-                    this.initForm();
-                    this.getCourses(this.path)
-                    this.show = true
+                .then((res) => {
+                    if (res.data.has_next_question) {
+                        this.initForm();
+                        this.getCourses(this.path)
+                        this.show = true
+                    } else {
+                        this.ModalShow = true
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+        redirect() {
+            this.initForm();
+            this.show = true
+            this.$router.push('/ExamType/' + this.lessonId + '/' + this.gradId);
         },
         playSound() {
             var audio = new Audio(require(`../assets/${this.Courses.voice}`));
