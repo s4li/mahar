@@ -83,7 +83,7 @@ export default {
                 })
                 .then((res) => {
                     console.log(res)
-                    if (res.data.has_next_question) {
+                    if (res.data.has_next_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)
                         this.show = true
