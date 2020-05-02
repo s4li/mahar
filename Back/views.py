@@ -217,8 +217,13 @@ def user_answer(cuser):
     user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
     session.add(user_answer)
     session.commit()
+    question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
+    if question:
+        result = {"has_next_question":"True"}
+    else:
+        result = {"has_next_question":"False"}    
     session.close()
-    return  jsonify('True')
+    return  jsonify(result)
 
 @app.route('/api/zarinpall')    
 @token_required
