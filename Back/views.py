@@ -284,7 +284,7 @@ def zarinpal(cuser):
 @app.route('/api/zarinpal-callback')    
 @token_required
 def zarinpal_callback(cuser):
-    ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
+    ZARINPAL_WEBSERVICE  = 'h ttps://www.zarinpal.com/pg/services/WebGate/wsdl'    
     MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.query.get('Status', None) 

@@ -81,7 +81,6 @@ class Sale_plan(Base):
 class Invoice(Base):
    __tablename__ = 'tbl_invoices'
    id = Column(Integer, primary_key=True)  
-   title = Column(String)
    invoice_no = Column(String)
    datetime = Column(String)
    transaction_reference_id = Column(String)
