@@ -80,8 +80,7 @@ export default {
                 });
         },
         buyPlan(grad,plan){
-            console.log(grad,plan)
-            axios.get('/zarinpall ', {
+            axios.get('/zarinpall', {
                     params: {
                         user_id: this.userid,
                         course_id: grad,
