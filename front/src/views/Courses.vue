@@ -9,8 +9,8 @@
         <div class="back" v-if="!show" key="seconde">
             <h3>{{answer.answer}}</h3>
             <div>
-                <button @click.prevent="SendAnswer(1)" class="btn true"><i class="far fa-check"></i>درسته</button>
-                <button @click.prevent="SendAnswer(0)" class="btn false"><i class="far fa-times"></i>غلطه</button>
+                <button @click.prevent="SendAnswer(0)" class="btn true"><i class="far fa-check"></i>درسته</button>
+                <button @click.prevent="SendAnswer(1)" class="btn false"><i class="far fa-times"></i>غلطه</button>
             </div>
         </div>
     </transition>
