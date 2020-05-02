@@ -251,7 +251,7 @@ def zarinpal(cuser):
     else:
         ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
         MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
-        callback_url = f'{root_url}/api/zarinpal-callback' 
+        callback_url = f'{root_url}/zarinpal-callback' 
         invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         client = Client(ZARINPAL_WEBSERVICE)
         result = client.service.PaymentRequest(MMERCHANT_ID,
@@ -284,7 +284,7 @@ def zarinpal(cuser):
 @app.route('/api/zarinpal-callback')    
 @token_required
 def zarinpal_callback(cuser):
-    ZARINPAL_WEBSERVICE  = 'h ttps://www.zarinpal.com/pg/services/WebGate/wsdl'    
+    ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
     MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.query.get('Status', None) 
