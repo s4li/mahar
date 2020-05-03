@@ -87,6 +87,7 @@ export default {
     border-color: #ffc107;
     text-align: center;
     border-radius: 4px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 a.btn.disabled,

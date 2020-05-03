@@ -1,20 +1,22 @@
 <template>
 <div class="hereparent">
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
-    <transition name="slideInUp" appear mode="out-in">
-        <div class="back" v-if="show" key="first">
-            <h3>{{Courses.question}}</h3>
-            <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
-            <button class="btn btn-warning" @click.prevent="show = false">معنیش چیه؟</button>
-        </div>
-        <div class="back" v-if="!show" key="seconde">
-            <h3>{{answer}}</h3>
-            <div>
-                <button @click.prevent="SendAnswer(0)" class="btn true"><i class="far fa-check"></i>درسته</button>
-                <button @click.prevent="SendAnswer(1)" class="btn false"><i class="far fa-times"></i>غلطه</button>
+    <div class="flip-card">
+        <div class="flip-card-inner" :class="{isFlipped:flip}">
+            <div class="flip-card-front back">
+                <h3>{{Courses.question}}</h3>
+                <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
+                <button class="btn btn-warning" @click.prevent="flip = true">معنیش چیه؟</button>
+            </div>
+            <div class="flip-card-back back">
+                <h3 class="mb-4">{{answer}}</h3>
+                <div>
+                    <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
+                    <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
+                </div>
             </div>
         </div>
-    </transition>
+    </div>
     <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer hide-header centered title="">
         <h4 class="my-4 text-center">شما به پایان این دوره از کلمات رسیدید</h4>
         <button class="btn btn-primary d-block m-auto w-25" @click.prevent="redirect()">بستن</button>
@@ -27,7 +29,6 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            show: true,
             index: -1,
             Courses: [],
             CoursesType: this.$route.params.type,
@@ -37,7 +38,8 @@ export default {
             userid: this.$store.state.userId,
             path: '',
             ModalShow: false,
-            questionType: 0
+            questionType: 0,
+            flip: false,
         }
     },
     methods: {
@@ -71,7 +73,7 @@ export default {
                     if (res.data.has_next_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)
-                        this.show = true
+                        this.flip = false
                     } else {
                         this.ModalShow = true
                     }
@@ -82,7 +84,7 @@ export default {
         },
         redirect() {
             this.initForm();
-            this.show = true
+            this.flip = true
             this.$router.push('/ExamType/' + this.lessonId + '/' + this.gradId);
         },
         playSound() {
@@ -121,18 +123,20 @@ export default {
 
 .back {
     padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
     text-align: center;
-    width: 70%;
 }
 
 .play {
     display: block;
     margin: 15px auto;
     padding: 8px 12px;
-    border: 1px solid #909090;
-    background: #f8f9fa;
+    border: none;
+    border-radius: 4px;
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    box-shadow: 4px 4px 8px #b3b3b3,
+        -4px -4px 8px #ffffff;
 }
 
 .play i {
@@ -161,61 +165,44 @@ export default {
     color: #ffffff;
 }
 
-.slideInUp-enter-active {
-    -webkit-animation-duration: 0.75s;
-    animation-duration: 0.75s;
-    -webkit-backface-visibility: visible !important;
-    backface-visibility: visible !important;
-    -webkit-animation-name: flipOutY;
-    animation-name: flipOutY;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
+/************************************** */
+.flip-card {
+    background-color: transparent;
+    width: 250px;
+    height: 170px;
+    perspective: 1000px;
 }
 
-@-webkit-keyframes flipOutY {
-    from {
-        -webkit-transform: perspective(400px);
-        transform: perspective(400px);
-    }
-
-    30% {
-        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
-        transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
-        opacity: 1;
-    }
-
-    to {
-        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
-        transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
-        opacity: 0;
-    }
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-@keyframes flipOutY {
-    from {
-        -webkit-transform: perspective(400px);
-        transform: perspective(400px);
-    }
-
-    30% {
-        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
-        transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
-        opacity: 1;
-    }
-
-    to {
-        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
-        transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
-        opacity: 0;
-    }
+.isFlipped {
+    transform: rotateY(180deg);
 }
 
-.flipOutY {
-    -webkit-animation-duration: 0.75s;
-    animation-duration: 0.75s;
-    -webkit-backface-visibility: visible !important;
-    backface-visibility: visible !important;
-    -webkit-animation-name: flipOutY;
-    animation-name: flipOutY;
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.flip-card-front {
+    background-color: #fdfdfd;
+}
+
+.flip-card-back {
+    background-color: #fdfdfd;
+    transform: rotateY(180deg);
+    padding-top: 35px;
 }
 </style>

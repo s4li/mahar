@@ -8,7 +8,7 @@
                     <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
                     پایه {{grad.title}}
                 </router-link>
-                <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-5 d-block w-25 btn-sm">خروج</button>
+                <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-3 d-block w-25 btn-sm shadow">خروج</button>
             </div>
         </div>
     </transition>
@@ -58,13 +58,13 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     padding: 15px;
-    background-color: #f8f9fa99;
+    background-color: #f9fafbcc;
     border-radius: 4px;
 }
 
 .btn-box a {
     width: 45%;
-    margin: 20px 0 0;
+    margin: 10px 0 10px;
     padding: 8px;
 }
 
@@ -72,6 +72,7 @@ export default {
     color: #212529;
     background-color: #ffc107;
     border-color: #ffc107;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .btn-warning:focus,

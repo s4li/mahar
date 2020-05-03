@@ -23,6 +23,7 @@ export default {
     color: #f8f9fa;
     margin: 0 -15px;
     position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .header h1 {

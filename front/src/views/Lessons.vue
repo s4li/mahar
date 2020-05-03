@@ -19,11 +19,11 @@
         <div class="buy-box">
             <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
                 <h5>فعالسازی این پایه</h5>
-                <button class="btn btn-primary" @click.prevent="buyPlan(gardnum,2)">۲۰۰۰ تومان</button>
+                <button class="btn shadow btn-primary" @click.prevent="buyPlan(gardnum,2)">۲۰۰۰ تومان</button>
             </div>
             <div class="buy-box-child">
                 <h5>فعالسازی کل برنامه</h5>
-                <button class="btn btn-success" @click.prevent="buyPlan(0,1)">۵۰۰۰ تومان</button>
+                <button class="btn shadow btn-success" @click.prevent="buyPlan(0,1)">۵۰۰۰ تومان</button>
             </div>
         </div>
         <div class="text-center" v-if="spinnerShow">
@@ -115,13 +115,13 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     padding: 15px;
-    background-color: #f8f9fa99;
+    background-color: #f9fafbcc;
     border-radius: 4px;
 }
 
 .btn-box button {
     width: 45%;
-    margin: 20px 0 0;
+    margin: 10px 0 10px;
     padding: 8px;
 }
 

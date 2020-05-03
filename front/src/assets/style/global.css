@@ -85,6 +85,7 @@
   border-radius: 50%;
   font-size: 16px;
   padding: 6px 11px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .back-btn i{
   vertical-align: middle;
@@ -93,6 +94,7 @@
   color: #2b2b28;
   background-color: #ffc107;
   border-color: #ffc107;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .btn-warning:focus, .btn-warning.focus {
   color: #2b2b28;
