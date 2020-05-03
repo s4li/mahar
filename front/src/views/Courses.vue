@@ -38,7 +38,7 @@ export default {
             userid: this.$store.state.userId,
             path: '',
             ModalShow: false,
-            questionType:0
+            questionType: 0
         }
     },
     methods: {
@@ -80,7 +80,7 @@ export default {
                     question_id: this.questionId,
                     lesson_id: this.lessonId,
                     ans_no: num,
-                    question_type:this.questionType
+                    question_type: this.questionType
                 })
                 .then((res) => {
                     console.log(res)
@@ -179,37 +179,60 @@ export default {
 }
 
 .slideInUp-enter-active {
-    -webkit-animation-name: slideInUp;
-    animation-name: slideInUp;
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
+    -webkit-animation-duration: 0.75s;
+    animation-duration: 0.75s;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    -webkit-animation-name: flipOutY;
+    animation-name: flipOutY;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 }
 
-@-webkit-keyframes slideInUp {
+@-webkit-keyframes flipOutY {
     from {
-        -webkit-transform: translate3d(0, 100%, 0);
-        transform: translate3d(0, 100%, 0);
-        visibility: visible;
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px);
+    }
+
+    30% {
+        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
+        transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
+        opacity: 1;
     }
 
     to {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
+        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+        transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+        opacity: 0;
     }
 }
 
-@keyframes slideInUp {
+@keyframes flipOutY {
     from {
-        -webkit-transform: translate3d(0, 100%, 0);
-        transform: translate3d(0, 100%, 0);
-        visibility: visible;
+        -webkit-transform: perspective(400px);
+        transform: perspective(400px);
+    }
+
+    30% {
+        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
+        transform: perspective(400px) rotate3d(0, 1, 0, -15deg);
+        opacity: 1;
     }
 
     to {
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
+        -webkit-transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+        transform: perspective(400px) rotate3d(0, 1, 0, 90deg);
+        opacity: 0;
     }
+}
+
+.flipOutY {
+    -webkit-animation-duration: 0.75s;
+    animation-duration: 0.75s;
+    -webkit-backface-visibility: visible !important;
+    backface-visibility: visible !important;
+    -webkit-animation-name: flipOutY;
+    animation-name: flipOutY;
 }
 </style>
