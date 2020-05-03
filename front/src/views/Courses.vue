@@ -121,7 +121,7 @@ export default {
 
 .back {
     padding: 15px;
-    background-color: #f8f9facc;
+    background-color: #f8f9fa;
     border-radius: 4px;
     text-align: center;
     width: 70%;
