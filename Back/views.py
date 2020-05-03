@@ -151,15 +151,15 @@ def status_question(cuser):
     user_id = int(request.args['user_id'])
     new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
     session.commit()
-    check_new_question = 'True' if new_question else 'False'
+    check_new_question = 'True' if str(new_question != None) else 'False'
     max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
     session.commit()
-    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
+    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > max_previous_answer[0], Question.lesson_id == lesson_id ).first()
     session.commit()
-    review_previous_questions = 'True' if next_previous_question else 'False'
+    review_previous_questions = 'True' if str(next_previous_question != None) else 'False'
     wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
     session.commit()
-    check_wrong_questions = 'True' if wrong_questions else 'False'
+    check_wrong_questions = 'True' if str(wrong_questions != None) else 'False'
     result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
     session.close() 
     return jsonify(result)
