@@ -174,7 +174,9 @@ def all_questions(cuser):
     session.commit()
     next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
     session.commit()
-    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id}
+    answer = session.query(Answer).filter(Answer.question_id == next_question.id).first()
+    session.commit()
+    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id, "answer": answer.ans_text}
     session.close() 
     return jsonify(result)    
 
@@ -190,7 +192,9 @@ def previous_questions(cuser):
     session.commit()
     next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
     session.commit()
-    result = {"question":next_previous_question.text, "voice": next_previous_voice.path, "next_index": next_previous_question.id , "question_id": next_previous_question.id}
+    answer = session.query(Answer).filter(Answer.question_id == next_previous_question.id).first()
+    session.commit()
+    result = {"question":next_previous_question.text, "voice": next_previous_voice.path, "next_index": next_previous_question.id , "question_id": next_previous_question.id, "answer": answer.ans_text}
     session.close() 
     return jsonify(result)
 
@@ -206,20 +210,12 @@ def wronge_questions(cuser):
     session.commit()
     wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
     session.commit()
-    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
+    answer = session.query(Answer).filter(Answer.question_id == wrong_question.id).first()
+    session.commit()
+    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id, "answer": answer.ans_text}
     session.close() 
     return jsonify(result)
 
-
-@app.route('/api/get-answer')     
-@token_required
-def answer(cuser): 
-    question_id = int(request.args['question_id'])
-    answer = session.query(Answer).filter(Answer.question_id == question_id).first()
-    result = {"answer": answer.ans_text}
-    session.commit()
-    session.close()
-    return  jsonify(result)
 
 @app.route('/api/set-user-answer', methods=('POST',))    
 @token_required
