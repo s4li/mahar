@@ -25,8 +25,8 @@ export default new Vuex.Store({
       state.idToken = null
       state.userId = null
     },
-    StoreCurrentUrl(state,newurl){
-      state.currenturl = newurl
+    StoreCurrentUrl(state,url){
+      state.currenturl = url
     }
   },
   actions: {
@@ -91,8 +91,12 @@ export default new Vuex.Store({
         return
       }else{
         commit('authUser', {token: token,userId: userId})
-        router.replace(this.state.currenturl)
+        const myurl = this.getters.geturl
+        router.push(myurl)
       }
+    },
+    saveurl({commit},url){
+      commit('StoreCurrentUrl',url)
     },
     logout ({commit}) {
       commit('clearAuthData')
@@ -129,6 +133,9 @@ export default new Vuex.Store({
     },
     isAuthenticated (state) {
       return state.idToken !== null
+    },
+    geturl(state){
+      return state.currenturl
     }
   }
 })

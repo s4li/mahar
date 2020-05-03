@@ -33,6 +33,8 @@ export default {
     },
     methods: {
         getStatus() {
+            const url = this.$route.path
+            this.$store.dispatch('saveurl', url);
             axios.get('/get-status-question-user', {
                     params: {
                         user_id: this.userid,

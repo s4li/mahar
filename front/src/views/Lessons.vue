@@ -48,7 +48,7 @@ export default {
             lessonsData: [],
             lessons: [],
             courseId: 0,
-            spinnerShow:false
+            spinnerShow:false,
         }
     },
     methods: {
@@ -69,7 +69,7 @@ export default {
         },
         getlessons() {
             const url = this.$route.path
-            this.$store.commit('StoreCurrentUrl', url);
+            this.$store.dispatch('saveurl', url);
             axios.get('/lessons', {
                     params: {
                         user_id: this.userid,
