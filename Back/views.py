@@ -55,11 +55,8 @@ def token_required(f):
 @app.route('/api/register', methods=('POST',))
 def register():
     session = Session()
-    #j_data = request.get_json()
-    #data = json.loads(j_data)
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
-    session.commit()
     if user == None:
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
         session.add(user)
@@ -84,7 +81,6 @@ def login():
     session = Session() 
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
-    session.commit()
     if user:
         token = jwt.encode({ 
                         'sub' : user.mobile,
@@ -107,7 +103,6 @@ def user_information(cuser):
     session = Session()
     user_id = int(request.args['id']) 
     user = session.query(User).filter(User.id == user_id).first()
-    session.commit()
     if user:
         response = {'result': 'success', 'full_name': user.full_name, 'mobile': user.mobile}
         status_code = 200
@@ -123,10 +118,8 @@ def courses(cuser):
     session = Session()
     all_courses = []
     courses = session.query(Course).all()
-    session.commit()
     for course in courses:
         lesson = session.query(Lesson).filter(Lesson.course_id == course.id).first()
-        session.commit()
         has_content = True if lesson else False
         all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
     session.close()     
@@ -140,9 +133,7 @@ def lessons(cuser):
     user_id = int(request.args['user_id'])
     all_lessons = []
     lessons = session.query(Lesson).filter(Lesson.course_id == course_id).all()
-    session.commit()
     user_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == user_id).first()
-    session.commit()
     purchased_lessons = user_purchased_lessons[0].split(',')
     for lesson in lessons:
         show_lesson = True if f'{lesson.id}' in purchased_lessons else False
@@ -156,23 +147,16 @@ def status_question(cuser):
     session = Session()
     lesson_id = int(request.args['lesson_id'])
     user_id = int(request.args['user_id'])
-    new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
-    if new_question == None:
-        check_new_question = 'False'
-    else:
-        check_new_question = 'True'
-    max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
-    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > max_previous_answer[0], Question.lesson_id == lesson_id ).first()
-    if next_previous_question == None :
-        review_previous_questions = 'False' 
-    else:
-        review_previous_questions = 'True'
-    wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
-    if wrong_questions == None:
-        check_wrong_questions = 'False' 
-    else:
-        check_wrong_questions = 'True'
-    result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
+    has_new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
+    check_new_question = 'True' if has_new_question else 'False'
+    last_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
+    check_previous_questions = 'False'
+    if last_answer[0]:
+        has_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > last_answer[0], Question.lesson_id == lesson_id ).first()
+        check_previous_questions = 'True' if has_previous_question else 'False'
+    has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
+    check_wrong_questions = 'True' if has_wrong_questions else 'False'
+    result = {"check_new_question":check_new_question, "review_previous_questions":check_previous_questions, "check_wrong_questions":check_wrong_questions}
     session.close() 
     return jsonify(result)
 
@@ -183,13 +167,10 @@ def all_questions(cuser):
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
     user_id = int(request.args['user_id'])
-    next_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
-    session.commit()
-    next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
-    session.commit()
-    answer = session.query(Answer).filter(Answer.question_id == next_question.id).first()
-    session.commit()
-    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id, "answer": answer.ans_text}
+    next_new_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
+    next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
+    next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
+    result = {"question":next_new_question.text, "voice":next_new_voice.path, "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text}
     session.close() 
     return jsonify(result)    
 
@@ -200,15 +181,15 @@ def previous_questions(cuser):
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
-    max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
+    last_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
     session.commit()
-    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
+    has_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> last_answer[0], Question.lesson_id == lesson_id ).first()
     session.commit()
-    next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
+    next_previous_voice = session.query(Voice).filter(Voice.id == has_previous_question.voice_id).first()
     session.commit()
-    answer = session.query(Answer).filter(Answer.question_id == next_previous_question.id).first()
+    answer = session.query(Answer).filter(Answer.question_id == has_previous_question.id).first()
     session.commit()
-    result = {"question":next_previous_question.text, "voice": next_previous_voice.path, "next_index": next_previous_question.id , "question_id": next_previous_question.id, "answer": answer.ans_text}
+    result = {"question":has_previous_question.text, "voice": next_previous_voice.path, "next_index": has_previous_question.id , "question_id": has_previous_question.id, "answer": answer.ans_text}
     session.close() 
     return jsonify(result)
 
@@ -251,17 +232,17 @@ def user_answer(cuser):
         next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
         session.commit()
     elif data['question_type'] == 2:
-        max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == data['user_id'], User_answer.lesson_id == data['lesson_id']).first()
+        last_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == data['user_id'], User_answer.lesson_id == data['lesson_id']).first()
         session.commit()
-        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0] , Question.lesson_id == data['lesson_id']).first()
+        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> last_answer[0] , Question.lesson_id == data['lesson_id']).first()
         session.commit()
     else:
         next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
         session.commit()
     if next_content:
-        result = {"has_next_question":"True"}
+        result = {"has_next_new_question":"True"}
     else:
-        result = {"has_next_question":"False"}    
+        result = {"has_next_new_question":"False"}    
     session.close()
     return  jsonify(result)
 
