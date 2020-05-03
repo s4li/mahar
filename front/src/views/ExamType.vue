@@ -5,9 +5,9 @@
     <transition name="fadeIn" appear>
         <div class="parent">
             <div class="btn-box">
-                <router-link class="btn" :class="{disabled:!Status.check_new_question}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
-                <router-link class="btn" :class="{disabled:!Status.review_previous_questions}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
-                <router-link class="btn" :class="{disabled:!Status.check_wrong_questions}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
+                <router-link class="btn" :class="{disabled:!newStatus}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
+                <router-link class="btn" :class="{disabled:!previousStatus}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
+                <router-link class="btn" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
             </div>
         </div>
     </transition>
@@ -23,10 +23,12 @@ export default {
     },
     data() {
         return {
-            Status: [],
             lessonId: this.$route.params.lessonId,
             gradId: this.$route.params.gradId,
             userid: this.$store.state.userId,
+            newStatus:false,
+            previousStatus:false,
+            wrongStatus:false,
         }
     },
     methods: {
@@ -38,7 +40,10 @@ export default {
                     }
                 })
                 .then((res) => {
-                    this.Status = res.data;
+                    console.log(res)
+                    //console.log(res.data.Status.check_new_question)
+                    //console.log(res.data.Status.review_previous_questions)
+                    //console.log(res.data.Status.check_wrong_questions)
                 })
                 .catch((error) => {
                     console.error(error);
