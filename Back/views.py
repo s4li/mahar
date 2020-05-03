@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from functools import wraps
 from suds.client import Client
-from .models import  Session, User, Course, Lesson, Answer, Question, User_answer, Voice, Sale_plan, Invoice
+from .models import  Session, User, Course, Lesson, Answer, Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 import jwt, json
@@ -149,11 +149,11 @@ def status_question(cuser):
     user_id = int(request.args['user_id'])
     has_new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
     check_new_question = 'True' if has_new_question else 'False'
-    last_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
+    enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
     check_previous_questions = 'False'
-    if last_answer[0]:
-        has_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > last_answer[0], Question.lesson_id == lesson_id ).first()
-        check_previous_questions = 'True' if has_previous_question else 'False'
+    if enrol_user and enrol_user[0] != -1:
+        has_next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > enrol_user[0], Question.lesson_id == lesson_id ).first()
+        check_previous_questions = 'True' if has_next_previous_question else 'False'
     has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
     check_wrong_questions = 'True' if has_wrong_questions else 'False'
     result = {"check_new_question":check_new_question, "review_previous_questions":check_previous_questions, "check_wrong_questions":check_wrong_questions}
@@ -170,6 +170,22 @@ def all_questions(cuser):
     next_new_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
     next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
     next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
+    if index == -1 :
+        # delete all answer user and change status in enrol_user table
+        all_previous_answer = session.query(User_answer).filter(User_answer.lesson_id == lesson_id, User_answer.user_id == user_id).all()
+        if all_previous_answer:
+            for answer in all_previous_answer:
+                session.delete(answer)
+                session.commit()
+        has_enroll_user = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()   
+        first_lesson_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
+        if has_enroll_user:
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.question_id: -1 })
+            session.commit()
+        else:
+            enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
+            session.add(enrol_user)  
+            session.commit()
     result = {"question":next_new_question.text, "voice":next_new_voice.path, "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text}
     session.close() 
     return jsonify(result)    
@@ -181,15 +197,11 @@ def previous_questions(cuser):
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
-    last_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
-    session.commit()
-    has_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> last_answer[0], Question.lesson_id == lesson_id ).first()
-    session.commit()
-    next_previous_voice = session.query(Voice).filter(Voice.id == has_previous_question.voice_id).first()
-    session.commit()
-    answer = session.query(Answer).filter(Answer.question_id == has_previous_question.id).first()
-    session.commit()
-    result = {"question":has_previous_question.text, "voice": next_previous_voice.path, "next_index": has_previous_question.id , "question_id": has_previous_question.id, "answer": answer.ans_text}
+    enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
+    previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> enrol_user[0], Question.lesson_id == lesson_id ).first()
+    previous_voice = session.query(Voice).filter(Voice.id == previous_question.voice_id).first()
+    previous_answer = session.query(Answer).filter(Answer.question_id == previous_question.id).first()
+    result = {"question":previous_question.text, "voice": previous_voice.path, "next_index": previous_question.id , "question_id": previous_question.id, "answer": previous_answer.ans_text}
     session.close() 
     return jsonify(result)
 
@@ -200,15 +212,11 @@ def wronge_questions(cuser):
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
-    wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
-    session.commit()
-    wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
-    session.commit()
+    first_wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
+    wrong_question = session.query(Question).filter(Question.id == first_wrong_answer.question_id).first()
     wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
-    session.commit()
-    answer = session.query(Answer).filter(Answer.question_id == wrong_question.id).first()
-    session.commit()
-    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id, "answer": answer.ans_text}
+    wrong_answer = session.query(Answer).filter(Answer.question_id == wrong_question.id).first()
+    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id, "answer": wrong_answer.ans_text}
     session.close() 
     return jsonify(result)
 
@@ -218,27 +226,25 @@ def wronge_questions(cuser):
 def user_answer(cuser): 
     session = Session()
     data = request.get_json()
-    previous_user_answer = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
-    session.commit()
-    if not previous_user_answer :
+    user_previous_answer  = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
+    if not user_previous_answer :
         user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
         session.add(user_answer)
         session.commit()
     else:
-        update_user_answer = session.query(User_answer).filter(User_answer.id == previous_user_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
+        user_answer_update = session.query(User_answer).filter(User_answer.id == user_previous_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
         session.commit()
-        session.close()
     if data['question_type'] == 1:
         next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
+        session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
         session.commit()
     elif data['question_type'] == 2:
-        last_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == data['user_id'], User_answer.lesson_id == data['lesson_id']).first()
-        session.commit()
-        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> last_answer[0] , Question.lesson_id == data['lesson_id']).first()
+        # update status in enrol
+        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> data['question_id'] , Question.lesson_id == data['lesson_id']).first()
+        session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
         session.commit()
     else:
         next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
-        session.commit()
     if next_content:
         result = {"has_next_new_question":"True"}
     else:
@@ -254,9 +260,7 @@ def zarinpal(cuser):
     course_id = int(request.args['course_id'])
     sale_plan_id = int(request.args['sale_plan_id'])
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
-    session.commit()
     user = session.query(User).filter(User.id == user_id).first()
-    session.commit()
     if not (sale_plan or user):
         result = {"result":"user or sale plane id not found"}
         status_code = 401
@@ -275,15 +279,14 @@ def zarinpal(cuser):
         if result.Status == 100:
             if sale_plan_id == 2 : 
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
-                session.commit()
                 str_lesson = ''
                 for lesson_id in lesson_ids:
                     if str(lesson_id[0]) not in ['1','9','16']:
                         str_lesson = str_lesson +str(lesson_id[0]) + ","
-                lesson_ids = str_lesson
+                lessons = str_lesson
             else:
-                lesson_ids = sale_plan.lessons        
-            invoice = Invoice( invoice_no = result.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lesson_ids)
+                lessons = sale_plan.lessons        
+            invoice = Invoice( invoice_no = result.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lessons)
             session.add(invoice)
             session.commit()
             session.close()
@@ -306,10 +309,8 @@ def zarinpal_callback():
     Authority = request.args['Authority']
     if Status == 'OK':
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
-        session.commit()
         if check_invoice:
             sale_plan = session.query(Sale_plan.price).filter(check_invoice.sale_plan_id == Sale_plan.id).first()
-            session.commit()
             result = client.service.PaymentVerification(MMERCHANT_ID,
                                                         Authority,
                                                         sale_plan[0])                                                                                                                                   
@@ -320,7 +321,6 @@ def zarinpal_callback():
                     purchased_lessons = check_invoice.lessons
                 else : 
                     purchased_lessons_user = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
-                    session.commit()
                     purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
                 update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                 session.commit()

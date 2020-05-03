@@ -10,6 +10,7 @@ Base = declarative_base() #function is used to create base class
 Session = sessionmaker(bind = engine) # A session object is the handle to database
 
 
+
 class User(Base):
    __tablename__ = 'tbl_users'
    id = Column(Integer, primary_key=True)
@@ -19,6 +20,7 @@ class User(Base):
    purchased_lessons = Column(String,  default='1,9,16')
    user_answer = relationship('User_answer') 
    invoice = relationship('Invoice')  
+   enrol_user = relationship('Enrol_user') 
 
 class Course(Base):
    __tablename__ = 'tbl_courses'
@@ -33,7 +35,8 @@ class Lesson(Base):
    course_id = Column(Integer,ForeignKey('tbl_courses.id', ondelete='CASCADE'))
    voice = relationship('Voice') 
    question = relationship('Question') 
-   user_answer = relationship('User_answer') 
+   user_answer = relationship('User_answer')
+   enrol_user = relationship('Enrol_user') 
 
 class Voice(Base):
    __tablename__ = 'tbl_voices'
@@ -52,6 +55,7 @@ class Question(Base):
    voice_id = Column(Integer,ForeignKey('tbl_voices.id', ondelete='CASCADE'))
    question = relationship('User_answer')
    answer = relationship('Answer') 
+   enrol_user = relationship('Enrol_user') 
 
 class Answer(Base):
    __tablename__ = 'tbl_answers'
@@ -60,6 +64,12 @@ class Answer(Base):
    check_ans = Column(String)
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
    
+class Enrol_user(Base): 
+   __tablename__ = 'tbl_enrol_user'
+   id = Column(Integer, primary_key=True)  
+   user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
+   question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE')) 
+   lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE')) 
 
 class User_answer(Base):
    __tablename__ = 'tbl_user_answers'
