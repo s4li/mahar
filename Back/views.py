@@ -157,21 +157,17 @@ def status_question(cuser):
     lesson_id = int(request.args['lesson_id'])
     user_id = int(request.args['user_id'])
     new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
-    session.commit()
     if new_question == None:
         check_new_question = 'False'
     else:
         check_new_question = 'True'
     max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
-    session.commit()
     next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > max_previous_answer[0], Question.lesson_id == lesson_id ).first()
-    session.commit()
     if next_previous_question == None :
         review_previous_questions = 'False' 
     else:
         review_previous_questions = 'True'
     wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
-    session.commit()
     if wrong_questions == None:
         check_wrong_questions = 'False' 
     else:
