@@ -5,7 +5,7 @@
         <div class="back" v-if="show" key="first">
             <h3>{{Courses.question}}</h3>
             <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
-            <button class="btn btn-warning" @click.prevent="getanswerdata()">معنیش چیه؟</button>
+            <button class="btn btn-warning" @click.prevent="show = false">معنیش چیه؟</button>
         </div>
         <div class="back" v-if="!show" key="seconde">
             <h3>{{answer.answer}}</h3>
@@ -34,7 +34,6 @@ export default {
             lessonId: this.$route.params.lessonId,
             gradId: this.$route.params.gradId,
             answer: '',
-            questionId: '',
             userid: this.$store.state.userId,
             path: '',
             ModalShow: false,
@@ -54,21 +53,7 @@ export default {
                 .then((res) => {
                     this.Courses = res.data;
                     this.index = res.data.next_index
-                    this.questionId = res.data.question_id
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        },
-        getanswerdata() {
-            axios.get('/get-answer', {
-                    params: {
-                        question_id: this.questionId
-                    }
-                })
-                .then((res) => {
-                    this.show = false
-                    this.answer = res.data
+                    this.answer = res.data.answer
                 })
                 .catch((error) => {
                     console.error(error);
@@ -77,7 +62,6 @@ export default {
         SendAnswer(num) {
             axios.post('/set-user-answer', {
                     user_id: this.userid,
-                    question_id: this.questionId,
                     lesson_id: this.lessonId,
                     ans_no: num,
                     question_type: this.questionType
@@ -108,7 +92,6 @@ export default {
         initForm() {
             this.Courses = [];
             this.answer = '';
-            this.questionId = '';
         },
     },
     created() {
