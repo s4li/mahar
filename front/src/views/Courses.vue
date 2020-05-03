@@ -54,6 +54,7 @@ export default {
                     this.Courses = res.data;
                     this.index = res.data.next_index
                     this.answer = res.data.answer
+                    console.log(this.answer)
                 })
                 .catch((error) => {
                     console.error(error);
