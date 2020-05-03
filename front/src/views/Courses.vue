@@ -8,7 +8,7 @@
             <button class="btn btn-warning" @click.prevent="show = false">معنیش چیه؟</button>
         </div>
         <div class="back" v-if="!show" key="seconde">
-            <h3>{{answer.answer}}</h3>
+            <h3>{{answer}}</h3>
             <div>
                 <button @click.prevent="SendAnswer(0)" class="btn true"><i class="far fa-check"></i>درسته</button>
                 <button @click.prevent="SendAnswer(1)" class="btn false"><i class="far fa-times"></i>غلطه</button>
@@ -54,7 +54,6 @@ export default {
                     this.Courses = res.data;
                     this.index = res.data.next_index
                     this.answer = res.data.answer
-                    console.log(this.answer)
                 })
                 .catch((error) => {
                     console.error(error);
