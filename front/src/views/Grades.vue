@@ -58,7 +58,7 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     padding: 15px;
-    background-color: #f9fafbcc;
+    background-color: #ffffffcc;
     border-radius: 4px;
 }
 
