@@ -58,10 +58,12 @@ def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     session.commit()
+    session.close() 
     if user == None:
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
         session.add(user)
         session.commit()
+        session.close()
         status_code = 200
         token = jwt.encode({
                             'sub': user.mobile,
@@ -73,14 +75,15 @@ def register():
         response = {'result':'success', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
     else:
         response = {'result':'user_exists'}
-        status_code = 401
-    session.close()                          
+        status_code = 401                         
     return jsonify(response), status_code
 
 @app.route('/api/login', methods=('POST',))
 def login(): 
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
+    session.commit()
+    session.close()
     if user:
         token = jwt.encode({ 
                         'sub' : user.mobile,
@@ -93,9 +96,7 @@ def login():
         response = {'result': 'success', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
     else:
         status_code = 401
-        response = {'result':'nouser'} 
-    session.commit()     
-    session.close()             
+        response = {'result':'nouser'}            
     return jsonify(response), status_code
 
 @app.route('/api/get-user-information')
@@ -103,27 +104,29 @@ def login():
 def user_information(cuser):
     user_id = int(request.args['id']) 
     user = session.query(User).filter(User.id == user_id).first()
+    session.commit()
+    session.close()
     if user:
         response = {'result': 'success', 'full_name': user.full_name, 'mobile': user.mobile}
         status_code = 200
     else:
         status_code = 401
-        response = {'result':'nouser'}
-    session.commit()      
-    session.close()             
+        response = {'result':'nouser'}             
     return jsonify(response), status_code    
 
 @app.route('/api/courses')     
 @token_required
 def courses(cuser):
     all_courses = []
-    courses = session.query(Course)
+    courses = session.query(Course).all()
+    session.commit()
+    session.close()
     for course in courses:
         lesson = session.query(Lesson).filter(Lesson.course_id == course.id).first()
+        session.commit()
+        session.close()
         has_content = True if lesson else False
         all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
-    session.commit()    
-    session.close() 
     return jsonify(all_courses)
 
 @app.route('/api/lessons')     
@@ -132,14 +135,16 @@ def lessons(cuser):
     course_id = int(request.args['course_id'])
     user_id = int(request.args['user_id'])
     all_lessons = []
-    lessons = session.query(Lesson).filter(Lesson.course_id == course_id)
-    session.commit() 
+    lessons = session.query(Lesson).filter(Lesson.course_id == course_id).all()
+    session.commit()
+    session.close() 
     user_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == user_id).first()
+    session.commit()
+    session.close()
     purchased_lessons = user_purchased_lessons[0].split(',')
     for lesson in lessons:
         show_lesson = True if f'{lesson.id}' in purchased_lessons else False
-        all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson})   
-    session.close() 
+        all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson})    
     return jsonify(all_lessons)    
 
 @app.route('/api/get-status-question-user')     
@@ -148,15 +153,21 @@ def status_question(cuser):
     lesson_id = int(request.args['lesson_id'])
     user_id = int(request.args['user_id'])
     new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
-    check_new_question = True if new_question else False
-    max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
-    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
-    review_previous_questions = True if next_previous_question else False
-    wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
-    check_wrong_questions = True if wrong_questions else False
-    result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
     session.commit()
     session.close()
+    check_new_question = 'True' if new_question else 'False'
+    max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
+    session.commit()
+    session.close()
+    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
+    session.commit()
+    session.close()
+    review_previous_questions = 'True' if next_previous_question else 'False'
+    wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
+    session.commit()
+    session.close()
+    check_wrong_questions = 'True' if wrong_questions else 'False'
+    result = {"check_new_question":check_new_question, "review_previous_questions":review_previous_questions, "check_wrong_questions":check_wrong_questions}
     return jsonify(result)
 
 @app.route('/api/new-questions')     
@@ -166,10 +177,12 @@ def all_questions(cuser):
     index = int(request.args['index'])
     user_id = int(request.args['user_id'])
     next_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
-    next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
-    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id}
     session.commit()
     session.close()
+    next_voice = session.query(Voice).filter(Voice.id == next_question.voice_id).first()
+    session.commit()
+    session.close()
+    result = {"question":next_question.text, "voice":next_voice.path, "next_index":next_question.id, "question_id": next_question.id}
     return jsonify(result)    
 
 @app.route('/api/get-previous-questions')     
@@ -179,11 +192,15 @@ def previous_questions(cuser):
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
     max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == user_id, User_answer.lesson_id == lesson_id).first()
-    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
-    next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
-    result = {"question":next_previous_question.text, "voice": next_previous_voice.path, "next_index": next_previous_question.id , "question_id": next_previous_question.id}
     session.commit()
     session.close()
+    next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0], Question.lesson_id == lesson_id ).first()
+    session.commit()
+    session.close()
+    next_previous_voice = session.query(Voice).filter(Voice.id == next_previous_question.voice_id).first()
+    session.commit()
+    session.close()
+    result = {"question":next_previous_question.text, "voice": next_previous_voice.path, "next_index": next_previous_question.id , "question_id": next_previous_question.id}
     return jsonify(result)
 
 @app.route('/api/get-wrong-questions')     
@@ -193,11 +210,15 @@ def wronge_questions(cuser):
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
     wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
-    wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
-    wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
-    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
     session.commit()
     session.close()
+    wrong_question = session.query(Question).filter(Question.id == wrong_answer.question_id).first()
+    session.commit()
+    session.close()
+    wrong_voice = session.query(Voice).filter(Voice.id == wrong_question.voice_id).first()
+    session.commit()
+    session.close()
+    result = {"question":wrong_question.text, "voice": wrong_voice.path, "next_index": wrong_answer.question_id , "question_id": wrong_question.id}
     return jsonify(result)
 
 
@@ -216,20 +237,32 @@ def answer(cuser):
 def user_answer(cuser): 
     data = request.get_json()
     previous_user_answer = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
+    session.commit()
+    session.close()
     if not previous_user_answer :
         user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
         session.add(user_answer)
         session.commit()
+        session.close()
     else:
         update_user_answer = session.query(User_answer).filter(User_answer.id == previous_user_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
         session.commit()
+        session.close()
     if data['question_type'] == 1:
         next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
+        session.commit()
+        session.close()
     elif data['question_type'] == 2:
         max_previous_answer = session.query(func.max(User_answer.question_id)).filter(User_answer.user_id == data['user_id'], User_answer.lesson_id == data['lesson_id']).first()
+        session.commit()
+        session.close()
         next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> max_previous_answer[0] , Question.lesson_id == data['lesson_id']).first()
+        session.commit()
+        session.close()
     else:
         next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
+        session.commit()
+        session.close()
     if next_content:
         result = {"has_next_question":"True"}
     else:
@@ -244,7 +277,11 @@ def zarinpal(cuser):
     course_id = int(request.args['course_id'])
     sale_plan_id = int(request.args['sale_plan_id'])
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
+    session.commit()
+    session.close()
     user = session.query(User).filter(User.id == user_id).first()
+    session.commit()
+    session.close()
     if not (sale_plan or user):
         result = {"result":"user or sale plane id not found"}
         status_code = 401
@@ -263,6 +300,8 @@ def zarinpal(cuser):
         if result.Status == 100:
             if sale_plan_id == 2 : 
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
+                session.commit()
+                session.close()
                 str_lesson = ''
                 for lesson_id in lesson_ids:
                     if str(lesson_id[0]) not in ['1','9','16']:
@@ -289,11 +328,14 @@ def zarinpal_callback():
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.args['Status'] 
     Authority = request.args['Authority']
-    invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     if Status == 'OK':
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
+        session.commit()
+        session.close()
         if check_invoice:
             sale_plan = session.query(Sale_plan.price).filter(check_invoice.sale_plan_id == Sale_plan.id).first()
+            session.commit()
+            session.close()
             result = client.service.PaymentVerification(MMERCHANT_ID,
                                                         Authority,
                                                         sale_plan[0])                                                                                                                                   
@@ -304,6 +346,8 @@ def zarinpal_callback():
                     purchased_lessons = check_invoice.lessons
                 else : 
                     purchased_lessons_user = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
+                    session.commit()
+                    session.close()
                     purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
                 update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                 session.commit()
@@ -318,6 +362,8 @@ def zarinpal_callback():
                 status_code = 401 
                 #return 'Transaction failed. Status: ' + str(result.Status)
             invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : result.Status, Invoice.transaction_reference_id: result.RefID})       
+            session.commit()
+            session.close()
     else:
         invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status})   
         session.commit()
