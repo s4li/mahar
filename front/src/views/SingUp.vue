@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="btn-box1">
-                    <button class="btn" :disabled="$v.$invalid" type="submit">ثبت نام</button>
+                    <button class="btn shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
                 </div>
             </form>
         </div>
@@ -148,7 +148,7 @@ export default {
 }
 
 .inner {
-    background-color: #f8f9fa99;
+    background-color: #ffffffcc;
     border-radius: 4px;
     margin-top: 20%;
 }

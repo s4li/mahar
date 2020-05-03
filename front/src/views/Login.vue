@@ -32,9 +32,9 @@
                     </div>
                 </div>
                 <div class="btn-boxl">
-                    <router-link to="/Singup" id="singupbtn" class="btn">ثبت نام</router-link>
-                    <button class="btn" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
-                    <router-link to="/Guids" id="infobtn" class="btn">راهنمای استفاده</router-link>
+                    <router-link to="/Singup" id="singupbtn" class="btn shadow">ثبت نام</router-link>
+                    <button class="btn shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
+                    <router-link to="/Guids" id="infobtn" class="btn shadow">راهنمای استفاده</router-link>
                 </div>
             </form>
         </div>
@@ -128,7 +128,7 @@ export default {
 }
 
 .inner {
-    background-color: #f8f9fa99;
+    background-color: #ffffffcc;
     border-radius: 4px;
     margin-top: 30%;
 }

@@ -42,10 +42,6 @@ export default {
                     }
                 })
                 .then((res) => {
-                    console.log(res)
-                    console.log(res.data.check_new_question)
-                    console.log(res.data.review_previous_questions)
-                    console.log(res.data.check_wrong_questions)
                     if(res.data.check_new_question == 'True'){
                         this.newStatus=true
                     }

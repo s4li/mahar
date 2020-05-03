@@ -1,22 +1,24 @@
 <template>
 <div class="hereparent">
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
-    <div class="flip-card">
-        <div class="flip-card-inner" :class="{isFlipped:flip}">
-            <div class="flip-card-front back">
-                <h3>{{Courses.question}}</h3>
-                <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
-                <button class="btn btn-warning" @click.prevent="flip = true">معنیش چیه؟</button>
-            </div>
-            <div class="flip-card-back back">
-                <h3 class="mb-4">{{answer}}</h3>
-                <div>
-                    <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
-                    <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
+    <transition name="fadeIn" appear>
+        <div class="flip-card">
+            <div class="flip-card-inner" :class="{isFlipped:flip}">
+                <div class="flip-card-front back">
+                    <h3>{{Courses.question}}</h3>
+                    <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
+                    <button class="btn btn-warning" @click.prevent="flip = true">معنیش چیه؟</button>
+                </div>
+                <div class="flip-card-back back">
+                    <h3 class="mb-4">{{answer}}</h3>
+                    <div>
+                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
+                        <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </transition>
     <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer hide-header centered title="">
         <h4 class="my-4 text-center">شما به پایان این دوره از کلمات رسیدید</h4>
         <button class="btn btn-primary d-block m-auto w-25" @click.prevent="redirect()">بستن</button>
@@ -40,6 +42,7 @@ export default {
             ModalShow: false,
             questionType: 0,
             flip: false,
+            questionId: '',
         }
     },
     methods: {
@@ -54,8 +57,9 @@ export default {
                 })
                 .then((res) => {
                     this.Courses = res.data;
-                    this.index = res.data.next_index
-                    this.answer = res.data.answer
+                    this.index = res.data.next_index;
+                    this.answer = res.data.answer;
+                    this.questionId = res.data.question_id;
                 })
                 .catch((error) => {
                     console.error(error);
@@ -66,11 +70,12 @@ export default {
                     user_id: this.userid,
                     lesson_id: this.lessonId,
                     ans_no: num,
-                    question_type: this.questionType
+                    question_type: this.questionType,
+                    question_id: this.questionId,
                 })
                 .then((res) => {
                     console.log(res)
-                    if (res.data.has_next_question == 'True') {
+                    if (res.data.has_next_new_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)
                         this.flip = false
@@ -94,6 +99,7 @@ export default {
         initForm() {
             this.Courses = [];
             this.answer = '';
+            this.questionId = '';
         },
     },
     created() {
@@ -137,6 +143,11 @@ export default {
     background: linear-gradient(145deg, #ffffff, #e6e6e6);
     box-shadow: 4px 4px 8px #b3b3b3,
         -4px -4px 8px #ffffff;
+}
+
+.play:focus {
+    box-shadow: 4px 4px 8px #b3b3b3,
+        -4px -4px 8px #ffffff !important;
 }
 
 .play i {
