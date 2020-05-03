@@ -41,9 +41,18 @@ export default {
                 })
                 .then((res) => {
                     console.log(res)
-                    //console.log(res.data.Status.check_new_question)
-                    //console.log(res.data.Status.review_previous_questions)
-                    //console.log(res.data.Status.check_wrong_questions)
+                    console.log(res.data.Status.check_new_question)
+                    console.log(res.data.Status.review_previous_questions)
+                    console.log(res.data.Status.check_wrong_questions)
+                    if(res.data.Status.check_new_question == 'True'){
+                        this.newStatus=true
+                    }
+                    if(res.data.Status.review_previous_questions == 'True'){
+                        this.previousStatus=true
+                    }
+                    if(res.data.Status.check_wrong_questions == 'True'){
+                        this.wrongStatus=true
+                    }
                 })
                 .catch((error) => {
                     console.error(error);
