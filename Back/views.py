@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from functools import wraps
 from suds.client import Client
-from .models import session, User, Course, Lesson, Answer, Question, User_answer, Voice, Sale_plan, Invoice
+from .models import  Session, User, Course, Lesson, Answer, Question, User_answer, Voice, Sale_plan, Invoice
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 import jwt, json
@@ -18,6 +18,7 @@ root_url = 'http://localhost:5555'
 def token_required(f):
     @wraps(f)
     def _verify(*args, **kwargs):
+        session = Session()
         auth_headers = request.headers.get('Authorization', '').split()
 
         invalid_msg = {
@@ -53,6 +54,7 @@ def token_required(f):
     
 @app.route('/api/register', methods=('POST',))
 def register():
+    session = Session()
     #j_data = request.get_json()
     #data = json.loads(j_data)
     data = request.get_json()
@@ -78,7 +80,8 @@ def register():
     return jsonify(response), status_code
 
 @app.route('/api/login', methods=('POST',))
-def login(): 
+def login():
+    session = Session() 
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
     session.commit()
@@ -101,6 +104,7 @@ def login():
 @app.route('/api/get-user-information')
 @token_required
 def user_information(cuser):
+    session = Session()
     user_id = int(request.args['id']) 
     user = session.query(User).filter(User.id == user_id).first()
     session.commit()
@@ -116,6 +120,7 @@ def user_information(cuser):
 @app.route('/api/courses')     
 @token_required
 def courses(cuser):
+    session = Session()
     all_courses = []
     courses = session.query(Course).all()
     session.commit()
@@ -130,6 +135,7 @@ def courses(cuser):
 @app.route('/api/lessons')     
 @token_required
 def lessons(cuser):
+    session = Session()
     course_id = int(request.args['course_id'])
     user_id = int(request.args['user_id'])
     all_lessons = []
@@ -147,6 +153,7 @@ def lessons(cuser):
 @app.route('/api/get-status-question-user')     
 @token_required
 def status_question(cuser):
+    session = Session()
     lesson_id = int(request.args['lesson_id'])
     user_id = int(request.args['user_id'])
     new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
@@ -159,7 +166,7 @@ def status_question(cuser):
     session.commit()
     next_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > max_previous_answer[0], Question.lesson_id == lesson_id ).first()
     session.commit()
-    if next_previous_question :
+    if (next_previous_question) :
         review_previous_questions = 'True'  
     else:
         review_previous_questions = 'False'
@@ -176,6 +183,7 @@ def status_question(cuser):
 @app.route('/api/new-questions')     
 @token_required
 def all_questions(cuser): 
+    session = Session()
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
     user_id = int(request.args['user_id'])
@@ -192,6 +200,7 @@ def all_questions(cuser):
 @app.route('/api/get-previous-questions')     
 @token_required
 def previous_questions(cuser): 
+    session = Session()
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
@@ -210,6 +219,7 @@ def previous_questions(cuser):
 @app.route('/api/get-wrong-questions')     
 @token_required
 def wronge_questions(cuser): 
+    session = Session()
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
     index = int(request.args['index'])
@@ -229,6 +239,7 @@ def wronge_questions(cuser):
 @app.route('/api/set-user-answer', methods=('POST',))    
 @token_required
 def user_answer(cuser): 
+    session = Session()
     data = request.get_json()
     previous_user_answer = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
     session.commit()
@@ -261,6 +272,7 @@ def user_answer(cuser):
 @app.route('/api/zarinpall')    
 @token_required
 def zarinpal(cuser): 
+    session = Session()
     user_id = int(request.args['user_id'])
     course_id = int(request.args['course_id'])
     sale_plan_id = int(request.args['sale_plan_id'])
@@ -309,6 +321,7 @@ def zarinpal(cuser):
 
 @app.route('/api/zarinpal-callback')    
 def zarinpal_callback():
+    session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
     MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     client = Client(ZARINPAL_WEBSERVICE)
