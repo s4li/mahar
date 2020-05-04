@@ -14,10 +14,10 @@ Session = sessionmaker(bind = engine) # A session object is the handle to databa
 class User(Base):
    __tablename__ = 'tbl_users'
    id = Column(Integer, primary_key=True)
-   full_name = Column(String)
-   mobile = Column(String)
-   password = Column(String)
-   purchased_lessons = Column(String,  default='1,9,16')
+   full_name = Column(String(100))
+   mobile = Column(String(45))
+   password = Column(String(50))
+   purchased_lessons = Column(String(500),  default='1,9,16')
    user_answer = relationship('User_answer') 
    invoice = relationship('Invoice')  
    enrol_user = relationship('Enrol_user') 
@@ -25,13 +25,13 @@ class User(Base):
 class Course(Base):
    __tablename__ = 'tbl_courses'
    id = Column(Integer, primary_key=True)  
-   title = Column(String)
+   title = Column(String(45))
    lesson = relationship('Lesson')
 
 class Lesson(Base):
    __tablename__ = 'tbl_lessons'
    id = Column(Integer, primary_key=True)  
-   title = Column(String)
+   title = Column(String(45))
    course_id = Column(Integer,ForeignKey('tbl_courses.id', ondelete='CASCADE'))
    voice = relationship('Voice') 
    question = relationship('Question') 
@@ -41,8 +41,8 @@ class Lesson(Base):
 class Voice(Base):
    __tablename__ = 'tbl_voices'
    id = Column(Integer, primary_key=True)  
-   title = Column(String)
-   path = Column(String)
+   title = Column(String(45))
+   path = Column(String(100))
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE'))
    question = relationship('Question') 
    
@@ -50,7 +50,7 @@ class Voice(Base):
 class Question(Base):
    __tablename__ = 'tbl_questions'
    id = Column(Integer, primary_key=True)  
-   text = Column(String)
+   text = Column(String(45))
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE'))
    voice_id = Column(Integer,ForeignKey('tbl_voices.id', ondelete='CASCADE'))
    question = relationship('User_answer')
@@ -60,8 +60,8 @@ class Question(Base):
 class Answer(Base):
    __tablename__ = 'tbl_answers'
    id = Column(Integer, primary_key=True)  
-   ans_text = Column(String)
-   check_ans = Column(String)
+   ans_text = Column(String(45))
+   check_ans = Column(String(45))
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
    
 class Enrol_user(Base): 
@@ -74,7 +74,7 @@ class Enrol_user(Base):
 class User_answer(Base):
    __tablename__ = 'tbl_user_answers'
    id = Column(Integer, primary_key=True)  
-   ans_no = Column(String)
+   ans_no = Column(String(45))
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE'))
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE'))
@@ -83,19 +83,19 @@ class User_answer(Base):
 class Sale_plan(Base):
    __tablename__ = 'tbl_sale_plan'
    id = Column(Integer, primary_key=True)  
-   title = Column(String)
-   price = Column(String)
-   lessons = Column(String)
+   title = Column(String(45))
+   price = Column(String(45))
+   lessons = Column(String(200))
    invoice = relationship('Invoice') 
 
 class Invoice(Base):
    __tablename__ = 'tbl_invoices'
    id = Column(Integer, primary_key=True)  
-   invoice_no = Column(String)
-   datetime = Column(String)
-   transaction_reference_id = Column(String)
-   status = Column(String)
-   lessons = Column(String)
+   invoice_no = Column(String(200))
+   datetime = Column(String(100))
+   transaction_reference_id = Column(String(200))
+   status = Column(String(45))
+   lessons = Column(String(200))
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    sale_plan_id = Column(Integer,ForeignKey('tbl_sale_plan.id', ondelete='CASCADE'))
 
