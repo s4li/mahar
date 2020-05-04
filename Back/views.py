@@ -48,7 +48,6 @@ def token_required(f):
         except (jwt.InvalidTokenError, Exception) as e:
             print(e)
             return jsonify(invalid_msg), 401
-
     return _verify
   
     
@@ -61,7 +60,7 @@ def register():
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
         session.add(user)
         session.commit()
-        status_code = 200
+        
         token = jwt.encode({
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
@@ -69,9 +68,10 @@ def register():
                             app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
-        response = {'result':'success', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
+        response = {'result':f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
+        status_code = 200
     else:
-        response = {'result':'user_exists'}
+        response = {'result':'کاربر عزیز با این شماره موبایل قبلا ثبت نام شده است!'}
         status_code = 401   
     session.close()                           
     return jsonify(response), status_code
@@ -90,10 +90,10 @@ def login():
                             app.secret_key  
                           )
         status_code = 200                  
-        response = {'result': 'success', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
+        response = {'result': f'{user.full_name}عزیز خوش آمدید.', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
     else:
         status_code = 401
-        response = {'result':'nouser'} 
+        response = {'result':'شما قبلا ثبت نام نکرده اید!'} 
     session.close()                
     return jsonify(response), status_code
 
@@ -272,13 +272,13 @@ def zarinpal(cuser):
         callback_url = f'{root_url}/api/zarinpal-callback' 
         invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         client = Client(ZARINPAL_WEBSERVICE)
-        result_zarinpall = client.service.PaymentRequest(MMERCHANT_ID,
+        result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                            sale_plan.price,
                                            sale_plan.title,
                                            user.mobile,
                                            'parastoo.rambarzini@gmail.com',
                                            callback_url)
-        if result_zarinpall.Status == 100:
+        if result_zarinpal.Status == 100:
             if sale_plan_id == 2 : 
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
                 str_lesson = ''
@@ -288,15 +288,15 @@ def zarinpal(cuser):
                 lessons = str_lesson
             else:
                 lessons = sale_plan.lessons        
-            invoice = Invoice( invoice_no = result_zarinpall.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lessons)
+            invoice = Invoice( invoice_no = result_zarinpal.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lessons)
             session.add(invoice)
             session.commit()
             session.close()
-            zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result_zarinpall.Authority}'
+            zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result_zarinpal.Authority}'
             result = {"result":"success", "zarinpal_url":zarinpal_url}
             status_code = 200
         else:
-            result = {"result":"faild"}
+            result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
     session.close()         
     return jsonify(result), status_code   
@@ -313,11 +313,12 @@ def zarinpal_callback():
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
         if check_invoice:
             sale_plan = session.query(Sale_plan.price).filter(check_invoice.sale_plan_id == Sale_plan.id).first()
-            result_zarinpall = client.service.PaymentVerification(MMERCHANT_ID,
+            result_zarinpal = client.service.PaymentVerification(MMERCHANT_ID,
                                                         Authority,
                                                         sale_plan[0])                                                                                                                                   
-            if result_zarinpall.Status == 100:  
-                result = {'result': 'success'} 
+            if result_zarinpal.Status == 100: 
+                user = session.query(User).filter(User.id == check_invoice.user_id).first()
+                result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
                 status_code = 200 
                 if check_invoice.sale_plan_id == 1:
                     purchased_lessons = check_invoice.lessons
@@ -327,8 +328,8 @@ def zarinpal_callback():
                 update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                 session.commit()
                 #return 'Transaction success. RefID: ' + str(result.RefID)   
-            elif result_zarinpall.Status == 101:
-                result = {'result': 'success'} 
+            elif result_zarinpal.Status == 101:
+                result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
                 status_code = 200 
                 if check_invoice.sale_plan_id == 1:
                     purchased_lessons = check_invoice.lessons
@@ -339,15 +340,15 @@ def zarinpal_callback():
                 session.commit()
                 #return 'Transaction submitted : ' + str(result.Status)
             else:
-                result = {'result': 'feild'} 
+                result = {'result': 'عملیات پرداخت ناموفق بود.'} 
                 status_code = 401 
                 #return 'Transaction failed. Status: ' + str(result.Status)
-            invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : result_zarinpall.Status, Invoice.transaction_reference_id: result_zarinpall.RefID})       
+            invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : result_zarinpal.Status, Invoice.transaction_reference_id: result_zarinpal.RefID})       
             session.commit()
     else:
         invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status})   
         session.commit()
-        result = {'result': 'feild'} 
+        result = {'result': 'عملیات پرداخت توسط کاربر یا سیستم متوقف شد.'} 
         status_code = 401 
         #return 'Transaction failed or canceled by user'
     session.close() 
