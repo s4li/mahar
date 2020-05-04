@@ -10,7 +10,8 @@ export default new Vuex.Store({
     idToken: null,
     userId: null,
     user: null,
-    showAlert : false,
+    alerttext : '',
+    showAlert:false,
     currenturl:'/Grades'
   },
   mutations: {
@@ -51,7 +52,12 @@ export default new Vuex.Store({
           router.replace('/Grades')
         })
         .catch(error => {
-          console.log(error,'error')
+          this.state.showAlert = true
+          if (error.response.status == 401){
+            this.state.alerttext = error.response.data.result
+          }else{
+            this.state.alerttext = 'خطای غیرمنتظره'
+          }
           localStorage.removeItem('FullName')
           localStorage.removeItem('token')
           localStorage.removeItem('userId')
@@ -73,12 +79,15 @@ export default new Vuex.Store({
             token: res.data.token,
             userId: res.data.id
             });
-        this.state.showAlert = true
           router.replace('/Grades')
         })
         .catch(error =>{
           this.state.showAlert = true
-          console.log(error)
+          if (error.response.status == 401){
+            this.state.alerttext = error.response.data.result
+          }else{
+            this.state.alerttext = 'خطای غیرمنتظره'
+          }
           localStorage.removeItem('FullName')
           localStorage.removeItem('token')
           localStorage.removeItem('userId')

@@ -12,6 +12,10 @@
             </div>
         </div>
     </transition>
+    <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer hide-header centered title="">
+        <h4 class="my-4 text-center">شما به پایان این دوره از کلمات رسیدید</h4>
+        <button class="btn btn-primary d-block m-auto w-25" @click.prevent="redirect()">بستن</button>
+    </b-modal>
 </div>
 </template>
 
@@ -25,7 +29,8 @@ export default {
     data() {
         return {
             grads: [],
-            show: true
+            show: true,
+            ModalShow: false,
         }
     },
     computed: {},
@@ -39,9 +44,13 @@ export default {
             axios.get('/courses')
                 .then((res) => {
                     this.grads = res.data;
+                    console.log(res)
+                    //res.status: 200
+                    //res.statusText: "OK"
+
                 })
                 .catch((error) => {
-                    console.error(error);
+                    console.log(error);
                 });
         },
     },

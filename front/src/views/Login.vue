@@ -2,7 +2,16 @@
 <div>
     <Header title="ورود"></Header>
     <div class="outter">
-        <b-alert class="shakeError" variant="danger" dismissible fade :show="this.$store.state.showAlert">لطفا فرم را به درستی پر کنید.</b-alert>
+
+        <transition name="shakeTop">
+            <div class="shakeTop alert alert-danger mt-2 alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
+                {{this.$store.state.alerttext}}
+                <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </transition>
+
         <div class="inner">
             <form @submit="onSubmit">
                 <div class="limiter">
@@ -60,8 +69,13 @@ export default {
             checkingMobile: false,
         }
     },
-    components: {Header},
+    components: {
+        Header
+    },
     methods: {
+        close() {
+            this.$store.state.showAlert = false
+        },
         onSubmit(evt) {
             evt.preventDefault();
             const payload = {
@@ -73,8 +87,9 @@ export default {
                     Mobile: payload.Mobile,
                     Password: payload.Password
                 })
+                this.initForm();
             } else {
-                this.$store.state.showAlert = true
+                this.initForm();
             }
         },
         checkingValPass() {
@@ -90,7 +105,13 @@ export default {
             } else {
                 this.checkingMobile = false
             }
-        }
+        },
+        initForm() {
+            this.LoginForm.Mobile = '';
+            this.LoginForm.Password = '';
+            this.checkingPass= false
+            this.checkingMobile= false
+        },
     },
     validations: {
         LoginForm: {
@@ -104,7 +125,10 @@ export default {
                 minlin: minLength(5)
             },
         },
-    }
+    },
+    created() {
+        this.$store.state.showAlert = false
+    },
 }
 </script>
 

@@ -1,8 +1,15 @@
 <template>
 <div>
     <Header title="ثبت نام"></Header>
-    <b-alert class="shakeError" variant="danger" dismissible fade :show="this.$store.state.showAlert">لطفا فرم را به درستی پر کنید.</b-alert>
     <div class="outter">
+        <transition name="shakeTop">
+            <div class="shakeTop alert alert-danger alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
+                {{this.$store.state.alerttext}}
+                <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </transition>
         <div class="inner">
             <form @submit="onSubmit">
                 <div class="limiter">
@@ -77,6 +84,9 @@ export default {
         Header
     },
     methods: {
+        close() {
+            this.$store.state.showAlert = false
+        },
         onSubmit(evt) {
             evt.preventDefault();
             const payload = {
@@ -84,21 +94,24 @@ export default {
                 Mobile: this.SingupForm.Mobile,
                 Password: this.SingupForm.Password,
             };
-            if (payload.Mobile && payload.Password && payload.FullName!= '') {
+            if (payload.Mobile && payload.Password && payload.FullName != '') {
                 this.$store.dispatch('signup', {
                     Mobile: payload.Mobile,
                     Password: payload.Password,
-                    FullName:payload.FullName
+                    FullName: payload.FullName
                 })
+                this.initForm();
             } else {
-                this.$store.state.showAlert = true
+                this.initForm();
             }
-            this.initForm();
         },
         initForm() {
             this.SingupForm.FullName = '';
             this.SingupForm.Mobile = '';
             this.SingupForm.Password = '';
+            this.checkingName = false
+            this.checkingPass = false
+            this.checkingMobile = false
         },
         checkingValName() {
             if (this.SingupForm.FullName != '') {
@@ -138,7 +151,10 @@ export default {
                 minlin: minLength(5)
             },
         },
-    }
+    },
+    created() {
+        this.$store.state.showAlert = false
+    },
 }
 </script>
 
