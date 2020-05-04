@@ -13,7 +13,6 @@
                     </svg>
                 </div>
                 <h1><span>م</span>رکز <span>ه</span>وشمند سازی <span>آ</span>موزش های <span>ر</span>سانه ای</h1>
-                <p>ورود</p>
             </div>
         </div>
     </div>
@@ -34,9 +33,10 @@
     align-items: center;
     flex-wrap: wrap;
     overflow: hidden;
-    background: #f8f9fa99;
+    background: #ffffffcc;
     border-radius: 4px;
     box-shadow: 0 5px 15px #dedede;
+    padding: 80px 0;
 }
 
 #logo {

@@ -2,6 +2,16 @@
 <div>
     <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
     <router-link class="back-btn" to="/Grades"><i class='fas fa-arrow-left'></i></router-link>
+
+    <transition name="shakeTop">
+        <div class="shakeTop alert alert-danger mt-2 alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
+            {{this.$store.state.alerttext}}
+            <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </transition>
+    
     <transition name="fadeIn" appear>
         <div class="parent">
             <div class="btn-box">
@@ -48,10 +58,13 @@ export default {
             lessonsData: [],
             lessons: [],
             courseId: 0,
-            spinnerShow:false,
+            spinnerShow: false,
         }
     },
     methods: {
+        close() {
+            this.$store.state.showAlert = false
+        },
         unlockCheck(checkid) {
             this.courseId = checkid
             const grads = this.lessons
@@ -99,7 +112,12 @@ export default {
                     window.location = URL
                 })
                 .catch((error) => {
-                    console.error(error);
+                    this.state.showAlert = true
+                    if (error.response.status == 401) {
+                        this.state.alerttext = error.response.data.result
+                    } else {
+                        this.state.alerttext = 'خطای غیرمنتظره'
+                    }
                 });
         }
     },

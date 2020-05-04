@@ -12,10 +12,6 @@
             </div>
         </div>
     </transition>
-    <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer hide-header centered title="">
-        <h4 class="my-4 text-center">شما به پایان این دوره از کلمات رسیدید</h4>
-        <button class="btn btn-primary d-block m-auto w-25" @click.prevent="redirect()">بستن</button>
-    </b-modal>
 </div>
 </template>
 
@@ -30,7 +26,6 @@ export default {
         return {
             grads: [],
             show: true,
-            ModalShow: false,
         }
     },
     computed: {},

@@ -4,7 +4,7 @@
     <div class="outter">
 
         <transition name="shakeTop">
-            <div class="shakeTop alert alert-danger mt-2 alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
+            <div class="shakeTop alert alert-danger alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
                 {{this.$store.state.alerttext}}
                 <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
