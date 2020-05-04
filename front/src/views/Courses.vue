@@ -74,7 +74,6 @@ export default {
                     question_id: this.questionId,
                 })
                 .then((res) => {
-                    console.log(res)
                     if (res.data.has_next_new_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)

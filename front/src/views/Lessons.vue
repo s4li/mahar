@@ -78,6 +78,7 @@ export default {
                 })
                 .then((res) => {
                     this.lessons = res.data;
+                    console.log(this.lessons)
                 })
                 .catch((error) => {
                     console.error(error);
@@ -117,6 +118,7 @@ export default {
     padding: 15px;
     background-color: #ffffffcc;
     border-radius: 4px;
+    box-shadow: 0 3px 10px #cccccc;
 }
 
 .btn-box button {

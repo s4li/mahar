@@ -1,7 +1,7 @@
 <template>
 <div>
     <Header title="نوع آزمون خود را انتخاب کنید"></Header>
-    <router-link class="back-btn" :to="'/ExamType/' + lessonId "><i class='fas fa-arrow-left'></i></router-link>
+    <router-link class="back-btn" :to="'/Lessons/' + lessonId "><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" appear>
         <div class="parent">
             <div class="btn-box">
@@ -71,6 +71,7 @@ export default {
     padding: 15px;
     background-color: #ffffffcc;
     border-radius: 4px;
+    box-shadow: 0 3px 10px #cccccc;
 }
 
 .btn-box button,
