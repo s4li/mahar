@@ -314,8 +314,8 @@ def zarinpal_callback():
         if check_invoice:
             sale_plan = session.query(Sale_plan.price).filter(check_invoice.sale_plan_id == Sale_plan.id).first()
             result_zarinpal = client.service.PaymentVerification(MMERCHANT_ID,
-                                                        Authority,
-                                                        sale_plan[0])                                                                                                                                   
+                                                                Authority,
+                                                                sale_plan[0])                                                                                                                                   
             if result_zarinpal.Status == 100: 
                 user = session.query(User).filter(User.id == check_invoice.user_id).first()
                 result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
@@ -352,7 +352,7 @@ def zarinpal_callback():
         status_code = 401 
         #return 'Transaction failed or canceled by user'
     session.close() 
-    return jsonify(result), status_code    
+    return redirect("http://localhost:8080/Grades")    
 
 
 if __name__ == '__main__':
