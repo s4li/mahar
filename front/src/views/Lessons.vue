@@ -91,7 +91,6 @@ export default {
                 })
                 .then((res) => {
                     this.lessons = res.data;
-                    console.log(this.lessons)
                 })
                 .catch((error) => {
                     console.error(error);

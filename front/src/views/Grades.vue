@@ -39,10 +39,6 @@ export default {
             axios.get('/courses')
                 .then((res) => {
                     this.grads = res.data;
-                    console.log(res)
-                    //res.status: 200
-                    //res.statusText: "OK"
-
                 })
                 .catch((error) => {
                     console.log(error);

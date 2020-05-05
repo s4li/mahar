@@ -19,9 +19,17 @@
             </div>
         </div>
     </transition>
-    <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer hide-header centered title="">
-        <h4 class="my-4 text-center">شما به پایان این دوره از کلمات رسیدید</h4>
-        <button class="btn btn-primary d-block m-auto w-25" @click.prevent="redirect()">بستن</button>
+    <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
+        <template v-slot:modal-header="{ close }">
+            <h5 class="w-100 m-0 text-center">شما به پایان این دوره از کلمات رسیدید</h5>
+            <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
+        </template>
+        <h4 class="my-4 text-center"> تعداد جواب های صحیح : {{wrongAnswer | faNum}}</h4>
+        <h4 class="my-4 text-center">تعداد جواب های غلط : {{trueAnswer | faNum}}</h4>
+        <div class="d-flex justify-content-center">
+            <router-link class="btn btn-primary m-2" :to="'/Lessons/' + gradId">پایه ها</router-link>
+            <button class="btn btn-secondary m-2" @click.prevent="redirect()">آزمون ها</button>
+        </div>
     </b-modal>
 </div>
 </template>
@@ -43,6 +51,8 @@ export default {
             questionType: 0,
             flip: false,
             questionId: '',
+            wrongAnswer: '',
+            trueAnswer: '',
         }
     },
     methods: {
@@ -80,6 +90,8 @@ export default {
                         this.flip = false
                     } else {
                         this.ModalShow = true
+                        this.wrongAnswer = res.data.wrong_answer_no
+                        this.trueAnswer = res.data.true_answer_no
                     }
                 })
                 .catch((error) => {
