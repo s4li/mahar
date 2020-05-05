@@ -39,9 +39,10 @@
   }
   
   body {
-    background-image: url(../image/background.png);
-    background-color: #ffffff;
+    background-image: url(/img/background.7434d534.png);
     background-position: center;
+    background-repeat: repeat-x;
+    background-size: contain;
   }
   
   html, body {
