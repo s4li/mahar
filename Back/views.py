@@ -12,11 +12,16 @@ from .models import  (Session, User, Course, Lesson, Answer,
 
 
 app = Flask(__name__)
-app.secret_key = 'mahar'
+app.secret_key = 'In the name of Allah!'
 
 # enable CORS
 CORS(app)
 bcrypt = Bcrypt(app)
+app.config['BCRYPT_LOG_ROUNDS'] = 6
+app.config['BCRYPT_HASH_IDENT'] = '2b'
+app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
+
+
 root_url = 'http://localhost:5555'
 
 def token_required(f):
@@ -61,7 +66,7 @@ def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if data and user == None :
-        hash_pass=bcrypt.generate_password_hash(data['password'])
+        hash_pass=bcrypt.generate_password_hash(data['password']).decode('utf-8')
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = hash_pass)
         session.add(user)
         session.commit()
@@ -87,7 +92,7 @@ def login():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        if bcrypt.check_password_hash(user.password,data['password']):
+        if bcrypt.check_password_hash(user.password.encode('utf-8'),data['password'].encode('utf-8')):
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
