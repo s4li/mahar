@@ -264,7 +264,9 @@ def user_answer(cuser):
     if next_content:
         result = {"has_next_new_question":"True"}
     else:
-        result = {"has_next_new_question":"False"}    
+        wrong_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'] ,User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).scalar() 
+        true_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'],  User_answer.ans_no == '0', User_answer.lesson_id == data['lesson_id']).scalar() 
+        result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
     session.close()
     return  jsonify(result)
 
