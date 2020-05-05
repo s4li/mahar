@@ -98,13 +98,8 @@ export default {
         },
         buyPlan(grad, plan) {
             this.spinnerShow = true
-            axios.get('/zarinpall', {
-                    params: {
-                        user_id: this.userid,
-                        course_id: grad,
-                        sale_plan_id: plan,
-                    }
-                })
+            const path = '/zarinpall/site/'+ this.userid +'/'+ plan +'/'+ grad
+            axios.get(path)
                 .then((res) => {
                     this.lessons = res.data;
                     const URL = res.data.zarinpal_url
