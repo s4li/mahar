@@ -49,6 +49,7 @@ export default new Vuex.Store({
             userId: res.data.id
           });
           dispatch('storeUser', authData);
+          this.state.showAlert = false
           router.replace('/Grades')
         })
         .catch(error => {
@@ -79,6 +80,7 @@ export default new Vuex.Store({
             token: res.data.token,
             userId: res.data.id
             });
+            this.state.showAlert = false
           router.replace('/Grades')
         })
         .catch(error =>{
