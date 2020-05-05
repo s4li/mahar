@@ -96,6 +96,7 @@ class Invoice(Base):
    transaction_reference_id = Column(String(200))
    status = Column(String(45))
    lessons = Column(String(200))
+   verify = Column(String(100))
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    sale_plan_id = Column(Integer,ForeignKey('tbl_sale_plan.id', ondelete='CASCADE'))
 
