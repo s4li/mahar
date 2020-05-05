@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="text-center" v-if="spinnerShow">
-            <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
+            <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
         </div>
     </b-modal>
 </div>
@@ -98,7 +98,7 @@ export default {
         },
         buyPlan(grad, plan) {
             this.spinnerShow = true
-            const path = '/zarinpall/site/'+ this.userid +'/'+ plan +'/'+ grad
+            const path = '/zarinpal/site/'+ this.userid +'/'+ plan +'/'+ grad
             axios.get(path)
                 .then((res) => {
                     this.lessons = res.data;
