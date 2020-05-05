@@ -119,7 +119,10 @@
     <script>
         $(function () {
             $(".redirect").click(function () {
-                $(window).attr('location','https://google.com');
+                $(window).attr('location','http://deeplink.flutter.dev');
+                setTimeout(function () {
+                    $(window).attr('location','poc://');
+                }, 250);
             });
         })
     </script>
