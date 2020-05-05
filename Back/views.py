@@ -2,17 +2,21 @@ from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from functools import wraps
 from suds.client import Client
-from .models import  Session, User, Course, Lesson, Answer, Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 import jwt, json
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
+from .models import  (Session, User, Course, Lesson, Answer, 
+                     Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user)
+
 
 app = Flask(__name__)
 app.secret_key = 'mahar'
 
 # enable CORS
 CORS(app)
-
+bcrypt = Bcrypt(app)
 root_url = 'http://localhost:5555'
 
 def token_required(f):
@@ -57,7 +61,8 @@ def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if data and user == None :
-        user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
+        hash_pass=bcrypt.generate_password_hash(data['password'])
+        user = User(full_name = data['full_name'], mobile = data['mobile'], password = hash_pass)
         session.add(user)
         session.commit()
         
@@ -80,17 +85,21 @@ def register():
 def login():
     session = Session() 
     data = request.get_json()
-    user = session.query(User).filter(User.mobile == data['mobile'], User.password == data['password']).first()
+    user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        token = jwt.encode({ 
+        if bcrypt.check_password_hash(user.password,data['password']):
+            token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
                         'exp' : datetime.utcnow() + timedelta(hours=24)
                             },
                             app.secret_key  
                           )
-        status_code = 200                  
-        response = {'result': f'{user.full_name}عزیز خوش آمدید.', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
+            status_code = 200                  
+            response = {'result': f'{user.full_name}عزیز خوش آمدید.', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
+        else:
+            status_code = 401
+            response = {'result':'رمز عبور خود را درست وارد نکرده اید!'} 
     else:
         status_code = 401
         response = {'result':'شما قبلا ثبت نام نکرده اید!'} 
@@ -352,7 +361,7 @@ def zarinpal_callback():
         status_code = 401 
         #return 'Transaction failed or canceled by user'
     session.close() 
-    return redirect("http://localhost:8080/Grades")    
+    return redirect("http://localhost:8081/Grades")    
 
 
 if __name__ == '__main__':

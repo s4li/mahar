@@ -16,7 +16,7 @@ class User(Base):
    id = Column(Integer, primary_key=True)
    full_name = Column(String(100))
    mobile = Column(String(45))
-   password = Column(String(50))
+   password = Column(String(200))
    purchased_lessons = Column(String(500),  default='1,9,16')
    user_answer = relationship('User_answer') 
    invoice = relationship('Invoice')  
