@@ -100,9 +100,6 @@ export default {
                     Password: payload.Password,
                     FullName: payload.FullName
                 })
-                this.initForm();
-            } else {
-                this.initForm();
             }
         },
         initForm() {

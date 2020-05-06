@@ -87,9 +87,6 @@ export default {
                     Mobile: payload.Mobile,
                     Password: payload.Password
                 })
-                this.initForm();
-            } else {
-                this.initForm();
             }
         },
         checkingValPass() {

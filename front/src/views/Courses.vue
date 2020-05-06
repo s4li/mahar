@@ -12,8 +12,8 @@
                 <div class="flip-card-back back">
                     <h3 class="mb-4">{{answer}}</h3>
                     <div>
-                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
-                        <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
+                        <button @click.prevent="SendAnswer(1)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
+                        <button @click.prevent="SendAnswer(0)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
                     </div>
                 </div>
             </div>
