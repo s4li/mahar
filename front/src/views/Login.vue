@@ -12,7 +12,8 @@
             </div>
         </transition>
 
-        <div class="inner">
+        <transition name="fadeIn" appear>
+        <div class="inner" v-if="show">
             <form @submit="onSubmit">
                 <div class="limiter">
                     <div class="container-login100">
@@ -43,10 +44,11 @@
                 <div class="btn-boxl">
                     <router-link to="/Singup" id="singupbtn" class="btn shadow">ثبت نام</router-link>
                     <button class="btn shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
-                    <router-link to="/Guids" id="infobtn" class="btn shadow">راهنمای استفاده</router-link>
+                    <router-link to="/Guids" id="infobtn" class="btn">راهنمای استفاده</router-link>
                 </div>
             </form>
         </div>
+        </transition>
     </div>
 </div>
 </template>
@@ -67,6 +69,7 @@ export default {
             },
             checkingPass: false,
             checkingMobile: false,
+            show : true
         }
     },
     components: {
@@ -106,8 +109,8 @@ export default {
         initForm() {
             this.LoginForm.Mobile = '';
             this.LoginForm.Password = '';
-            this.checkingPass= false
-            this.checkingMobile= false
+            this.checkingPass = false
+            this.checkingMobile = false
         },
     },
     validations: {
@@ -131,8 +134,9 @@ export default {
 
 <style lang="css" scoped>
 #infobtn {
-    border: 1px solid #e0e0d8;
-    background: #e2dfd6;
+    border-radius: 4px;
+    background: linear-gradient(145deg, #cbc9c1, #f2efe5);
+    box-shadow: 5px 5px 15px #c5c2ba, -5px -5px 15px #fffcf2;
 }
 
 #loginbtn {

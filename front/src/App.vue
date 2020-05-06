@@ -2,7 +2,7 @@
 <div id="app">
     <div class="container">
         <div class="row">
-            <div class="col-12 col-md-6 m-md-auto">
+            <div class="col-12 col-lg-6 m-lg-auto">
                 <router-view />
             </div>
         </div>
