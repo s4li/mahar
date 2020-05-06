@@ -323,7 +323,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
             session.close()
             zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result_zarinpal.Authority}'
             result = {"result":"success", "zarinpal_url":zarinpal_url}
-            webbrowser.open(zarinpal_url)
+            return render_template("pay.html", zarinpal_url = zarinpal_url, amont = sale_plan.price, phone = mobile, cource_name = sale_plan.title)
         else:
             result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
