@@ -2,10 +2,10 @@ from sqlalchemy import Column, Table, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base #class stores a catlog of classes and mapped tables in the Declarative system
 from sqlalchemy.orm import sessionmaker, relationship
 import pymysql
-from .conection_info import password, user
+from .conection_info import mysql_password, mysql_user, host, db_name
 
 
-engine = create_engine(f'mysql+pymysql://{user}:{password}@localhost/mahar?charset=utf8') # Create the database in memory
+engine = create_engine(f'mysql+pymysql://{mysql_user}:{mysql_password}@{host}/{db_name}?charset=utf8') # Create the database in memory
 Base = declarative_base() #function is used to create base class
 Session = sessionmaker(bind = engine) # A session object is the handle to database
 
