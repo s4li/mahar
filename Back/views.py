@@ -13,7 +13,6 @@ from .models import  (Session, User, Course, Lesson, Answer,
 
 
 app = Flask(__name__)
-app.secret_key = 'In the name of Allah!'
 
 # enable CORS
 CORS(app)
@@ -21,9 +20,9 @@ bcrypt = Bcrypt(app)
 app.config['BCRYPT_LOG_ROUNDS'] = 6
 app.config['BCRYPT_HASH_IDENT'] = '2b'
 app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
+app.config['SECRET_KEY'] = 'In the name of Allah!'
 
-
-root_url = 'http://localhost:8080'
+root_url = 'http://194.5.188.147:8888/'
 
 def token_required(f):
     @wraps(f)
@@ -45,7 +44,7 @@ def token_required(f):
 
         try:
             token = auth_headers[1]
-            data = jwt.decode(token, app.secret_key)
+            data = jwt.decode(token, app.config['SECRET_KEY'])
             user = None
             if data and data['sub']:
                 user = session.query(User).filter_by(mobile=data['sub']).first()
@@ -76,7 +75,7 @@ def register():
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
                             'exp': datetime.utcnow() + timedelta(hours=24)},
-                            app.secret_key)
+                            app.config['SECRET_KEY'])
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
         response = {'result':f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
@@ -93,13 +92,13 @@ def login():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        if bcrypt.check_password_hash(user.password.encode('utf-8'),data['password'].encode('utf-8')):
+        if bcrypt.check_password_hash( user.password.encode('utf-8'), data['password'].encode('utf-8')):
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
                         'exp' : datetime.utcnow() + timedelta(hours=24)
                             },
-                            app.secret_key  
+                            app.config['SECRET_KEY']  
                           )
             status_code = 200                  
             response = {'result': f'{user.full_name}عزیز خوش آمدید.', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
@@ -316,7 +315,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
     else:
         #<type>/<user_id>/<sale_plan_id>/<verify>
         mobile = user_id
-        callback_url = f'http://localhost:5555/api/zarinpal-callback' 
+        callback_url = f'{root_url}/api/zarinpal-callback' 
         result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                                         sale_plan.price,
                                                         sale_plan.title,
@@ -407,7 +406,7 @@ def zarinpal_callback():
         #return 'Transaction failed or canceled by user'
     if check_invoice.user_id != -1:
         session.close()
-        return redirect("http://localhost:8081/Grades")
+        return redirect("{root_url}/Grades")
     else:
         session.close()
         return render_template("afterPay.html", invoice_result = zarinpal_result_status)   
