@@ -17,12 +17,7 @@ app = Flask(__name__)
 
 # enable CORS
 CORS(app)
-bcrypt = Bcrypt(app)
-app.config['BCRYPT_LOG_ROUNDS'] = 6
-app.config['BCRYPT_HASH_IDENT'] = '2b'
-app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
-app.config['SECRET_KEY'] = 'In*the*name*of*Allah!'
-app.secret_key = 'any random string'
+app.secret_key = 'In the name of Allah!'
 
 def token_required(f):
     @wraps(f)
@@ -44,7 +39,7 @@ def token_required(f):
 
         try:
             token = auth_headers[1]
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, app.secret_key)
             user = None
             if data and data['sub']:
                 user = session.query(User).filter_by(mobile=data['sub']).first()
@@ -66,8 +61,7 @@ def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if data and user == None :
-        hash_pass = bcrypt.generate_password_hash(data['password'])
-        user = User(full_name = data['full_name'], mobile = data['mobile'], password = hash_pass)
+        user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
         session.add(user)
         session.commit()
         
@@ -75,7 +69,7 @@ def register():
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
                             'exp': datetime.utcnow() + timedelta(hours=24)},
-                            app.config['SECRET_KEY'])
+                            app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
         response = {'result':f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
@@ -92,13 +86,13 @@ def login():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        if bcrypt.check_password_hash( user.password, data['password']):
+        if  user.password == data['password']:
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
                         'exp' : datetime.utcnow() + timedelta(hours=24)
                             },
-                            app.config['SECRET_KEY']  
+                            app.secret_key  
                           )
             status_code = 200                  
             response = {'result': f'{user.full_name}عزیز خوش آمدید.', 'token': token.decode('UTF-8'), 'full_name': user.full_name, 'id' : user.id} 
