@@ -12,8 +12,8 @@
                 <div class="flip-card-back back">
                     <h3 class="mb-4">{{answer}}</h3>
                     <div>
-                        <button @click.prevent="SendAnswer(1)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
-                        <button @click.prevent="SendAnswer(0)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
+                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
+                        <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
                     </div>
                 </div>
             </div>
@@ -24,8 +24,8 @@
             <h5 class="w-100 m-0 text-center">شما به پایان این دوره از کلمات رسیدید</h5>
             <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
         </template>
-        <h4 class="my-4 text-center"> تعداد جواب های صحیح : {{wrongAnswer | faNum}}</h4>
-        <h4 class="my-4 text-center">تعداد جواب های غلط : {{trueAnswer | faNum}}</h4>
+        <h4 class="my-4 text-center"> تعداد جواب های صحیح : {{trueAnswer | faNum}}</h4>
+        <h4 class="my-4 text-center">تعداد جواب های غلط : {{wrongAnswer | faNum}}</h4>
         <div class="d-flex justify-content-center">
             <router-link class="btn btn-primary m-2" :to="'/Lessons/' + gradId">پایه ها</router-link>
             <button class="btn btn-secondary m-2" @click.prevent="redirect()">آزمون ها</button>
