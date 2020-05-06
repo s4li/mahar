@@ -66,7 +66,7 @@ def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if data and user == None :
-        hash_pass=bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        hash_pass = bcrypt.generate_password_hash(data['password'])
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = hash_pass)
         session.add(user)
         session.commit()
@@ -92,7 +92,7 @@ def login():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        if bcrypt.check_password_hash( user.password.encode('utf-8'), data['password'].encode('utf-8')):
+        if bcrypt.check_password_hash( user.password, data['password']):
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
