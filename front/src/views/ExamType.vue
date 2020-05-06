@@ -1,16 +1,21 @@
 <template>
 <div>
     <Header title="نوع آزمون خود را انتخاب کنید"></Header>
+
     <router-link class="back-btn" :to="'/Lessons/' + gradId "><i class='fas fa-arrow-left'></i></router-link>
-    <transition name="fadeIn" appear>
-        <div class="parent">
-            <div class="btn-box">
+
+    <div class="parent">
+        <transition name="fadeIn" mode="out-in">
+            <div class="text-center" v-if="toggleShow" key="first">
+                <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
+            </div>
+            <div class="btn-box" v-if="!toggleShow" key="seconde">
                 <router-link class="btn" :class="{disabled:!newStatus}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
                 <router-link class="btn" :class="{disabled:!previousStatus}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
                 <router-link class="btn" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
             </div>
-        </div>
-    </transition>
+        </transition>
+    </div>
 </div>
 </template>
 
@@ -26,9 +31,10 @@ export default {
             lessonId: this.$route.params.lessonId,
             gradId: this.$route.params.gradId,
             userid: this.$store.state.userId,
-            newStatus:false,
-            previousStatus:false,
-            wrongStatus:false,
+            newStatus: false,
+            previousStatus: false,
+            wrongStatus: false,
+            toggleShow: true,
         }
     },
     methods: {
@@ -42,15 +48,16 @@ export default {
                     }
                 })
                 .then((res) => {
-                    if(res.data.check_new_question == 'True'){
-                        this.newStatus=true
+                    if (res.data.check_new_question == 'True') {
+                        this.newStatus = true
                     }
-                    if(res.data.review_previous_questions == 'True'){
-                        this.previousStatus=true
+                    if (res.data.review_previous_questions == 'True') {
+                        this.previousStatus = true
                     }
-                    if(res.data.check_wrong_questions == 'True'){
-                        this.wrongStatus=true
+                    if (res.data.check_wrong_questions == 'True') {
+                        this.wrongStatus = true
                     }
+                    this.toggleShow = false
                 })
                 .catch((error) => {
                     console.error(error);

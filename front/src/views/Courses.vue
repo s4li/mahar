@@ -1,8 +1,11 @@
 <template>
 <div class="hereparent">
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
-    <transition name="fadeIn" appear>
-        <div class="flip-card">
+    <transition name="fadeIn" mode="out-in">
+        <div class="text-center" v-if="toggleShow" key="first">
+            <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
+        </div>
+        <div class="flip-card" v-if="!toggleShow" key="seconde">
             <div class="flip-card-inner" :class="{isFlipped:flip}">
                 <div class="flip-card-front back">
                     <h3>{{Courses.question}}</h3>
@@ -53,6 +56,7 @@ export default {
             questionId: '',
             wrongAnswer: '',
             trueAnswer: '',
+            toggleShow: true,
         }
     },
     methods: {
@@ -70,6 +74,7 @@ export default {
                     this.index = res.data.next_index;
                     this.answer = res.data.answer;
                     this.questionId = res.data.question_id;
+                    this.toggleShow = false
                 })
                 .catch((error) => {
                     console.error(error);
@@ -87,6 +92,7 @@ export default {
                     if (res.data.has_next_new_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)
+                        this.toggleShow = true
                         this.flip = false
                     } else {
                         this.ModalShow = true

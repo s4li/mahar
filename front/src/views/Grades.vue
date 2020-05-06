@@ -1,17 +1,20 @@
 <template>
 <div>
     <Header title="پایه مورد نظر خود را انتخاب کنید"></Header>
-    <transition name="fadeIn" appear>
-        <div class="parent">
-            <div class="btn-box" v-if="show">
+    <div class="parent">
+        <transition name="fadeIn" mode="out-in">
+            <div class="text-center" v-if="toggleShow" key="first">
+                <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
+            </div>
+            <div class="btn-box" v-if="!toggleShow" key="seconde">
                 <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
                     <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
                     پایه {{grad.title}}
                 </router-link>
                 <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-3 d-block w-25 btn-sm shadow">خروج</button>
             </div>
-        </div>
-    </transition>
+        </transition>
+    </div>
 </div>
 </template>
 
@@ -25,7 +28,7 @@ export default {
     data() {
         return {
             grads: [],
-            show: true,
+            toggleShow: true,
         }
     },
     computed: {},
@@ -39,6 +42,7 @@ export default {
             axios.get('/courses')
                 .then((res) => {
                     this.grads = res.data;
+                    this.toggleShow = false
                 })
                 .catch((error) => {
                     console.log(error);

@@ -11,15 +11,19 @@
             </button>
         </div>
     </transition>
-    
-    <transition name="fadeIn" appear>
-        <div class="parent">
-            <div class="btn-box">
+
+    <div class="parent">
+        <transition name="fadeIn" mode="out-in">
+            <div class="text-center" v-if="toggleShow" key="first">
+                <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
+            </div>
+            <div class="btn-box" v-if="!toggleShow" key="seconde">
                 <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
                     <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
             </div>
-        </div>
-    </transition>
+        </transition>
+    </div>
+
     <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
         <template v-slot:modal-header="{ close }">
             <h5 class="w-100 m-0 text-center">توجه!</h5>
@@ -59,6 +63,7 @@ export default {
             lessons: [],
             courseId: 0,
             spinnerShow: false,
+            toggleShow:true,
         }
     },
     methods: {
@@ -91,6 +96,7 @@ export default {
                 })
                 .then((res) => {
                     this.lessons = res.data;
+                    this.toggleShow = false
                 })
                 .catch((error) => {
                     console.error(error);
@@ -98,7 +104,7 @@ export default {
         },
         buyPlan(grad, plan) {
             this.spinnerShow = true
-            const path = '/zarinpal/site/'+ this.userid +'/'+ plan +'/'+ grad
+            const path = '/zarinpal/site/' + this.userid + '/' + plan + '/' + grad
             axios.get(path)
                 .then((res) => {
                     this.lessons = res.data;
