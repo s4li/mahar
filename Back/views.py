@@ -8,6 +8,7 @@ import jwt, json
 import webbrowser
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
+from .conection_info import front_url, back_url
 from .models import  (Session, User, Course, Lesson, Answer, 
                      Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user)
 
@@ -22,7 +23,6 @@ app.config['BCRYPT_HASH_IDENT'] = '2b'
 app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
 app.config['SECRET_KEY'] = 'In the name of Allah!'
 
-root_url = 'http://194.5.188.147:8888/'
 
 def token_required(f):
     @wraps(f)
@@ -285,7 +285,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
             result = {"result":"user or sale plane id not found"}
             status_code = 401
         else:
-            callback_url = f'{root_url}/api/zarinpal-callback' 
+            callback_url = f'{back_url}/api/zarinpal-callback' 
             result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                                sale_plan.price,
                                                sale_plan.title,
@@ -315,7 +315,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
     else:
         #<type>/<user_id>/<sale_plan_id>/<verify>
         mobile = user_id
-        callback_url = f'{root_url}/api/zarinpal-callback' 
+        callback_url = f'{back_url}/api/zarinpal-callback' 
         result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                                         sale_plan.price,
                                                         sale_plan.title,
