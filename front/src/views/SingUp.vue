@@ -2,6 +2,7 @@
 <div>
     <Header title="ثبت نام"></Header>
     <div class="outter">
+        <router-link class="back-btn" to="/login"><i class='fas fa-arrow-left'></i></router-link>
         <transition name="shakeTop">
             <div class="shakeTop alert alert-danger alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
                 {{this.$store.state.alerttext}}
