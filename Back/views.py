@@ -287,7 +287,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
                                                'parastoo.rambarzini@gmail.com',
                                                callback_url)
             if result_zarinpal.Status == 100:
-                if sale_plan_id == 2 : 
+                if sale_plan_id == '2' : 
                     lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
                     str_lesson = ''
                     for lesson_id in lesson_ids:
