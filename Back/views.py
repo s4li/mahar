@@ -21,7 +21,7 @@ bcrypt = Bcrypt(app)
 app.config['BCRYPT_LOG_ROUNDS'] = 6
 app.config['BCRYPT_HASH_IDENT'] = '2b'
 app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
-app.config['SECRET_KEY'] = 'In the name of Allah!'
+app.config['SECRET_KEY'] = 'In*the*name*of*Allah!'
 
 
 def token_required(f):
@@ -334,7 +334,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
             result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
     session.close()         
-    return jsonify(result), status_code   
+    return jsonify(result)  
 
 @app.route('/api/zarinpal-callback')    
 def zarinpal_callback():
