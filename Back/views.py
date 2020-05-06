@@ -400,7 +400,7 @@ def zarinpal_callback():
         #return 'Transaction failed or canceled by user'
     if check_invoice.user_id != -1:
         session.close()
-        return redirect("{root_url}/Grades")
+        return redirect("/Grades")
     else:
         session.close()
         return render_template("afterPay.html", invoice_result = zarinpal_result_status)   
