@@ -8,6 +8,7 @@ import jwt, json
 import webbrowser
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
+from .conection_info import front_url, back_url
 from .models import  (Session, User, Course, Lesson, Answer, 
                      Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user)
 
@@ -20,9 +21,8 @@ bcrypt = Bcrypt(app)
 app.config['BCRYPT_LOG_ROUNDS'] = 6
 app.config['BCRYPT_HASH_IDENT'] = '2b'
 app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
-app.config['SECRET_KEY'] = 'In the name of Allah!'
-
-root_url = 'http://194.5.188.147:8888/'
+app.config['SECRET_KEY'] = 'In*the*name*of*Allah!'
+app.secret_key = 'any random string'
 
 def token_required(f):
     @wraps(f)
@@ -66,7 +66,7 @@ def register():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if data and user == None :
-        hash_pass=bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        hash_pass = bcrypt.generate_password_hash(data['password'])
         user = User(full_name = data['full_name'], mobile = data['mobile'], password = hash_pass)
         session.add(user)
         session.commit()
@@ -92,7 +92,7 @@ def login():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        if bcrypt.check_password_hash( user.password.encode('utf-8'), data['password'].encode('utf-8')):
+        if bcrypt.check_password_hash( user.password, data['password']):
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
@@ -285,7 +285,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
             result = {"result":"user or sale plane id not found"}
             status_code = 401
         else:
-            callback_url = f'{root_url}/api/zarinpal-callback' 
+            callback_url = f'{back_url}/api/zarinpal-callback' 
             result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                                sale_plan.price,
                                                sale_plan.title,
@@ -315,7 +315,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
     else:
         #<type>/<user_id>/<sale_plan_id>/<verify>
         mobile = user_id
-        callback_url = f'{root_url}/api/zarinpal-callback' 
+        callback_url = f'{back_url}/api/zarinpal-callback' 
         result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                                         sale_plan.price,
                                                         sale_plan.title,
@@ -334,7 +334,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
             result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
     session.close()         
-    return jsonify(result), status_code   
+    return jsonify(result)  
 
 @app.route('/api/zarinpal-callback')    
 def zarinpal_callback():
