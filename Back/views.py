@@ -22,7 +22,7 @@ app.config['BCRYPT_LOG_ROUNDS'] = 6
 app.config['BCRYPT_HASH_IDENT'] = '2b'
 app.config['BCRYPT_HANDLE_LONG_PASSWORDS'] = False
 app.config['SECRET_KEY'] = 'In*the*name*of*Allah!'
-
+app.secret_key = 'any random string'
 
 def token_required(f):
     @wraps(f)
