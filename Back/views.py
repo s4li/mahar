@@ -310,6 +310,8 @@ def zarinpal(type, user_id, sale_plan_id, verify):
         #<type>/<user_id>/<sale_plan_id>/<verify>
         mobile = user_id
         callback_url = f'{back_url}/api/zarinpal-callback' 
+        price = sale_plan.price
+        title = sale_plan.title
         result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                                         sale_plan.price,
                                                         sale_plan.title,
@@ -323,7 +325,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
             session.close()
             zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result_zarinpal.Authority}'
             result = {"result":"success", "zarinpal_url":zarinpal_url}
-            return render_template("pay.html", zarinpal_url = zarinpal_url, amont = sale_plan.price, phone = mobile, cource_name = sale_plan.title)
+            return render_template("pay.html", zarinpal_url = zarinpal_url, cost = price, phone = mobile, cource_name = title)
         else:
             result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
