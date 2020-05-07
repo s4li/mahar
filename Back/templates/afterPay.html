@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>تکمیل خرید</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" href="/static/uploads/3488amar.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="../static/uploads/3488amar.ico" type="image/x-icon">
     <style>
         @font-face {
             font-family: 'newfont';
-            src: url('/static/fonts/IRANSansWeb.woff') format('truetype');
+            src: url('../static/fonts/IRANSansWeb.woff') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -88,7 +88,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="header depth-8">
-                    <div class="background" style="background-image: url({{ url_for('static',filename='uploads/top-sucses.png')}} );"></div>
+                    <div class="background" style="background-image: url(../static/uploads/top-sucses.png);"></div>
                     <div class="content-success">
                         <h3><i class="fa fa-check icon icon-success"></i>عملیات پرداخت موفقیت آمیز بود</h3>
                         <p>با تشکر از شما</p>
@@ -103,7 +103,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="header depth-8">
-                    <div class="background" style="background-image: url({{ url_for('static',filename='uploads/top-failed.png')}} );"></div>
+                    <div class="background" style="background-image: url(../static/uploads/top-failed.png);"></div>
                     <div class="content-failed">
                         <h3><i class="fa fa-close icon icon-failed"></i>عملیات پرداخت با شکست مواجه شد</h3>
                         <p>در صورت برداشت از حساب شما مبلغ برداشتی طی ۲۴ ساعت آینده به حساب شما برگشت داده می شود.</p>

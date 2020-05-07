@@ -112,12 +112,12 @@ export default {
                     window.location = URL
                 })
                 .catch((error) => {
-                    this.state.showAlert = true
                     if (error.response.status == 401) {
                         this.state.alerttext = error.response.data.result
                     } else {
                         this.state.alerttext = 'خطای غیرمنتظره'
                     }
+                    this.state.showAlert = true
                 });
         }
     },
