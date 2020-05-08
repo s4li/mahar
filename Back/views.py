@@ -68,7 +68,7 @@ def register():
         token = jwt.encode({
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
-                            'exp': datetime.utcnow() + timedelta(hours=24)},
+                            'exp': datetime.utcnow() + timedelta(days=10)},
                             app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
@@ -90,7 +90,7 @@ def login():
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
-                        'exp' : datetime.utcnow() + timedelta(hours=24)
+                        'exp' : datetime.utcnow() + timedelta(days=10)
                             },
                             app.secret_key  
                           )
@@ -195,7 +195,7 @@ def all_questions(cuser):
             enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
             session.add(enrol_user)  
             session.commit()
-    result = {"question":next_new_question.text, "voice":next_new_voice.path, "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text}
+    result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text}
     session.close() 
     return jsonify(result)    
 
@@ -210,7 +210,7 @@ def continue_previous_questions(cuser):
     next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> enrol_user[0], Question.lesson_id == lesson_id ).first()
     next_continue_previous_voice = session.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
     next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
-    result = {"question":next_continue_previous_question.text, "voice": next_continue_previous_voice.path, "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text}
+    result = {"question":next_continue_previous_question.text, "voice": f'{next_continue_previous_voice.path}', "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text}
     session.close() 
     return jsonify(result)
 
@@ -225,7 +225,7 @@ def wronge_questions(cuser):
     next_wrong_question = session.query(Question).filter(Question.id == first_wrong_answer.question_id).first()
     next_wrong_voice = session.query(Voice).filter(Voice.id == next_wrong_question.voice_id).first()
     next_wrong_answer = session.query(Answer).filter(Answer.question_id == next_wrong_question.id).first()
-    result = {"question":next_wrong_question.text, "voice": next_wrong_voice.path, "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text}
+    result = {"question":next_wrong_question.text, "voice": f'{next_wrong_voice.path}', "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text}
     session.close() 
     return jsonify(result)
 
