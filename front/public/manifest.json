@@ -1,48 +1,57 @@
 {
-    "name": "مرکز هوشمندسازی آموزش های رسانه ای",
-    "short_name": "مهار",
-    "start_url": "/index.html",
-    "display": "fullscreen",
-    "background_color": "#fff",
-    "description": "مرکز هوشمندسازی آموزش های رسانه ای",
-    "dir": "rtl",
-    "lang": "fa-ir",
-    "categories": ["education"],
-    "icons": [{
-        "src": "../src/assets/image/logos/48.png",
-        "sizes": "48x48",
-        "type": "image/png",
-        "purpose": "maskable"
-    }, {
-        "src": "../src/assets/image/logos/72.png",
-        "sizes": "72x72",
-        "type": "image/png",
-        "purpose": "maskable"
-    }, {
-        "src": "../src/assets/image/logos/96.png",
-        "sizes": "96x96",
-        "type": "image/png",
-        "purpose": "maskable"
-    }, {
-        "src": "../src/assets/image/logos/144.png",
-        "sizes": "144x144",
-        "type": "image/png",
-        "purpose": "maskable"
-    }, {
-        "src": "../src/assets/image/logos/168.png",
-        "sizes": "168x168",
-        "type": "image/png",
-        "purpose": "maskable"
-    }, {
-        "src": "../src/assets/image/logos/192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "maskable"
+  "name": "مرکز هوشمندسازی آموزش های رسانه ای",
+  "short_name": "مهار",
+  "start_url": "/index.html",
+  "display": "fullscreen",
+  "background_color": "#fff",
+  "description": "مرکز هوشمندسازی آموزش های رسانه ای",
+  "dir": "rtl",
+  "lang": "fa-ir",
+  "categories": [
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "../src/assets/image/logos/48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
-        "src": "../src/assets/image/logos/512.png",
-        "type": "image/png",
-        "sizes": "512x512",
-        "purpose": "maskable"
-    }]
+      "src": "../src/assets/image/logos/72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "../src/assets/image/logos/96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "../src/assets/image/logos/144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "../src/assets/image/logos/168.png",
+      "sizes": "168x168",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "../src/assets/image/logos/192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "../src/assets/image/logos/512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
 }
