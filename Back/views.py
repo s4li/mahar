@@ -43,6 +43,7 @@ def token_required(f):
             user = None
             if data and data['sub']:
                 user = session.query(User).filter_by(mobile=data['sub']).first()
+                session.commit()
                 session.close()
             if not user:
                 raise RuntimeError('User not found')
@@ -68,7 +69,7 @@ def register():
         token = jwt.encode({
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
-                            'exp': datetime.utcnow() + timedelta(hours=24)},
+                            'exp': datetime.utcnow() + timedelta(days=10)},
                             app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
@@ -76,7 +77,8 @@ def register():
         status_code = 200
     else:
         response = {'result':'کاربر عزیز با این شماره موبایل قبلا ثبت نام شده است!'}
-        status_code = 401   
+        status_code = 401 
+    session.commit()      
     session.close()                           
     return jsonify(response), status_code
 
@@ -90,7 +92,7 @@ def login():
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
-                        'exp' : datetime.utcnow() + timedelta(hours=24)
+                        'exp' : datetime.utcnow() + timedelta(days=10)
                             },
                             app.secret_key  
                           )
@@ -102,6 +104,7 @@ def login():
     else:
         status_code = 401
         response = {'result':'شما قبلا ثبت نام نکرده اید!'} 
+    session.commit()    
     session.close()                
     return jsonify(response), status_code
 
@@ -117,6 +120,7 @@ def user_information(cuser):
     else:
         status_code = 401
         response = {'result':'nouser'}
+    session.commit()    
     session.close()                  
     return jsonify(response), status_code    
 
@@ -131,6 +135,7 @@ def courses(cuser):
             lesson = session.query(Lesson).filter(Lesson.course_id == course.id).first()
             has_content = True if lesson else False
             all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
+    session.commit()
     session.close()     
     return jsonify(all_courses)
 
@@ -147,6 +152,7 @@ def lessons(cuser):
     for lesson in lessons:
         show_lesson = True if f'{lesson.id}' in purchased_lessons_list else False
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson}) 
+    session.commit()
     session.close()        
     return jsonify(all_lessons)    
 
@@ -166,6 +172,7 @@ def status_question(cuser):
     has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
     check_wrong_questions = 'True' if has_wrong_questions else 'False'
     result = {"check_new_question":check_new_question, "review_previous_questions":check_continue_previous_questions, "check_wrong_questions":check_wrong_questions}
+    session.commit()
     session.close() 
     return jsonify(result)
 
@@ -195,7 +202,8 @@ def all_questions(cuser):
             enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
             session.add(enrol_user)  
             session.commit()
-    result = {"question":next_new_question.text, "voice":next_new_voice.path, "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text}
+    result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text}
+    session.commit()
     session.close() 
     return jsonify(result)    
 
@@ -210,7 +218,8 @@ def continue_previous_questions(cuser):
     next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> enrol_user[0], Question.lesson_id == lesson_id ).first()
     next_continue_previous_voice = session.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
     next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
-    result = {"question":next_continue_previous_question.text, "voice": next_continue_previous_voice.path, "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text}
+    result = {"question":next_continue_previous_question.text, "voice": f'{next_continue_previous_voice.path}', "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text}
+    session.commit()
     session.close() 
     return jsonify(result)
 
@@ -225,7 +234,8 @@ def wronge_questions(cuser):
     next_wrong_question = session.query(Question).filter(Question.id == first_wrong_answer.question_id).first()
     next_wrong_voice = session.query(Voice).filter(Voice.id == next_wrong_question.voice_id).first()
     next_wrong_answer = session.query(Answer).filter(Answer.question_id == next_wrong_question.id).first()
-    result = {"question":next_wrong_question.text, "voice": next_wrong_voice.path, "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text}
+    result = {"question":next_wrong_question.text, "voice": f'{next_wrong_voice.path}', "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text}
+    session.commit()
     session.close() 
     return jsonify(result)
 
@@ -261,6 +271,7 @@ def user_answer(cuser):
         wrong_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'] ,User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).scalar() 
         true_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'],  User_answer.ans_no == '0', User_answer.lesson_id == data['lesson_id']).scalar() 
         result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
+    session.commit()
     session.close()
     return  jsonify(result)
 
@@ -329,6 +340,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
         else:
             result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
+    session.commit()        
     session.close()         
     return jsonify(result)  
 
@@ -401,9 +413,11 @@ def zarinpal_callback():
         status_code = 401 
         #return 'Transaction failed or canceled by user'
     if check_invoice.user_id != -1:
+        session.commit()
         session.close()
         return redirect("/Grades")
     else:
+        session.commit()
         session.close()
         return render_template("afterPay.html", invoice_result = zarinpal_result_status)   
         
@@ -418,6 +432,8 @@ def api_pasargad_callback():
     else:
         transactionID = None
     dict_data={"transaction" : transactionID}
+    session.commit()
+    session.close()
     return dict_data
 
 if __name__ == '__main__':
