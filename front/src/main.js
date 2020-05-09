@@ -7,6 +7,7 @@ import store from './store'
 import axios from 'axios'
 import Vuelidate from 'vuelidate'
 import './filters'
+import './registerServiceWorker'
 
 Vue.use(BootstrapVue);
 Vue.use(Vuelidate)
