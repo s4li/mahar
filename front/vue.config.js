@@ -10,7 +10,7 @@ module.exports = {
     manifestOptions:{
       name: 'مرکز هوشمندسازی آموزش های رسانه ای',
       short_name: 'مهار',
-      start_url: '.',
+      start_url: '/',
       background_color: '#fff',
       description: 'مرکز هوشمندسازی آموزش های رسانه ای',
       categories: ['education'],
