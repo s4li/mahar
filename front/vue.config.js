@@ -1,7 +1,8 @@
 module.exports = {
   pwa: {
-    workboxPluginMode:'GenerateSW',
-    name: "مرکز هوشمندسازی آموزش های رسانه ای",
+    workboxPluginMode:'InjectManifest',
+    workboxOptions: {swSrc: "public/service-worker.js"},
+    name: 'مرکز هوشمندسازی آموزش های رسانه ای',
     themeColor: '#ffc107',
     msTileColor: '#FFFFFF',
     appleMobileWebAppCapable:'no',
