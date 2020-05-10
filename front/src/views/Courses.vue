@@ -1,5 +1,8 @@
 <template>
 <div class="hereparent">
+    <div class="coursesheader">
+        <h1>درس:{{lessonId | faNum}}</h1>
+    </div>
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" mode="out-in">
         <div class="text-center" v-if="toggleShow" key="first">
@@ -13,7 +16,7 @@
                     <button class="btn btn-warning" @click.prevent="flip = true">معنیش چیه؟</button>
                 </div>
                 <div class="flip-card-back back">
-                    <h3 class="mb-4">{{answer}}</h3>
+                    <h3 class="mb-4 h4">{{answer}}</h3>
                     <div>
                         <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
                         <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
@@ -135,6 +138,27 @@ export default {
 </script>
 
 <style lang="css">
+.coursesheader{
+    text-align: center;
+    padding: 20px;
+    background: #ffba23;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFD200, #ffba23);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFD200, #ffba23); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color: #f8f9fa;
+    margin: 0 -15px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.coursesheader h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    padding-top: 5px;
+}
 .hereparent {
     position: relative;
     height: 100vh;
@@ -231,6 +255,8 @@ export default {
 .flip-card-back {
     background-color: #fdfdfd;
     transform: rotateY(180deg);
-    padding-top: 35px;
+}
+.flip-card-back h3{
+    min-height: 70px;
 }
 </style>

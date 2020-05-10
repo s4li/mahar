@@ -1,12 +1,21 @@
 {
   "name": "مرکز هوشمندسازی آموزش های رسانه ای",
   "short_name": "مهار",
-  "start_url": ".",
+  "start_url": "/",
   "display": "fullscreen",
   "background_color": "#fff",
   "description": "مرکز هوشمندسازی آموزش های رسانه ای",
   "dir": "rtl",
   "lang": "fa-ir",
+  "scope": [
+    ".",
+    "/",
+    "/Guids",
+    "/login",
+    "/Singup",
+    "/Grades",
+    "/Lessons/1","/Lessons/2","/Lessons/3","/Lessons/4","/Lessons/5","/Lessons/6"
+  ],
   "categories": [
     "education"
   ],

@@ -42,6 +42,7 @@
         </div>
         <div class="text-center" v-if="spinnerShow">
             <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
+            <h4>لطفا کمی صبر کنید ...</h4>
         </div>
     </b-modal>
 </div>
@@ -63,7 +64,7 @@ export default {
             lessons: [],
             courseId: 0,
             spinnerShow: false,
-            toggleShow:true,
+            toggleShow: true,
         }
     },
     methods: {
@@ -104,7 +105,18 @@ export default {
         },
         buyPlan(grad, plan) {
             this.spinnerShow = true
-            const path = '/zarinpal/site/' + this.userid + '/' + plan + '/' + grad
+            const gradId = this.gardnum
+            let planId
+            if (plan == 2) {
+                planId = 2
+            } else {
+                if (gradId == 1 || gradId == 2 || gradId == 3) {
+                    planId = 3
+                } else {
+                    planId = 1
+                }
+            }
+            const path = '/zarinpal/site/' + this.userid + '/' + planId + '/' + grad
             axios.get(path)
                 .then((res) => {
                     this.lessons = res.data;
