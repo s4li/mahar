@@ -12,7 +12,7 @@ export default new Vuex.Store({
     user: null,
     alerttext : '',
     showAlert:false,
-    currenturl:'/Grades'
+    currenturl:'/Grades',
   },
   mutations: {
     authUser (state, userData) {
@@ -31,6 +31,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setLogoutTimer ({commit}, expirationTime) {
+      console.log(expirationTime)
+      setTimeout(() => {
+        commit('clearAuthData')
+        localStorage.removeItem('FullName')
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+      }, expirationTime * 1000 )
+    },
     signup ({commit, dispatch}, authData) {
       axios.post('/register', {
         full_name : authData.FullName,
@@ -49,6 +58,7 @@ export default new Vuex.Store({
             userId: res.data.id
           });
           dispatch('storeUser', authData);
+          dispatch('setLogoutTimer', 86400)
           this.state.showAlert = false
           router.replace('/Grades')
         })
@@ -64,7 +74,7 @@ export default new Vuex.Store({
           localStorage.removeItem('userId')
         })
     },
-    login ({commit}, authData) {
+    login ({commit, dispatch}, authData) {
       axios.post('/login', {
         mobile : authData.Mobile,
         password : authData.Password,
@@ -80,7 +90,8 @@ export default new Vuex.Store({
             token: res.data.token,
             userId: res.data.id
             });
-            this.state.showAlert = false
+            dispatch('setLogoutTimer', 86400)
+          this.state.showAlert = false
           router.replace('/Grades')
         })
         .catch(error =>{

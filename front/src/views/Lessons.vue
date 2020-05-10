@@ -36,7 +36,7 @@
                 <button class="btn shadow btn-primary" @click.prevent="buyPlan(gardnum,2)">۲۰۰۰ تومان</button>
             </div>
             <div class="buy-box-child">
-                <h5>فعالسازی کل برنامه</h5>
+                <h5>فعالسازی {{gradname}}</h5>
                 <button class="btn shadow btn-success" @click.prevent="buyPlan(0,1)">۵۰۰۰ تومان</button>
             </div>
         </div>
@@ -65,6 +65,7 @@ export default {
             courseId: 0,
             spinnerShow: false,
             toggleShow: true,
+            gradname:'',
         }
     },
     methods: {
@@ -102,6 +103,12 @@ export default {
                 .catch((error) => {
                     console.error(error);
                 });
+            const gradId = this.gardnum
+            if (gradId == 1 || gradId == 2 || gradId == 3) {
+                    this.gradname = 'متوسطه اول'
+                } else {
+                    this.gradname = 'متوسطه دوم'
+                }
         },
         buyPlan(grad, plan) {
             this.spinnerShow = true

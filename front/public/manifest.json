@@ -8,7 +8,6 @@
   "dir": "rtl",
   "lang": "fa-ir",
   "scope": [
-    ".",
     "/",
     "/Guids",
     "/login",
