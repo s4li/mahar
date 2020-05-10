@@ -17,7 +17,7 @@ class User(Base):
    full_name = Column(String(100))
    mobile = Column(String(45))
    password = Column(String(200))
-   purchased_lessons = Column(String(500),  default='1,9,16')
+   purchased_lessons = Column(String(500), default='1,9,16,20,32,42')
    user_answer = relationship('User_answer') 
    invoice = relationship('Invoice')  
    enrol_user = relationship('Enrol_user') 
