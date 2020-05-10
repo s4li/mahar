@@ -310,7 +310,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
                     lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
                     str_lesson = ''
                     for lesson_id in lesson_ids:
-                        if str(lesson_id[0]) not in ['1','9','16']:
+                        if str(lesson_id[0]) not in ['1','9','16','20','32','42']:
                             str_lesson = str_lesson +str(lesson_id[0]) + ","
                     lessons = str_lesson
                 else:
@@ -368,17 +368,19 @@ def zarinpal_callback():
             result_zarinpal = client.service.PaymentVerification(MMERCHANT_ID,
                                                                 Authority,
                                                                 sale_plan[0])                                                                                                                                   
-            if result_zarinpal.Status == 100: 
+            if  result_zarinpal.Status == 100: 
                 if check_invoice.user_id != -1:
                     zarinpal_result_status = result_zarinpal.Status
                     user = session.query(User).filter(User.id == check_invoice.user_id).first()
                     result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
                     status_code = 200 
-                    if check_invoice.sale_plan_id == 1:
-                        purchased_lessons = check_invoice.lessons
-                    else : 
-                        purchased_lessons_user = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
-                        purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
+                    old_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
+                    new_purchased_lessons = check_invoice.lessons 
+                    new_purchased_lessons_split = new_purchased_lessons.split(',')
+                    purchased_lessons = old_purchased_lessons[0]
+                    for lesson in new_purchased_lessons_split:
+                        if lesson not in old_purchased_lessons[0]:
+                            purchased_lessons = purchased_lessons  + ',' + lesson
                     update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                     session.commit()
                 else:
