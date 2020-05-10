@@ -310,7 +310,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
                     lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
                     str_lesson = ''
                     for lesson_id in lesson_ids:
-                        if str(lesson_id[0]) not in ['1','9','16']:
+                        if str(lesson_id[0]) not in ['1','9','16','20','32','42']:
                             str_lesson = str_lesson +str(lesson_id[0]) + ","
                     lessons = str_lesson
                 else:
