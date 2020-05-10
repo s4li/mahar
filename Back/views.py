@@ -312,7 +312,7 @@ def zarinpal(type, user_id, sale_plan_id, verify):
                     for lesson_id in lesson_ids:
                         if str(lesson_id[0]) not in ['1','9','16','20','32','42']:
                             str_lesson = str_lesson +str(lesson_id[0]) + ","
-                    lessons = str_lesson
+                    lessons = str_lesson[:-1]
                 else:
                     lessons = sale_plan.lessons        
                 invoice = Invoice( invoice_no = result_zarinpal.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lessons, verify= -1)
