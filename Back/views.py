@@ -4,7 +4,7 @@ from functools import wraps
 from suds.client import Client
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func
-import jwt, json
+import jwt, json, hashlib, hmac
 import webbrowser
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -55,17 +55,23 @@ def token_required(f):
             return jsonify(invalid_msg), 401
     return _verify
   
-    
+def make_hashed_password(password):
+    hashed_key= 'test1234567879'
+    h = hashlib.blake2b(key= hashed_key.encode(), digest_size=16)
+    h.update(password[:512].encode()) # limit password to 512 characters. 
+    hash_password = h.hexdigest().encode('utf-8')
+    return hash_password
+
 @app.route('/api/register', methods=('POST',))
 def register():
     session = Session()
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if data and user == None :
-        user = User(full_name = data['full_name'], mobile = data['mobile'], password = data['password'])
+        hash_password = make_hashed_password(data['password'])
+        user = User(full_name = data['full_name'], mobile = data['mobile'], password = hash_password)
         session.add(user)
         session.commit()
-        
         token = jwt.encode({
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
@@ -88,7 +94,9 @@ def login():
     data = request.get_json()
     user = session.query(User).filter(User.mobile == data['mobile']).first()
     if user:
-        if  user.password == data['password']:
+        good_sig = make_hashed_password(data['password'])
+        check_if_password_is_correct = hmac.compare_digest(good_sig, bytes(user.password , encoding= 'utf-8'))
+        if  check_if_password_is_correct:
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
