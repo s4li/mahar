@@ -75,7 +75,7 @@ def register():
         token = jwt.encode({
                             'sub': user.mobile,
                             'iat':datetime.utcnow(),  
-                            'exp': datetime.utcnow() + timedelta(days=10)},
+                            'exp': datetime.utcnow() + timedelta(days=1)},
                             app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
@@ -100,7 +100,7 @@ def login():
             token = jwt.encode({ 
                         'sub' : user.mobile,
                         'iat' : datetime.utcnow(),
-                        'exp' : datetime.utcnow() + timedelta(days=10)
+                        'exp' : datetime.utcnow() + timedelta(days=1)
                             },
                             app.secret_key  
                           )
