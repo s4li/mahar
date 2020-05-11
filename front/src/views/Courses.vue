@@ -5,7 +5,7 @@
     </div>
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" mode="out-in">
-        <div class="text-center bg-light p-4 rounded" v-if="toggleShow" key="first">
+        <div class="spinnerbackground" v-if="toggleShow" key="first">
                 <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
                 <div v-if="toolboxcondition" class="exitBtnaAnimate">
                     <h6 class="my-2">لطفا کمی صبر کنید</h6>
@@ -178,7 +178,12 @@ export default {
     right: 0;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
-
+.spinnerbackground{
+    background: #ffffff8f;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
 .coursesheader h1 {
     font-size: 18px;
     font-weight: 600;
