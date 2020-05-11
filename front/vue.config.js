@@ -3,7 +3,7 @@ module.exports = {
     workboxPluginMode:'InjectManifest',
     workboxOptions: {swSrc: "public/service-worker.js"},
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',
-    themeColor: '#ffc107',
+    themeColor: '#FFFFFF',
     msTileColor: '#FFFFFF',
     appleMobileWebAppCapable:'no',
     manifestPath:'manifest.json',

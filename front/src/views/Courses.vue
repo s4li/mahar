@@ -1,7 +1,7 @@
 <template>
 <div class="hereparent">
     <div class="coursesheader">
-        <h1>درس:{{lessonId | faNum}}</h1>
+        <h1>{{lessonTitle}}</h1>
     </div>
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" mode="out-in">
@@ -11,12 +11,12 @@
         <div class="flip-card" v-if="!toggleShow" key="seconde">
             <div class="flip-card-inner" :class="{isFlipped:flip}">
                 <div class="flip-card-front back">
-                    <h3>{{Courses.question}}</h3>
+                    <h3 class="mb-2">{{Courses.question}}</h3>
                     <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
                     <button class="btn btn-warning" @click.prevent="flip = true">معنیش چیه؟</button>
                 </div>
                 <div class="flip-card-back back">
-                    <h3 class="mb-4 h4">{{answer}}</h3>
+                    <h3 class="h4">{{answer}}</h3>
                     <div>
                         <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
                         <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
@@ -60,6 +60,7 @@ export default {
             wrongAnswer: '',
             trueAnswer: '',
             toggleShow: true,
+            lessonTitle : '',
         }
     },
     methods: {
@@ -78,6 +79,7 @@ export default {
                     this.answer = res.data.answer;
                     this.questionId = res.data.question_id;
                     this.toggleShow = false
+                    this.lessonTitle = res.data.lesson_title;
                 })
                 .catch((error) => {
                     console.error(error);
@@ -177,7 +179,7 @@ export default {
 
 .play {
     display: block;
-    margin: 15px auto;
+    margin: 20px auto;
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
@@ -220,7 +222,7 @@ export default {
 /************************************** */
 .flip-card {
     background-color: transparent;
-    width: 250px;
+    width: 300px;
     height: 170px;
     perspective: 1000px;
 }
@@ -257,6 +259,7 @@ export default {
     transform: rotateY(180deg);
 }
 .flip-card-back h3{
-    min-height: 70px;
+    min-height: 60px;
+    padding-top: 15px;
 }
 </style>
