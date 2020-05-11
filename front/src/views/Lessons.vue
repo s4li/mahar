@@ -14,8 +14,12 @@
 
     <div class="parent">
         <transition name="fadeIn" mode="out-in">
-            <div class="text-center" v-if="toggleShow" key="first">
-                <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
+            <div class="text-center bg-light p-4 rounded" v-if="toggleShow" key="first">
+                <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
+                <div v-if="toolboxcondition" class="exitBtnaAnimate">
+                    <h6 class="my-2">لطفا کمی صبر کنید</h6>
+                    <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
+                </div>
             </div>
             <div class="btn-box" v-if="!toggleShow" key="seconde">
                 <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
@@ -66,9 +70,16 @@ export default {
             spinnerShow: false,
             toggleShow: true,
             gradname:'',
+            toolboxcondition: false
         }
     },
     methods: {
+        onLogout() {
+            this.$store.dispatch('logout')
+        },
+        toggleCondition() {
+            this.toolboxcondition = true
+        },
         close() {
             this.$store.state.showAlert = false
         },
@@ -142,6 +153,9 @@ export default {
     },
     created() {
         this.getlessons();
+        setTimeout(() => {
+            this.toggleCondition()
+        }, 5000)
     },
 }
 </script>

@@ -5,9 +5,13 @@
     </div>
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" mode="out-in">
-        <div class="text-center" v-if="toggleShow" key="first">
-            <b-spinner class="ml-2" type="grow" variant="warning" label="Text Centered"></b-spinner>
-        </div>
+        <div class="text-center bg-light p-4 rounded" v-if="toggleShow" key="first">
+                <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
+                <div v-if="toolboxcondition" class="exitBtnaAnimate">
+                    <h6 class="my-2">لطفا کمی صبر کنید</h6>
+                    <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
+                </div>
+            </div>
         <div class="flip-card" v-if="!toggleShow" key="seconde">
             <div class="flip-card-inner" :class="{isFlipped:flip}">
                 <div class="flip-card-front back">
@@ -60,10 +64,17 @@ export default {
             wrongAnswer: '',
             trueAnswer: '',
             toggleShow: true,
-            lessonTitle : '',
+            lessonTitle: '',
+            toolboxcondition: false
         }
     },
     methods: {
+        onLogout() {
+            this.$store.dispatch('logout')
+        },
+        toggleCondition() {
+            this.toolboxcondition = true
+        },
         getCourses(URL) {
             this.path = URL
             axios.get(URL, {
@@ -97,8 +108,7 @@ export default {
                     if (res.data.has_next_new_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)
-                        this.toggleShow = true
-                        this.flip = false
+                        this.Preview()
                     } else {
                         this.ModalShow = true
                         this.wrongAnswer = res.data.wrong_answer_no
@@ -108,6 +118,14 @@ export default {
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+        Preview(){
+            this.toggleShow = true
+            this.flip = false
+            this.toolboxcondition= false
+            setTimeout(() => {
+            this.toggleCondition()
+        }, 5000)
         },
         redirect() {
             this.initForm();
@@ -135,17 +153,23 @@ export default {
             this.questionType = 3
             this.getCourses('/get-wrong-questions');
         }
+        setTimeout(() => {
+            this.toggleCondition()
+        }, 5000)
     },
 }
 </script>
 
 <style lang="css">
-.coursesheader{
+.coursesheader {
     text-align: center;
     padding: 20px;
-    background: #ffba23;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #FFD200, #ffba23);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #FFD200, #ffba23); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #ffba23;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFD200, #ffba23);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFD200, #ffba23);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     color: #f8f9fa;
     margin: 0 -15px;
     position: absolute;
@@ -161,6 +185,7 @@ export default {
     margin: 0;
     padding-top: 5px;
 }
+
 .hereparent {
     position: relative;
     height: 100vh;
@@ -258,7 +283,8 @@ export default {
     background-color: #fdfdfd;
     transform: rotateY(180deg);
 }
-.flip-card-back h3{
+
+.flip-card-back h3 {
     min-height: 60px;
     padding-top: 15px;
 }
