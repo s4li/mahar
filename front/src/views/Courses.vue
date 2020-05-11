@@ -204,7 +204,7 @@ export default {
 
 .play {
     display: block;
-    margin: 20px auto;
+    margin: 10px auto;
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
@@ -248,7 +248,7 @@ export default {
 .flip-card {
     background-color: transparent;
     width: 300px;
-    height: 170px;
+    height: 150px;
     perspective: 1000px;
 }
 
@@ -286,6 +286,6 @@ export default {
 
 .flip-card-back h3 {
     min-height: 60px;
-    padding-top: 15px;
+    padding-top: 10px;
 }
 </style>
