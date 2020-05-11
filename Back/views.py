@@ -377,9 +377,10 @@ def zarinpal_callback():
                     old_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
                     new_purchased_lessons = check_invoice.lessons 
                     new_purchased_lessons_split = new_purchased_lessons.split(',')
+                    old_purchased_lessons_split = old_purchased_lessons[0].split(',')
                     purchased_lessons = old_purchased_lessons[0]
                     for lesson in new_purchased_lessons_split:
-                        if lesson not in old_purchased_lessons[0]:
+                        if lesson not in old_purchased_lessons_split:
                             purchased_lessons = purchased_lessons  + ',' + lesson
                     update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                     session.commit()
