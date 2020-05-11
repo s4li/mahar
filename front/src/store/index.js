@@ -93,13 +93,13 @@ export default new Vuex.Store({
           this.state.showAlert = false
           router.replace('/Grades')
         })
-        .catch(() =>{
+        .catch(error =>{
           this.state.showAlert = true
-          //if (error.response.status == 401){
-          //  this.state.alerttext = error.response.data.result
-          //}else{
-          //  this.state.alerttext = 'خطای غیرمنتظره'
-          //}
+          if (error.response.status == 401){
+            this.state.alerttext = error.response.data.result
+          }else{
+            this.state.alerttext = 'خطای غیرمنتظره'
+          }
           localStorage.removeItem('FullName')
           localStorage.removeItem('token')
           localStorage.removeItem('userId')
