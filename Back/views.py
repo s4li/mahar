@@ -5,6 +5,7 @@ from suds.client import Client
 from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 import jwt, json, hashlib, hmac
+from random import randint
 import webbrowser
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -61,6 +62,72 @@ def make_hashed_password(password):
     h.update(password[:512].encode()) # limit password to 512 characters. 
     hash_password = h.hexdigest().encode('utf-8')
     return hash_password
+
+def send_sms(mobile, sms_text):
+    from suds.client import Client
+    url="http://ws.smartsms.ir/sms.asmx?WSDL"
+    client = Client(url, timeout=240)
+    originator = '50002237167'#500059962
+    message= '''
+    <xmsrequest>
+    <userid>53741</userid>
+    <password>Salam159!</password>
+    <action>smssend</action>
+    <body>
+    <type>oto</type>
+    '''+\
+    '<recipient mobile="{}" originator="{}" >{}</recipient>'.format(mobile,originator,sms_text) +\
+    '''
+    </body>
+    </xmsrequest>
+    '''
+    response = client.service.XmsRequest(requestData= message)
+    result= False
+    if '<code id="0">ok</code>' in response:
+        result= True
+    return result
+
+@app.route('/api/confirm-mobile')
+def confirm_mobile(): 
+    session = Session()
+    mobile = request.args['mobile']
+    user = session.query(User).filter(User.mobile == mobile).first()
+    if user:
+        code = randint(10000, 99999)
+        text = f' {code} : کد تایید مهار'
+        confirm_sms = send_sms(mobile, text)
+        if confirm_sms:
+            response = {'result':'success'}
+            session.query(User).filter(User.id == user.id).update({ User.confirm_code: code})
+            session.commit()
+            status_code = 200
+        else:
+            response = {'result':'ارسال پیامک ناموفق بود!'} 
+            status_code = 401  
+    else:
+        response = {'result':'کاربر گرامی، اطلاعاتی با این شماره موبایل ثبت نشده است!'} 
+        status_code = 401  
+    return jsonify(response), status_code
+
+@app.route('/api/reset-password')
+def reset_password(): 
+    session = Session()
+    data = request.get_json()
+    user = session.query(User).filter(User.mobile == data['mobile']).first()
+    if user and user.confirm_code == data['confirm_code']:
+        if data['password'] == data['re_password']:
+            hash_password = make_hashed_password(data['password'])
+            session.query(User).filter(User.id == user.id).update({ User.password : hash_password})
+            session.commit()
+            status_code = 200
+            response = {'result': 'رمزعبور با موفقیت تغییر یافت.'}
+        else:
+            response = {'result': 'رمزهای ورودی با هم مطاقبت ندارد!'} 
+            status_code = 401
+    else:
+        response = {'result': 'کد تایید مطابقت ندارد!'} 
+        status_code = 401        
+    return jsonify(response), status_code
 
 @app.route('/api/register', methods=('POST',))
 def register():
