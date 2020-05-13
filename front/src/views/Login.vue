@@ -13,41 +13,49 @@
         </transition>
 
         <transition name="fadeIn" appear>
-        <div class="inner" v-if="show">
-            <form @submit="onSubmit">
-                <div class="limiter">
-                    <div class="container-login100">
-                        <div class="wrap-login100">
-                            <div class="login100-form validate-form">
-                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.LoginForm.Mobile.$error}">
-                                    <input type="number" @blur="$v.LoginForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="LoginForm.Mobile" v-on:keyup="checkingValMobile">
-                                    <span class="focus-input100" data-placeholder="شماره موبایل"></span>
+            <div class="container" v-if="show">
+                <div class="row">
+                    <div class="col-12 col-lg-8 mx-lg-auto">
+                        <div class="inner">
+                            <h1 class="lgTitle">ورود</h1>
+                            <form @submit="onSubmit">
+                                <div class="limiter">
+                                    <div class="container-login100">
+                                        <div class="wrap-login100">
+                                            <div class="login100-form validate-form">
+                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.LoginForm.Mobile.$error}">
+                                                    <input type="number" @blur="$v.LoginForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="LoginForm.Mobile" v-on:keyup="checkingValMobile">
+                                                    <span class="focus-input100" data-placeholder="شماره موبایل"></span>
+                                                </div>
+                                                <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
-                            </div>
+                                <div class="limiter">
+                                    <div class="container-login100">
+                                        <div class="wrap-login100">
+                                            <div class="login100-form validate-form">
+                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.LoginForm.Password.$error}">
+                                                    <input type="password" @blur="$v.LoginForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="LoginForm.Password" v-on:keyup="checkingValPass">
+                                                    <span class="focus-input100" data-placeholder="کلمه عبور"></span>
+                                                </div>
+                                                <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn enterBtn w-25 shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
+                                <div class="btn-boxl">
+                                    <router-link to="/Singup" id="singupbtn" class="btn btn-sm shadow">ثبت نام</router-link>
+                                    <router-link to="/Recovery" class="btn btn-sm btn-outline-primary shadow">بازیابی رمز عبور</router-link>
+                                    <router-link to="/Guids" class="btn btn-sm btn-outline-secondary shadow">راهنمای استفاده</router-link>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="limiter">
-                    <div class="container-login100">
-                        <div class="wrap-login100">
-                            <div class="login100-form validate-form">
-                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.LoginForm.Password.$error}">
-                                    <input type="password" @blur="$v.LoginForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="LoginForm.Password" v-on:keyup="checkingValPass">
-                                    <span class="focus-input100" data-placeholder="کلمه عبور"></span>
-                                </div>
-                                <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn-boxl">
-                    <router-link to="/Singup" id="singupbtn" class="btn shadow">ثبت نام</router-link>
-                    <button class="btn shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
-                    <router-link to="/Guids" id="infobtn" class="btn">راهنمای استفاده</router-link>
-                </div>
-            </form>
-        </div>
+            </div>
         </transition>
     </div>
 </div>
@@ -69,7 +77,7 @@ export default {
             },
             checkingPass: false,
             checkingMobile: false,
-            show : true
+            show: true
         }
     },
     components: {
@@ -133,10 +141,25 @@ export default {
 </script>
 
 <style lang="css" scoped>
-#infobtn {
-    border-radius: 4px;
-    background: linear-gradient(145deg, #cbc9c1, #f2efe5);
-    box-shadow: 5px 5px 15px #c5c2ba, -5px -5px 15px #fffcf2;
+.lgTitle {
+    display: block;
+    font-size: 18px;
+    text-align: center;
+    padding: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+@media (max-width: 991.8px) {
+    .lgTitle {
+        display: none;
+    }
+}
+
+.enterBtn {
+    margin: 10px auto;
+    min-width: 150px;
+    display: block;
 }
 
 #loginbtn {
@@ -156,6 +179,7 @@ export default {
     background-color: #ffffffcc;
     border-radius: 4px;
     margin-top: 30%;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
 
 .btn-boxl {
@@ -168,8 +192,7 @@ export default {
 
 .btn-boxl button,
 .btn-boxl a {
-    background-color: #fbb901;
-    min-width: 120px;
+    min-width: 100px;
     margin-bottom: 15px;
 }
 

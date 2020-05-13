@@ -1,6 +1,3 @@
-//self.addEventListener('fetch',() => console.log("fetch"));
-
-
 const staticAssets = [
   '../src/assets/fonts/IRANSansWeb_100.woff',
   '../src/assets/fonts/IRANSansWeb_200.woff',
@@ -12,7 +9,9 @@ const staticAssets = [
   '../src/assets/fonts/fa-light-300.woff',
   '../src/assets/fonts/fa-regular-400.woff',
 ];
+
 const cacheName = 'first';
+
 self.addEventListener('install', async e => {
   const cache = await caches.open(cacheName);
   await cache.addAll(staticAssets);

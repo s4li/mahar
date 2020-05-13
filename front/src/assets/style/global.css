@@ -70,7 +70,7 @@
 }
 .parent {
   position: relative;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 161.13px);
   width: 100%;
   display: flex;
   align-items: center;
@@ -102,6 +102,14 @@
   background-color: #ffc107;
   border-color: #ffc107;
   box-shadow: none;
+}
+.btnBoxParrent {
+  padding: 15px;
+  background-color: #ffffffcc;
+  border-radius: 4px;
+  box-shadow: 0 3px 10px #cccccc;
+  text-align: center;
+  max-width: 500px;
 }
 .shakeTop-enter-active {
 	-webkit-animation: shake-top 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
@@ -232,5 +240,10 @@
   to {
     opacity: 1;
     display: block;
+  }
+}
+@media (min-width: 992px) {
+  .back-btn {
+      display: none;
   }
 }

@@ -10,11 +10,14 @@
                     <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
                 </div>
             </div>
-            <div class="btn-box" v-if="!toggleShow" key="seconde">
-                <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
-                    <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
-                    پایه {{grad.title}}
-                </router-link>
+            <div class="btnBoxParrent" v-if="!toggleShow" key="seconde">
+                <h1 class="d-block h5">پایه مورد نظر خود را انتخاب کنید</h1>
+                <div class="btn-box">
+                    <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
+                        <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
+                        پایه {{grad.title}}
+                    </router-link>
+                </div>
                 <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-3 d-block w-25 btn-sm shadow">خروج</button>
             </div>
         </transition>
@@ -36,7 +39,6 @@ export default {
             toolboxcondition: false
         }
     },
-    computed: {},
     methods: {
         onLogout() {
             this.$store.dispatch('logout')
@@ -67,15 +69,12 @@ export default {
 </script>
 
 <style scoped>
+
 .btn-box {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    padding: 15px;
-    background-color: #ffffffcc;
-    border-radius: 4px;
-    box-shadow: 0 3px 10px #cccccc;
 }
 
 .btn-box a {

@@ -14,7 +14,7 @@ module.exports = {
       background_color: '#fff',
       description: 'مرکز هوشمندسازی آموزش های رسانه ای',
       categories: ['education'],
-      display: 'fullscreen',
+      display: 'standalone',
       dir: 'rtl',
       lang: 'fa-ir',
     },

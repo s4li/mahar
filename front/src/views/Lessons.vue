@@ -21,9 +21,12 @@
                     <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
                 </div>
             </div>
-            <div class="btn-box" v-if="!toggleShow" key="seconde">
-                <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
-                    <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
+            <div class="btnBoxParrent" v-if="!toggleShow" key="seconde">
+                <h1 class="d-block h5">درس مورد نظر خود را انتخاب کنید</h1>
+                <div class="btn-box">
+                    <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
+                        <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
+                </div>
             </div>
         </transition>
     </div>
@@ -69,7 +72,7 @@ export default {
             courseId: 0,
             spinnerShow: false,
             toggleShow: true,
-            gradname:'',
+            gradname: '',
             toolboxcondition: false
         }
     },
@@ -116,10 +119,10 @@ export default {
                 });
             const gradId = this.gardnum
             if (gradId == 1 || gradId == 2 || gradId == 3) {
-                    this.gradname = 'متوسطه اول'
-                } else {
-                    this.gradname = 'متوسطه دوم'
-                }
+                this.gradname = 'متوسطه اول'
+            } else {
+                this.gradname = 'متوسطه دوم'
+            }
         },
         buyPlan(grad, plan) {
             this.spinnerShow = true
@@ -161,15 +164,9 @@ export default {
 </script>
 
 <style>
+
 .btn-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 15px;
-    background-color: #ffffffcc;
-    border-radius: 4px;
-    box-shadow: 0 3px 10px #cccccc;
+    display: block;
 }
 
 .btn-box button {
@@ -211,5 +208,20 @@ export default {
 
 .buy-box-child h5 {
     font-size: 14px;
+}
+
+@media (max-width: 991.8px) {
+    .btn-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 992px) {
+    .btn-box button {
+        margin: 10px;
+    }
 }
 </style>

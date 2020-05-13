@@ -32,4 +32,9 @@ export default {
     margin: 0;
     padding-top: 5px;
 }
+@media (min-width: 992px) {
+    .header {
+        display: none;
+    }
+}
 </style>

@@ -13,10 +13,13 @@
                     <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
                 </div>
             </div>
-            <div class="btn-box" v-if="!toggleShow" key="seconde">
-                <router-link class="btn" :class="{disabled:!newStatus}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
-                <router-link class="btn" :class="{disabled:!previousStatus}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
-                <router-link class="btn" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
+            <div class="btnBoxParrent" v-if="!toggleShow" key="seconde">
+                <h1 class="d-block h5">نوع آزمون خود را انتخاب کنید</h1>
+                <div class="btn-box">
+                    <router-link class="btn" :class="{disabled:!newStatus}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
+                    <router-link class="btn" :class="{disabled:!previousStatus}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
+                    <router-link class="btn" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
+                </div>
             </div>
         </transition>
     </div>
@@ -89,10 +92,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 15px;
-    background-color: #ffffffcc;
-    border-radius: 4px;
-    box-shadow: 0 3px 10px #cccccc;
+    flex-wrap: wrap;
 }
 
 .btn-box button,

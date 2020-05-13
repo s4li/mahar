@@ -39,6 +39,11 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/Recovery',
+    name: 'Recovery',
+    component: () => import('../views/Recovery.vue'),
+  },
+  {
     path: '/Lessons/:id',
     name: 'Lessons',
     component: () => import('../views/Lessons.vue'),
@@ -75,7 +80,7 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '*',redirect:'/Grades'
+    path: '*',redirect:'/'
   }
 ]
 

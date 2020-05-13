@@ -13,51 +13,58 @@
         </transition>
 
         <transition name="fadeIn" appear>
-            <div class="inner" v-if="show">
-                <form @submit="onSubmit">
-                    <div class="limiter">
-                        <div class="container-login100">
-                            <div class="wrap-login100">
-                                <div class="login100-form validate-form">
-                                    <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.FullName.$error}">
-                                        <input type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName">
-                                        <span class="focus-input100" data-placeholder="نام کاربری"></span>
+            <div class="container" v-if="show">
+                <div class="row">
+                    <div class="col-12 col-lg-8 mx-lg-auto">
+                        <div class="inner">
+                            <h1 class="lgTitle">ورود</h1>
+                            <form @submit="onSubmit">
+                                <div class="limiter">
+                                    <div class="container-login100">
+                                        <div class="wrap-login100">
+                                            <div class="login100-form validate-form">
+                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.FullName.$error}">
+                                                    <input type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName">
+                                                    <span class="focus-input100" data-placeholder="نام کاربری"></span>
+                                                </div>
+                                                <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
                                 </div>
-                            </div>
+                                <div class="limiter">
+                                    <div class="container-login100">
+                                        <div class="wrap-login100">
+                                            <div class="login100-form validate-form">
+                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Password.$error}">
+                                                    <input type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
+                                                    <span class="focus-input100" data-placeholder="کلمه عبور"></span>
+                                                </div>
+                                                <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="limiter">
+                                    <div class="container-login100">
+                                        <div class="wrap-login100">
+                                            <div class="login100-form validate-form">
+                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Mobile.$error}">
+                                                    <input type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
+                                                    <span class="focus-input100" data-placeholder="شماره موبایل"></span>
+                                                </div>
+                                                <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="btn-box1">
+                                    <button class="btn shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="limiter">
-                        <div class="container-login100">
-                            <div class="wrap-login100">
-                                <div class="login100-form validate-form">
-                                    <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Password.$error}">
-                                        <input type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
-                                        <span class="focus-input100" data-placeholder="کلمه عبور"></span>
-                                    </div>
-                                    <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="limiter">
-                        <div class="container-login100">
-                            <div class="wrap-login100">
-                                <div class="login100-form validate-form">
-                                    <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Mobile.$error}">
-                                        <input type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
-                                        <span class="focus-input100" data-placeholder="شماره موبایل"></span>
-                                    </div>
-                                    <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="btn-box1">
-                        <button class="btn shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </transition>
     </div>
@@ -161,6 +168,21 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.lgTitle {
+    display: block;
+    font-size: 18px;
+    text-align: center;
+    padding: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+@media (max-width: 991.8px) {
+    .lgTitle {
+        display: none;
+    }
+}
+
 .outter {
     padding: 15px;
 }
@@ -169,6 +191,7 @@ export default {
     background-color: #ffffffcc;
     border-radius: 4px;
     margin-top: 20%;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
 
 .btn-box1 {

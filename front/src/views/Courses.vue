@@ -193,7 +193,7 @@ export default {
 
 .hereparent {
     position: relative;
-    height: 100vh;
+    height: calc(100vh - 161.13px);
     width: 100%;
     display: flex;
     align-items: center;
@@ -248,7 +248,6 @@ export default {
     margin: 10px 10px 0;
     color: #ffffff;
 }
-
 /************************************** */
 .flip-card {
     background-color: transparent;

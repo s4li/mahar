@@ -3,12 +3,16 @@
     <Header title="راهنمای برنامه"></Header>
     <router-link class="back-btn" to="/login"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" appear>
-    <div class="guidParent" v-if="show">
-        <div class="wrraper" v-for="(item, index) in content" :key="index">
-            <img :src="item.imgPath" alt="">
-            <p>{{index+1 | faNum}} - {{ item.text }}</p>
+        <div class="guidParent" v-if="show">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12 wrraper" v-for="(item, index) in content" :key="index">
+                        <img :src="item.imgPath" alt="">
+                        <p>{{index+1 | faNum}} - {{ item.text }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
     </transition>
 </div>
 </template>
@@ -50,7 +54,7 @@ export default {
                     text: 'در انتها خرید یک پایه یا کل پایه ها را داریم که شما در این صفحه با انتخاب گزینه مورد نظر به صفحه پرداخت منتقل میشوید و می توانید خرید خودتان را انجام دهید.'
                 },
             ],
-            show : true
+            show: true
         }
     },
 }
@@ -78,7 +82,7 @@ export default {
 }
 
 .wrraper p {
-        margin: 10px 0;
+    margin: 10px 0;
     font-size: 13px;
     line-height: 20px;
 }
