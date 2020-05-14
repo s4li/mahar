@@ -158,8 +158,9 @@ export default {
 
 .enterBtn {
     margin: 10px auto;
-    min-width: 150px;
+    min-width: 110px;
     display: block;
+    padding: 4px;
 }
 
 #loginbtn {
