@@ -11,15 +11,16 @@
                 </div>
             </div>
             <div v-if="!toggleShow" key="seconde">
-                <div class="btnBoxParrent" v-if="extraData">
+                <div class="btnBoxParrent p-4" id="width" v-if="extraData">
+                    <h1 class="d-block h6 p-3 my-2" id="extratitle">لطفا پایه و شهر خود را مشخص کنید</h1>
                     <form @submit="getExtraUserData">
-                        <b-row class="mb-2">
+                        <b-row class="mb-2 mb-lg-5">
                             <b-col cols="2"><p class="titleextradata">شهر</p></b-col>
                             <b-col>
                                 <b-form-select required class="my-2" v-model="city" :options="provinces"></b-form-select>
                             </b-col>
                         </b-row>
-                        <b-row class="mb-2">
+                        <b-row class="mb-2 mb-lg-4">
                             <b-col cols="2"><p class="titleextradata">پایه</p></b-col>
                             <b-col>
                                 <b-form-select required class="my-2" v-model="degree" :options="degrees"></b-form-select>
@@ -162,6 +163,9 @@ export default {
 </script>
 
 <style scoped>
+#width{
+    min-width: 500px;
+}
 .titleextradata{
     margin: 15px 0 0 0;
 }
@@ -191,5 +195,13 @@ export default {
     background-color: #ffc107;
     border-color: #ffc107;
     box-shadow: none;
+}
+@media (max-width: 991.8px) {
+    #width{
+        min-width: 300px;
+    }
+    #extratitle{
+        display: none!important;
+    }
 }
 </style>
