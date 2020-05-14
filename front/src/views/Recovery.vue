@@ -11,6 +11,14 @@
                 </button>
             </div>
         </transition>
+        <transition name="shakeTop">
+            <div class="shakeTop alert alert-success alert-dismissible" v-if="showsuccessAlert" role="alert">
+                {{showsuccessAlertText}}
+                <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </transition>
 
         <transition name="fadeIn" appear>
             <div class="container" v-if="show">
@@ -112,7 +120,9 @@ export default {
             checkingPassword: false,
             checkingrepeatPassword: false,
             checkingconfirmCode: false,
-            show: true
+            show: true,
+            showsuccessAlert: false,
+            showsuccessAlertText: '',
         }
     },
     components: {
@@ -129,15 +139,16 @@ export default {
                         mobile: this.mobileNumber,
                     }
                 })
-                .then((res) => {
-                    console.log(res)
+                .then(() => {
                     this.show = false
                 })
                 .catch((error) => {
                     if (error.response.status == 401) {
-                        this.state.alerttext = error.response.data.result
+                        this.$store.state.alerttext = error.response.data.result
+                        this.$store.state.showAlert = true
                     } else {
-                        this.state.alerttext = 'خطای غیرمنتظره'
+                        this.$store.state.alerttext = 'خطای غیرمنتظره'
+                        this.$store.state.showAlert = true
                     }
                 });
         },
@@ -151,17 +162,20 @@ export default {
                 })
                 .then((res) => {
                     if (res.status == 200) {
-                        this.state.alerttext = res.statusText
+                        this.showsuccessAlertText = res.data.result
+                        this.showsuccessAlert = true
                     }
-                    console.log(res)
-                    //router.replace('/login')
+                    setTimeout(() => {
+                        this.$router.push('/login')
+                    }, 2000)
                 })
                 .catch((error) => {
-                    console.log(error)
                     if (error.response.status == 401) {
-                        this.state.alerttext = error.response.data.result
+                        this.$store.state.alerttext = error.response.data.result
+                        this.$store.state.showAlert = true
                     } else {
-                        this.state.alerttext = 'خطای غیرمنتظره'
+                        this.$store.state.alerttext = 'خطای غیرمنتظره'
+                        this.$store.state.showAlert = true
                     }
                 });
         },
