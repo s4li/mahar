@@ -143,7 +143,7 @@ export default {
         },
         Submitdata(evt) {
             evt.preventDefault();
-            axios.get('/reset-password', {
+            axios.post('/reset-password', {
                     mobile: this.mobileNumber,
                     password: this.password,
                     re_password: this.repeatPassword,
