@@ -19,6 +19,8 @@ class User(Base):
    password = Column(String(200))
    purchased_lessons = Column(String(500), default='1,9,16,20,32,42')
    confirm_code = Column(String(45), default='0')
+   grade = Column(String(45) , default='na')
+   city = Column(String(45) , default='na')
    user_answer = relationship('User_answer') 
    invoice = relationship('Invoice')  
    enrol_user = relationship('Enrol_user') 

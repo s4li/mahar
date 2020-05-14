@@ -106,10 +106,12 @@ def confirm_mobile():
             status_code = 401  
     else:
         response = {'result':'کاربر گرامی، اطلاعاتی با این شماره موبایل ثبت نشده است!'} 
-        status_code = 401  
+        status_code = 401 
+    session.commit()      
+    session.close()      
     return jsonify(response), status_code
 
-@app.route('/api/reset-password')
+@app.route('/api/reset-password', methods=('POST',))
 def reset_password(): 
     session = Session()
     data = request.get_json()
@@ -126,7 +128,9 @@ def reset_password():
             status_code = 401
     else:
         response = {'result': 'کد تایید مطابقت ندارد!'} 
-        status_code = 401        
+        status_code = 401  
+    session.commit()      
+    session.close()           
     return jsonify(response), status_code
 
 @app.route('/api/register', methods=('POST',))
@@ -203,6 +207,7 @@ def user_information(cuser):
 @token_required
 def courses(cuser):
     session = Session()
+    user_id = int(request.args['user_id'])
     all_courses = []
     courses = session.query(Course).all()
     if courses:
@@ -210,9 +215,15 @@ def courses(cuser):
             lesson = session.query(Lesson).filter(Lesson.course_id == course.id).first()
             has_content = True if lesson else False
             all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
+    user = session.query(User).filter(User.id == user_id).first()
+    user_purchased_lessons = user.purchased_lessons.split(',')
+    complete_information = False
+    if len(user_purchased_lessons) >= 6:
+        complete_information = True  
+    response = {'all_courses' : all_courses, 'complete_information': complete_information}
     session.commit()
     session.close()     
-    return jsonify(all_courses)
+    return jsonify(response)
 
 @app.route('/api/lessons')     
 @token_required
@@ -517,5 +528,14 @@ def api_pasargad_callback():
     session.close()
     return dict_data
 
+@app.route('/api/information-completion-status')    
+@token_required
+def information_completion_status(cuser):
+    session = Session()
+    data = request.get_json()
+    user = session.query(User).filter(User.id == data['user_id']).update({User.grade : data['grade'], User.city : data['city']})   
+    session.commit()
+    session.close()
+    return jsonify('True')
 if __name__ == '__main__':
     app.run(debug=True) 
