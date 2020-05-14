@@ -22,7 +22,7 @@
                         <b-row class="mb-2">
                             <b-col cols="2"><p class="titleextradata">پایه</p></b-col>
                             <b-col>
-                                <b-form-select required class="my-2" v-model="gard" :options="degrees"></b-form-select>
+                                <b-form-select required class="my-2" v-model="degree" :options="degrees"></b-form-select>
                             </b-col>
                         </b-row>
                         <button class="btn btn-primary" type="submit">ذخیره اطلاعات</button>
@@ -69,10 +69,8 @@ export default {
                     this.extraData = res.data.complete_information
                     if (this.extraData) {
                         this.title = 'لطفا پایه و شهر خود را مشخص کنید'
-                        console.log(res.data.complete_information)
                     } else {
                         this.title = 'پایه مورد نظر خود را انتخاب کنید'
-                        console.log(this.extraData)
                     }
                     this.toggleShow = false
                 })
@@ -80,10 +78,11 @@ export default {
                     console.log(error);
                 });
         },
-        getExtraUserData() {
+        getExtraUserData(evt) {
+            evt.preventDefault();
             axios.post('/information-completion-status', {
                     user_id: this.userId,
-                    grade: this.grad,
+                    grade: this.degree,
                     city: this.city,
                 })
                 .then((res) => {
@@ -111,7 +110,7 @@ export default {
             toggleShow: true,
             toolboxcondition: false,
             userId: this.$store.state.userId,
-            gard: null,
+            degree: null,
             city: null,
             extraData: false,
             provinces: [
