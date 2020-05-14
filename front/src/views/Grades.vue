@@ -1,7 +1,6 @@
 <template>
 <div>
     <Header :title="title"></Header>
-    {{extraData}}
     <div class="parent">
         <transition name="fadeIn" mode="out-in">
             <div class="text-center bg-light p-4 rounded" v-if="toggleShow" key="first">
