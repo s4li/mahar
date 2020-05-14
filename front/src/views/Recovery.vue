@@ -1,6 +1,7 @@
 <template>
 <div>
     <Header title="بازیابی رمز عبور"></Header>
+    <router-link class="back-btn" to="/login"><i class='fas fa-arrow-left'></i></router-link>
     <div class="outter">
 
         <transition name="shakeTop">

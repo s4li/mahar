@@ -175,16 +175,10 @@ export default {
     margin: 0;
 }
 
-@media (max-width: 991.8px) {
-    .lgTitle {
-        display: none;
-    }
-}
-
 .inner {
     background-color: #ffffffcc;
     border-radius: 4px;
-    margin-top: 20%;
+    margin-top: 10%;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
 
@@ -201,5 +195,13 @@ export default {
     background-color: #fbb901;
     min-width: 120px;
     margin-bottom: 15px;
+}
+@media (max-width: 991.8px) {
+    .lgTitle {
+        display: none;
+    }
+    .inner {
+    margin-top: 20%;
+}
 }
 </style>

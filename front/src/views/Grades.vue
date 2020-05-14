@@ -48,6 +48,7 @@ export default {
             this.$store.commit('StoreCurrentUrl', url);
             axios.get('/courses')
                 .then((res) => {
+                    console.log(res)
                     this.grads = res.data;
                     this.toggleShow = false
                 })

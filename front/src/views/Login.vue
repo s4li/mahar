@@ -146,12 +146,6 @@ export default {
     margin: 0;
 }
 
-@media (max-width: 991.8px) {
-    .lgTitle {
-        display: none;
-    }
-}
-
 .enterBtn {
     margin: 10px auto;
     min-width: 110px;
@@ -171,7 +165,7 @@ export default {
 .inner {
     background-color: #ffffffcc;
     border-radius: 4px;
-    margin-top: 30%;
+    margin-top: 10%;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
 
@@ -187,5 +181,13 @@ export default {
 .btn-boxl a {
     min-width: 110px;
     margin-bottom: 15px;
+}
+@media (max-width: 991.8px) {
+    .lgTitle {
+        display: none;
+    }
+    .inner{
+        margin-top: 25%;
+    }
 }
 </style>
