@@ -78,7 +78,7 @@
 }
 .back-btn {
   position: absolute;
-  top: 15px;
+  top: 9px;
   left: 10px;
   background-color: #ffc107;
   color: var(--light);

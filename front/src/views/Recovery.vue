@@ -21,8 +21,8 @@
         </transition>
 
         <transition name="fadeIn" appear>
-            <div class="container" v-if="show">
-                <div class="row">
+            <div class="container p-0" v-if="show">
+                <div class="row no-gutters">
                     <div class="col-12 col-lg-8 mx-lg-auto">
                         <div class="inner">
                             <h1 class="lgTitle">بازیابی رمز عبور</h1>
@@ -46,8 +46,8 @@
                     </div>
                 </div>
             </div>
-            <div class="container" v-if="!show">
-                <div class="row">
+            <div class="container p-0" v-if="!show">
+                <div class="row no-gutters">
                     <div class="col-12 col-lg-8 mx-lg-auto">
                         <div class="inner">
                             <h1 class="lgTitle">ورود</h1>

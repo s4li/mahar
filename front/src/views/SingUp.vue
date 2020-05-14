@@ -1,73 +1,71 @@
 <template>
 <div>
     <Header title="ثبت نام"></Header>
-    <div class="outter">
-        <router-link class="back-btn" to="/login"><i class='fas fa-arrow-left'></i></router-link>
-        <transition name="shakeTop">
-            <div class="shakeTop alert alert-danger alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
-                {{this.$store.state.alerttext}}
-                <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </transition>
+    <router-link class="back-btn" to="/login"><i class='fas fa-arrow-left'></i></router-link>
+    <transition name="shakeTop">
+        <div class="shakeTop alert alert-danger alert-dismissible" v-if="this.$store.state.showAlert" role="alert">
+            {{this.$store.state.alerttext}}
+            <button type="button" class="close" @click.prevent="close()" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </transition>
 
-        <transition name="fadeIn" appear>
-            <div class="container" v-if="show">
-                <div class="row">
-                    <div class="col-12 col-lg-8 mx-lg-auto">
-                        <div class="inner">
-                            <h1 class="lgTitle">ورود</h1>
-                            <form @submit="onSubmit">
-                                <div class="limiter">
-                                    <div class="container-login100">
-                                        <div class="wrap-login100">
-                                            <div class="login100-form validate-form">
-                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.FullName.$error}">
-                                                    <input type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName">
-                                                    <span class="focus-input100" data-placeholder="نام کاربری"></span>
-                                                </div>
-                                                <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+    <transition name="fadeIn" appear>
+        <div class="container p-0" v-if="show">
+            <div class="row no-gutters">
+                <div class="col-12 col-lg-8 mx-lg-auto">
+                    <div class="inner">
+                        <h1 class="lgTitle">ورود</h1>
+                        <form @submit="onSubmit">
+                            <div class="limiter">
+                                <div class="container-login100">
+                                    <div class="wrap-login100">
+                                        <div class="login100-form validate-form">
+                                            <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.FullName.$error}">
+                                                <input type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName">
+                                                <span class="focus-input100" data-placeholder="نام کاربری"></span>
                                             </div>
+                                            <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="limiter">
-                                    <div class="container-login100">
-                                        <div class="wrap-login100">
-                                            <div class="login100-form validate-form">
-                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Password.$error}">
-                                                    <input type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
-                                                    <span class="focus-input100" data-placeholder="کلمه عبور"></span>
-                                                </div>
-                                                <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                            </div>
+                            <div class="limiter">
+                                <div class="container-login100">
+                                    <div class="wrap-login100">
+                                        <div class="login100-form validate-form">
+                                            <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Password.$error}">
+                                                <input type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
+                                                <span class="focus-input100" data-placeholder="کلمه عبور"></span>
                                             </div>
+                                            <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="limiter">
-                                    <div class="container-login100">
-                                        <div class="wrap-login100">
-                                            <div class="login100-form validate-form">
-                                                <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Mobile.$error}">
-                                                    <input type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
-                                                    <span class="focus-input100" data-placeholder="شماره موبایل"></span>
-                                                </div>
-                                                <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
+                            </div>
+                            <div class="limiter">
+                                <div class="container-login100">
+                                    <div class="wrap-login100">
+                                        <div class="login100-form validate-form">
+                                            <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Mobile.$error}">
+                                                <input type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
+                                                <span class="focus-input100" data-placeholder="شماره موبایل"></span>
                                             </div>
+                                            <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="btn-box1">
-                                    <button class="btn shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="btn-box1">
+                                <button class="btn shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </transition>
-    </div>
+        </div>
+    </transition>
 </div>
 </template>
 
@@ -181,10 +179,6 @@ export default {
     .lgTitle {
         display: none;
     }
-}
-
-.outter {
-    padding: 15px;
 }
 
 .inner {

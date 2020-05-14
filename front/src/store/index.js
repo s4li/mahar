@@ -93,7 +93,7 @@ export default new Vuex.Store({
           this.state.showAlert = false
           router.replace('/Grades')
         })
-        .catch(error =>{
+        .catch((error) =>{
           this.state.showAlert = true
           if (error.response.status == 401){
             this.state.alerttext = error.response.data.result
@@ -126,7 +126,7 @@ export default new Vuex.Store({
       localStorage.removeItem('userId')
       this.state.showAlert = false
       delete axios.defaults.headers.common['Authorization']
-      router.replace('/login')
+      router.replace('/')
     },
     storeUser ({state}) {
       if (!state.idToken) {
