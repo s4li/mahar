@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="w-100" v-if="!toggleShow" key="seconde">
-                <div class="btnBoxParrent" v-if="extraData">
+                <div class="btnBoxParrent" v-if="!extraData">
                     <form @submit="getExtraUserData">
                         <b-row class="mb-2">
                             <b-col cols="2"><p class="titleextradata">شهر</p></b-col>
@@ -28,7 +28,7 @@
                         <button class="btn btn-primary" type="submit">ذخیره اطلاعات</button>
                     </form>
                 </div>
-                <div class="btnBoxParrent" v-if="!extraData">
+                <div class="btnBoxParrent" v-if="extraData">
                     <h1 class="d-block h5">پایه مورد نظر خود را انتخاب کنید</h1>
                     <div class="btn-box">
                         <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
