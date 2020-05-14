@@ -9,8 +9,8 @@ from random import randint
 import webbrowser
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
-from .conection_info import front_url, back_url
-from .models import  (Session, User, Course, Lesson, Answer, 
+from Back.conection_info import front_url, back_url
+from Back.models import  (Session, User, Course, Lesson, Answer, 
                      Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user)
 
 
@@ -204,7 +204,7 @@ def user_information(cuser):
     return jsonify(response), status_code    
 
 @app.route('/api/courses')     
-@token_required
+@token_required 
 def courses(cuser):
     session = Session()
     user_id = int(request.args['user_id'])
@@ -218,7 +218,7 @@ def courses(cuser):
     user = session.query(User).filter(User.id == user_id).first()
     user_purchased_lessons = user.purchased_lessons.split(',')
     complete_information = False
-    if len(user_purchased_lessons) >= 6:
+    if len(user_purchased_lessons) > 6 and user.grade == 'na':
         complete_information = True  
     response = {'all_courses' : all_courses, 'complete_information': complete_information}
     session.commit()
@@ -528,7 +528,7 @@ def api_pasargad_callback():
     session.close()
     return dict_data
 
-@app.route('/api/information-completion-status')    
+@app.route('/api/information-completion-status' , methods=('POST',))    
 @token_required
 def information_completion_status(cuser):
     session = Session()
@@ -536,6 +536,6 @@ def information_completion_status(cuser):
     user = session.query(User).filter(User.id == data['user_id']).update({User.grade : data['grade'], User.city : data['city']})   
     session.commit()
     session.close()
-    return jsonify('True')
+    return redirect("/Grades")
 if __name__ == '__main__':
     app.run(debug=True) 
