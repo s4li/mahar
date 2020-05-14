@@ -6,12 +6,12 @@
     <router-link class="back-btn" :to="'/ExamType/' + lessonId + '/' + gradId"><i class='fas fa-arrow-left'></i></router-link>
     <transition name="fadeIn" mode="out-in">
         <div class="spinnerbackground" v-if="toggleShow" key="first">
-                <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
-                <div v-if="toolboxcondition" class="exitBtnaAnimate">
-                    <h6 class="my-2">لطفا کمی صبر کنید</h6>
-                    <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
-                </div>
+            <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
+            <div v-if="toolboxcondition" class="exitBtnaAnimate">
+                <h6 class="my-2">لطفا کمی صبر کنید</h6>
+                <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
             </div>
+        </div>
         <div class="flip-card" v-if="!toggleShow" key="seconde">
             <div class="flip-card-inner" :class="{isFlipped:flip}">
                 <div class="flip-card-front back">
@@ -22,7 +22,7 @@
                 <div class="flip-card-back back">
                     <h3 class="h4">{{answer}}</h3>
                     <div>
-                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check"></i>درسته</button>
+                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check" style="width: 20px;"></i>درسته</button>
                         <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
                     </div>
                 </div>
@@ -119,13 +119,13 @@ export default {
                     console.error(error);
                 });
         },
-        Preview(){
+        Preview() {
             this.toggleShow = true
             this.flip = false
-            this.toolboxcondition= false
+            this.toolboxcondition = false
             setTimeout(() => {
-            this.toggleCondition()
-        }, 5000)
+                this.toggleCondition()
+            }, 5000)
         },
         redirect() {
             this.initForm();
@@ -163,12 +163,12 @@ export default {
 <style lang="css">
 .coursesheader {
     text-align: center;
-    padding: 20px;
-    background: #ffba23;
+    padding: 15px;
+    background: #523828;
     /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #FFD200, #ffba23);
+    background: -webkit-linear-gradient(to right, #8c6d5d, #523828);
     /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #FFD200, #ffba23);
+    background: linear-gradient(to right, #8c6d5d, #523828);
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     color: #f8f9fa;
     margin: 0 -15px;
@@ -176,16 +176,18 @@ export default {
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
-.spinnerbackground{
+
+.spinnerbackground {
     background: #ffffff8f;
     padding: 15px;
     border-radius: 4px;
     text-align: center;
 }
+
 .coursesheader h1 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     margin: 0;
     padding-top: 5px;
@@ -198,6 +200,13 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+@media (max-width: 991.8px) {
+    .hereparent {
+        height: 100vh;
+    }
+
 }
 
 .back {
@@ -248,6 +257,7 @@ export default {
     margin: 10px 10px 0;
     color: #ffffff;
 }
+
 /************************************** */
 .flip-card {
     background-color: transparent;
@@ -263,7 +273,7 @@ export default {
     text-align: center;
     transition: transform 0.6s;
     transform-style: preserve-3d;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
 
 .isFlipped {
@@ -284,7 +294,7 @@ export default {
 }
 
 .flip-card-back {
-    background-color: #fdfdfd;
+    background-color: #fffdf7;
     transform: rotateY(180deg);
 }
 
