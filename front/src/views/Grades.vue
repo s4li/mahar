@@ -10,7 +10,7 @@
                     <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
                 </div>
             </div>
-            <div class="w-100" v-if="!toggleShow" key="seconde">
+            <div v-if="!toggleShow" key="seconde">
                 <div class="btnBoxParrent" v-if="!extraData">
                     <form @submit="getExtraUserData">
                         <b-row class="mb-2">
