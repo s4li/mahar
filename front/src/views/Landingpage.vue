@@ -95,12 +95,21 @@ export default {
         },
         next() {
             this.$refs.myCarousel.next()
+        },
+        Help(){
+            const Index = localStorage.getItem('seehelp')
+            if(Index){
+                this.$router.push(this.path)
+            }else{
+                localStorage.setItem('seehelp', true)
+                this.goslide = true
+            }
         }
     },
     created() {
         this.DiagnosisPath()
         setTimeout(() => {
-            this.goslide = true
+            this.Help()
         }, 3000);
     },
 }
