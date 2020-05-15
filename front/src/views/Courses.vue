@@ -258,6 +258,15 @@ export default {
     color: #ffffff;
 }
 
+.true:active,
+.true:focus,
+.true:hover,
+.false:active,
+.false:focus,
+.false:hover {
+    color: #ffffff;
+}
+
 /************************************** */
 .flip-card {
     background-color: transparent;
@@ -294,7 +303,7 @@ export default {
 }
 
 .flip-card-back {
-    background-color: #fcf9f0;
+    background-color: #fff9e7;
     transform: rotateY(180deg);
 }
 

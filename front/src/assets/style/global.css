@@ -94,6 +94,9 @@
 .back-btn i{
   vertical-align: middle;
 }
+.back-btn:active i,.back-btn:focus i,.back-btn:hover i{
+  color: var(--light);
+}
 .btn-warning {
   color: #2b2b28;
   background-color: #ffc107;

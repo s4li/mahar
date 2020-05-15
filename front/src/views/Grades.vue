@@ -46,7 +46,7 @@
             <h5 class="w-100 m-0 text-center">آیا مطمئن هستید؟</h5>
             <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
         </template>
-        <div class="text-center p-4">
+        <div class="text-center p-3">
             <button @click="onLogout" class="btn btn-primary w-25 m-3">بله</button>
             <button @click="show=false" class="btn btn-warning w-25 m-3 shadow">خیر</button>
         </div>
