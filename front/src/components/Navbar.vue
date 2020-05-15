@@ -15,7 +15,7 @@
                 <router-link class="nav-link" to="/Guids">راهنما</router-link>
             </li>
             <li v-if="auth" class="nav-item">
-                <button @click="onLogout" class="btn btn-link nav-link">خروج</button>
+                <button @click="show=true" class="btn btn-link nav-link">خروج</button>
             </li>
         </ul>
     </div>
@@ -28,6 +28,16 @@
             <img src="../assets/image/logos/144.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
         </router-link>
     </nav>
+    <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="danger" headerTextVariant="light">
+        <template v-slot:modal-header="{ close }">
+            <h5 class="w-100 m-0 text-center">آیا مطمئن هستید؟</h5>
+            <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
+        </template>
+        <div class="text-center p-4">
+            <button @click="onLogout" class="btn btn-primary w-25 m-3">بله</button>
+            <button @click="show=false" class="btn btn-warning w-25 m-3 shadow">خیر</button>
+        </div>
+    </b-modal>
 </nav>
 </template>
 
@@ -36,6 +46,7 @@ export default {
     methods: {
         onLogout() {
             this.$store.dispatch('logout')
+            this.show=false
         },
     },
     computed: {
@@ -43,6 +54,11 @@ export default {
             return this.$store.getters.isAuthenticated
         }
     },
+    data() {
+        return {
+            show: false,
+        }
+    }
 }
 </script>
 

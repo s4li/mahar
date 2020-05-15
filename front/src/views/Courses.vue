@@ -294,7 +294,7 @@ export default {
 }
 
 .flip-card-back {
-    background-color: #fffdf7;
+    background-color: #fcf9f0;
     transform: rotateY(180deg);
 }
 
