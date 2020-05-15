@@ -433,4 +433,7 @@ input {
       visibility: visible;
       opacity: 1;
   }
+  .btnBoxParrent h1{
+    display: none!important;
+  }
 }

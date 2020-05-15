@@ -30,7 +30,7 @@
                     </form>
                 </div>
                 <div class="btnBoxParrent" v-if="!extraData">
-                    <h1 class="d-block h5">پایه مورد نظر خود را انتخاب کنید</h1>
+                    <h1 class="d-block h5">پایه ی تحصیلی مورد نظر خود را انتخاب نمایید.</h1>
                     <div class="btn-box">
                         <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
                             <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
@@ -81,7 +81,7 @@ export default {
                     if (this.extraData) {
                         this.title = 'لطفا پایه و شهر خود را مشخص کنید'
                     } else {
-                        this.title = 'پایه مورد نظر خود را انتخاب کنید'
+                        this.title = 'پایه ی تحصیلی مورد نظر خود را انتخاب نمایید.'
                     }
                     this.toggleShow = false
                 })

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <Header title="نوع آزمون خود را انتخاب کنید"></Header>
+    <Header title="تمایل به انجام چه کاری دارید ؟ "></Header>
 
     <router-link class="back-btn" :to="'/Lessons/' + gradId "><i class='fas fa-arrow-left'></i></router-link>
 
@@ -14,11 +14,11 @@
                 </div>
             </div>
             <div class="btnBoxParrent" v-if="!toggleShow" key="seconde">
-                <h1 class="d-block h5">نوع آزمون خود را انتخاب کنید</h1>
+                <h1 class="d-block h5">تمایل به انجام چه کاری دارید ؟ </h1>
                 <div class="btn-box">
-                    <router-link class="btn" :class="{disabled:!newStatus}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">پرسش جدید</router-link>
-                    <router-link class="btn" :class="{disabled:!previousStatus}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه پرسش قبلی</router-link>
-                    <router-link class="btn" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط های این بخش</router-link>
+                    <router-link class="btn btn-top" :class="{disabled:!newStatus}" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">تمرین جدید</router-link>
+                    <router-link class="btn btn-middle" :class="{disabled:!previousStatus}" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه تمرین قبلی</router-link>
+                    <router-link class="btn btn-bottom" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور تمرین های گذشته</router-link>
                 </div>
             </div>
         </transition>
@@ -100,9 +100,6 @@ export default {
     margin: 15px 0;
     padding: 8px;
     width: 80%;
-    color: #212529;
-    background-color: #ffc107;
-    border-color: #ffc107;
     text-align: center;
     border-radius: 4px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -111,5 +108,23 @@ export default {
 a.btn.disabled,
 fieldset:disabled a.btn {
     pointer-events: none;
+}
+
+.btn-top {
+    background-color: #ece6c9;
+    border-color: #ece6c9;
+    color: #212529;
+}
+
+.btn-middle {
+    background-color: #ffd83b;
+    border-color: #ffd83b;
+    color: #212529;
+}
+
+.btn-bottom {
+    background-color: #b1953f;
+    border-color: #b1953f;
+    color: #f1f1f1;
 }
 </style>

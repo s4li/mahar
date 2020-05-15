@@ -17,13 +17,13 @@
                 <div class="flip-card-front back">
                     <h3 class="mb-2">{{Courses.question}}</h3>
                     <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
-                    <button class="btn btn-warning" @click.prevent="flip = true">معنیش چیه؟</button>
+                    <button class="btn btn-warning" @click.prevent="flip = true">معنی کلمه ؟</button>
                 </div>
                 <div class="flip-card-back back">
                     <h3 class="h4">{{answer}}</h3>
                     <div>
-                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check" style="width: 20px;"></i>درسته</button>
-                        <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلطه</button>
+                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check" style="width: 20px;"></i>درست</button>
+                        <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلط</button>
                     </div>
                 </div>
             </div>
@@ -31,14 +31,14 @@
     </transition>
     <b-modal v-model="ModalShow" class="text-center" content-class="shadow" hide-footer centered header-bg-variant="warning" headerTextVariant="dark">
         <template v-slot:modal-header="{ close }">
-            <h5 class="w-100 m-0 text-center">شما به پایان این دوره از کلمات رسیدید</h5>
+            <h5 class="w-100 m-0 text-center">شما به پایان تمرین درس انتخابی رسیدید</h5>
             <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
         </template>
-        <h4 class="my-4 text-center"> تعداد جواب های صحیح : {{trueAnswer | faNum}}</h4>
+        <h4 class="my-4 text-center"> تعداد جواب های درست : {{trueAnswer | faNum}}</h4>
         <h4 class="my-4 text-center">تعداد جواب های غلط : {{wrongAnswer | faNum}}</h4>
         <div class="d-flex justify-content-center">
-            <router-link class="btn btn-primary m-2" :to="'/Lessons/' + gradId">درس ها</router-link>
-            <button class="btn btn-secondary m-2" @click.prevent="redirect()">آزمون ها</button>
+            <router-link class="btn btn-primary m-2" :to="'/Lessons/' + gradId">انتخاب درس</router-link>
+            <button class="btn btn-secondary m-2" @click.prevent="redirect()">ادامه تمرین</button>
         </div>
     </b-modal>
 </div>

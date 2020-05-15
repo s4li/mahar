@@ -110,7 +110,7 @@ export default {
         this.DiagnosisPath()
         setTimeout(() => {
             this.Help()
-        }, 3000);
+        }, 2000);
     },
 }
 </script>
