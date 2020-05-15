@@ -536,6 +536,7 @@ def information_completion_status(cuser):
     user = session.query(User).filter(User.id == data['user_id']).update({User.grade : data['grade'], User.city : data['city']})   
     session.commit()
     session.close()
-    return redirect("/Grades")
+    return jsonify("True")
+    
 if __name__ == '__main__':
     app.run(debug=True) 
