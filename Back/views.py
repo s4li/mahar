@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.sql import func
 import jwt, json, hashlib, hmac
 from random import randint
+from user_agents import parse
 import webbrowser
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
@@ -537,6 +538,28 @@ def information_completion_status(cuser):
     session.commit()
     session.close()
     return jsonify("True")
-    
+
+@app.route('/api/get-user-agent' )    
+@token_required
+def get_user_agent(cuser):
+    ua_string = request.headers.get('User-Agent')
+    user_agent = parse(ua_string)
+    is_mobile = user_agent.is_mobile # returns True
+    is_tablet = user_agent.is_tablet # returns False
+    is_touch_capable = user_agent.is_touch_capable # returns False
+    is_pc = user_agent.is_pc # returns False
+    is_bot = user_agent.is_bot # returns False
+    if is_mobile:
+        user_agent_type = 'mobile'  
+    elif is_tablet:
+        user_agent_type = 'tablet'
+    elif is_touch_capable:
+        user_agent_type = 'touch_capable'
+    elif is_pc:
+        user_agent_type = 'pc'  
+    else:
+        user_agent_type = 'bot'      
+    return jsonify(user_agent_type) 
+
 if __name__ == '__main__':
     app.run(debug=True) 
