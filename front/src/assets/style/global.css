@@ -440,3 +440,9 @@ input {
     display: none!important;
   }
 }
+@media (min-width: 992px){
+  body {
+      background: #f8f9fa;
+      background-image: unset!important;
+  }
+}

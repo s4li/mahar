@@ -166,6 +166,7 @@ export default {
 .carouselSlide {
     height: 100%;
     width: 100%;
+    overflow: scroll;
 }
 
 .carousel-caption {
@@ -195,12 +196,13 @@ export default {
     background: #f8f9fa;
     text-align: center;
     color: #2b2b28;
+    padding-bottom: 50px;
 }
 
 .carouselSlide img {
     width: 80%;
     height: auto;
-    margin: 80px auto;
+    margin: 40px auto 60px;
     max-width: 400px;
 }
 
