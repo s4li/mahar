@@ -539,9 +539,8 @@ def information_completion_status(cuser):
     session.close()
     return jsonify("True")
 
-@app.route('/api/get-user-agent' )    
-@token_required
-def get_user_agent(cuser):
+@app.route('/api/get-user-agent')    
+def get_user_agent():
     ua_string = request.headers.get('User-Agent')
     user_agent = parse(ua_string)
     is_mobile = user_agent.is_mobile # returns True
