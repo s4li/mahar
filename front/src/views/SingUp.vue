@@ -26,7 +26,7 @@
                                                 <input type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName">
                                                 <span class="focus-input100" data-placeholder="نام کاربری"></span>
                                             </div>
-                                            <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                                            <small class="form-text text-muted">تعداد کاراکتر های نام کاربری ۵ تا یا بیشتر باشد.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -39,7 +39,7 @@
                                                 <input type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
                                                 <span class="focus-input100" data-placeholder="کلمه عبور"></span>
                                             </div>
-                                            <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                                            <small class="form-text text-muted">تعداد کاراکتر های کلمه عبور ۵ تا یا بیشتر باشد.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +52,7 @@
                                                 <input type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
                                                 <span class="focus-input100" data-placeholder="شماره موبایل"></span>
                                             </div>
-                                            <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
+                                            <small class="form-text text-muted">شماره موبایل با صفر نوشته شود.</small>
                                         </div>
                                     </div>
                                 </div>

@@ -30,17 +30,27 @@
                     </form>
                 </div>
                 <div class="btnBoxParrent" v-if="!extraData">
-                    <h1 class="d-block h5">پایه مورد نظر خود را انتخاب کنید</h1>
+                    <h1 class="d-block h5">پایه ی تحصیلی مورد نظر خود را انتخاب نمایید.</h1>
                     <div class="btn-box">
                         <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
                             <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
                             پایه {{grad.title}}
                         </router-link>
                     </div>
-                    <button @click="onLogout" class="btn btn-outline-danger mx-auto mt-3 d-block w-25 btn-sm shadow">خروج</button>
+                    <button @click="show=true" class="btn btn-danger mx-auto mt-3 d-block btn-sm shadow">خروج از حساب کاربری</button>
                 </div>
             </div>
         </transition>
+    <b-modal v-model="show" id="modal-center" content-class="shadow" hide-footer centered header-bg-variant="danger" headerTextVariant="light">
+        <template v-slot:modal-header="{ close }">
+            <h5 class="w-100 m-0 text-center">آیا مطمئن هستید؟</h5>
+            <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
+        </template>
+        <div class="text-center p-3">
+            <button @click="onLogout" class="btn btn-primary w-25 m-3">بله</button>
+            <button @click="show=false" class="btn btn-warning w-25 m-3 shadow">خیر</button>
+        </div>
+    </b-modal>
     </div>
 </div>
 </template>
@@ -71,7 +81,7 @@ export default {
                     if (this.extraData) {
                         this.title = 'لطفا پایه و شهر خود را مشخص کنید'
                     } else {
-                        this.title = 'پایه مورد نظر خود را انتخاب کنید'
+                        this.title = 'پایه ی تحصیلی مورد نظر خود را انتخاب نمایید.'
                     }
                     this.toggleShow = false
                 })
@@ -106,6 +116,7 @@ export default {
     },
     data() {
         return {
+            show : false,
             title:'',
             grads: [],
             toggleShow: true,

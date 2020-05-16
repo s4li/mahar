@@ -1,6 +1,6 @@
 <template>
 <div>
-    <Header title="درس مورد نظر خود را انتخاب کنید"></Header>
+    <Header title="درس مورد نظر خود را انتخاب نمایید."></Header>
     <router-link class="back-btn" to="/Grades"><i class='fas fa-arrow-left'></i></router-link>
 
     <transition name="shakeTop">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="btnBoxParrent" v-if="!toggleShow" key="seconde">
-                <h1 class="d-block h5">درس مورد نظر خود را انتخاب کنید</h1>
+                <h1 class="d-block h5">درس مورد نظر خود را انتخاب نمایید.</h1>
                 <div class="btn-box">
                     <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
                         <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
@@ -36,7 +36,7 @@
             <h5 class="w-100 m-0 text-center">توجه!</h5>
             <b-button class="d-none" size="sm" variant="light" @click="close()"><i style="vertical-align: sub;" class="far fa-times"></i></b-button>
         </template>
-        <h4 class="text-center h6">شما پایه <span style="font-weight:bold">{{gardnum | translate}}</span> را انتخاب کرده اید محتویات این پایه در صورت خریداری شدن فعال خواهد شد</h4>
+        <h4 class="text-center h6">کاربر عزیز شما پایه<span style="font-weight:bold"> {{gardnum | translate}} </span>  را انتخاب کرده اید پس از خرید آن دسترسی به دروس باز می شود. </h4>
         <div class="buy-box">
             <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
                 <h5>فعالسازی این پایه</h5>

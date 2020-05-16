@@ -64,6 +64,9 @@
   button:focus {
     outline: none;
   }
+  .modal-backdrop {
+    background-color: #0006 !important;
+}
 .btn.focus, .btn:focus {
   outline: none;
   box-shadow: none;
@@ -90,6 +93,9 @@
 }
 .back-btn i{
   vertical-align: middle;
+}
+.back-btn:active i,.back-btn:focus i,.back-btn:hover i{
+  color: var(--light);
 }
 .btn-warning {
   color: #2b2b28;
@@ -429,5 +435,8 @@ input {
   .alert-validate::before {
       visibility: visible;
       opacity: 1;
+  }
+  .btnBoxParrent h1{
+    display: none!important;
   }
 }

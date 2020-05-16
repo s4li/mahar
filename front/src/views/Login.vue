@@ -24,7 +24,7 @@
                                                 <input type="number" @blur="$v.LoginForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="LoginForm.Mobile" v-on:keyup="checkingValMobile">
                                                 <span class="focus-input100" data-placeholder="شماره موبایل"></span>
                                             </div>
-                                            <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد</small>
+                                            <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -37,7 +37,7 @@
                                                 <input type="password" @blur="$v.LoginForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="LoginForm.Password" v-on:keyup="checkingValPass">
                                                 <span class="focus-input100" data-placeholder="کلمه عبور"></span>
                                             </div>
-                                            <small class="form-text text-muted">تعداد کاراکترها نمی تواند کمتر از ۵ کاراکتر باشد</small>
+                                            <small class="form-text text-muted">تعداد کاراکتر های کلمه عبور ۵ تا یا بیشتر باشد.</small>
                                         </div>
                                     </div>
                                 </div>
