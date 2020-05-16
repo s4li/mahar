@@ -111,14 +111,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-top {
-    background-color: #ece6c9;
-    border-color: #ece6c9;
+    background-color: #ffd83b;
+    border-color: #ffd83b;
     color: #212529;
 }
 
 .btn-middle {
-    background-color: #ffd83b;
-    border-color: #ffd83b;
+    background-color: #ece6c9;
+    border-color: #ece6c9;
     color: #212529;
 }
 
