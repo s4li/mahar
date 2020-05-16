@@ -201,6 +201,7 @@ export default {
     width: 80%;
     height: auto;
     margin: 80px auto;
+    max-width: 400px;
 }
 
 .carouselSlide h3 {
@@ -211,7 +212,9 @@ export default {
     color: #4c4c4c;
     padding: 20px;
 }
-
+.carouselSlide .btn{
+    max-width: 400px;
+}
 .landingLessonTitle {
     text-align: center;
     margin: 20px;
