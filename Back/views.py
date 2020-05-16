@@ -154,7 +154,7 @@ def register():
         response = {'result':f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.', 'full_name': user.full_name, 'token':token.decode('UTF-8'), 'id': user.id}
         status_code = 200
     else:
-        response = {'result':'کاربر عزیز با این شماره موبایل قبلا ثبت نام شده است!'}
+        response = {'result':'کاربر عزیز، با این شماره موبایل قبلا ثبت نام شده، در صورت فراموشی رمز "فراموشی کلمه عبور" را لمس نمایید. '}
         status_code = 401 
     session.commit()      
     session.close()                           
@@ -183,7 +183,7 @@ def login():
             response = {'result':'رمز عبور خود را درست وارد نکرده اید!'} 
     else:
         status_code = 401
-        response = {'result':'شما قبلا ثبت نام نکرده اید!'} 
+        response = {'result':'این نام کاربری قبلا ثبت نام نشده است!'} 
     session.commit()    
     session.close()                
     return jsonify(response), status_code
