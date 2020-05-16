@@ -24,6 +24,8 @@ const token = localStorage.getItem('token')
 
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = `Bearer: ${token}`
+}else{
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = null
 }
 
 const reqInterceptor = axios.interceptors.request.use(config => {
