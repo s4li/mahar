@@ -15,7 +15,6 @@
         </div>
     </div>
     <div class="mobile">
-
         <div class="home">
             <transition name="fadeIn" mode="out-in">
                 <div class="welcome" v-if="!goslide" key="first">
@@ -68,6 +67,7 @@
 
 <script>
 import loader from '../components/loader'
+import axios from 'axios'
 export default {
     components: {
         loader
@@ -84,6 +84,15 @@ export default {
         }
     },
     methods: {
+        getUserAgents() {
+            axios.get('/get-user-agent')
+                .then((res) => {
+                    console.log(res)
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         DiagnosisPath() {
             if (this.$store.getters.isAuthenticated) {
                 console.log('/Grades')
@@ -108,9 +117,10 @@ export default {
     },
     created() {
         this.DiagnosisPath()
-        setTimeout(() => {
-            this.Help()
-        }, 2000);
+        this.getUserAgents()
+        //setTimeout(() => {
+        //    this.Help()
+        //}, 2000);
     },
 }
 </script>
