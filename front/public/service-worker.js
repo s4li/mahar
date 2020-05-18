@@ -1,10 +1,3 @@
-// install new service worker when ok, then reload page.
-self.addEventListener("message", msg => {
-  if (msg.data.action == 'skipWaiting') {
-      self.skipWaiting()
-  }
-})
-
 workbox.core.setCacheNameDetails({ prefix: 'd4' })
 //Change this value every time before you build
 const LATEST_VERSION = 'v1.0'
