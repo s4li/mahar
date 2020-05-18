@@ -9,7 +9,8 @@ module.exports = {
     msTileColor: '#FFFFFF',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'white',
-    manifestPath:'public/manifest.json',
+    manifestPath:'manifest.json',
+    scope: '/',
     manifestOptions:{
       name: 'مرکز هوشمندسازی آموزش های رسانه ای',
       short_name: 'مهار',
