@@ -543,11 +543,11 @@ def information_completion_status(cuser):
 def get_user_agent():
     ua_string = request.headers.get('User-Agent')
     user_agent = parse(ua_string)
-    is_mobile = user_agent.is_mobile # returns True
-    is_tablet = user_agent.is_tablet # returns False
-    is_touch_capable = user_agent.is_touch_capable # returns False
-    is_pc = user_agent.is_pc # returns False
-    is_bot = user_agent.is_bot # returns False
+    is_mobile = user_agent.is_mobile # returns True or false
+    is_tablet = user_agent.is_tablet 
+    is_touch_capable = user_agent.is_touch_capable 
+    is_pc = user_agent.is_pc 
+    is_bot = user_agent.is_bot 
     if is_mobile:
         user_agent_type = 'mobile'  
     elif is_tablet:
@@ -557,7 +557,8 @@ def get_user_agent():
     elif is_pc:
         user_agent_type = 'pc'  
     else:
-        user_agent_type = 'bot'      
+        user_agent_type = 'bot' 
+    print(user_agent_type)         
     return jsonify(user_agent_type) 
 
 if __name__ == '__main__':
