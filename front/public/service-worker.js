@@ -1,7 +1,34 @@
-workbox.core.setCacheNameDetails({ prefix: 'd4' })
+const staticAssets = [
+  '../src/assets/fonts/IRANSansWeb_100.woff',
+  '../src/assets/fonts/IRANSansWeb_200.woff',
+  '../src/assets/fonts/IRANSansWeb_400.woff',
+  '../src/assets/fonts/IRANSansWeb_600.woff',
+  '../src/assets/fonts/IRANSansWeb_800.woff',
+  '../src/assets/fonts/fa-duotone-900.woff',
+  '../src/assets/fonts/fa-brands-400.woff',
+  '../src/assets/fonts/fa-light-300.woff',
+  '../src/assets/fonts/fa-regular-400.woff',
+  '../src/assets/image/guidImage/1.png',
+  '../src/assets/image/guidImage/2.jpg',
+  '../src/assets/image/guidImage/3.jpg',
+  '../src/assets/image/guidImage/4.jpg',
+  '../src/assets/image/guidImage/5.jpg',
+  '../src/assets/image/guidImage/6.jpg',
+  '../src/assets/image/guidImage/7.jpg',
+  '../public/manifest.json',
+];
+
+const cacheName = 'first';
+
+self.addEventListener('install', async () => {
+  const cache = await caches.open(cacheName);
+  await cache.addAll(staticAssets);
+  return self.skipWaiting();
+});
+
 //Change this value every time before you build
 const LATEST_VERSION = 'v1.0'
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', () => {
 console.log(`%c ${LATEST_VERSION} `, 'background: #ddd; color: #0000ff')
 if (caches) {
   caches.keys().then((arr) => {
@@ -22,13 +49,52 @@ if (caches) {
     })
   })
 }
+self.clients.claim();
 })
 
-workbox.skipWaiting()
-workbox.clientsClaim()
+self.addEventListener('fetch', async e => {
+  const req = e.request;
+  const url = new URL(req.url);
+  if (url.origin === location.origin) {
+    e.respondWith(cacheFirst(req));
+  } else {
+    e.respondWith(networkAndCache(req));
+  }
+});
 
-self.__precacheManifest = [].concat(self.__precacheManifest || []);
-workbox.precaching.suppressWarnings();
-workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+async function cacheFirst(req) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(req);
+  return cached || fetch(req);
+}
 
-workbox.routing.registerNavigationRoute('/index.html');
+async function networkAndCache(req) {
+  const cache = await caches.open(cacheName);
+  try {
+    const fresh = await fetch(req);
+    await cache.put(req, fresh.clone());
+    return fresh;
+  } catch (e) {
+    const cached = await cache.match(req);
+    return cached;
+  }
+}
+//workbox.setConfig({
+//  debug: false,
+//});
+//
+//workbox.core.setCacheNameDetails({ prefix: 'd4' })
+//workbox.skipWaiting()
+//workbox.clientsClaim()
+//
+//self.__precacheManifest = [].concat(self.__precacheManifest || []);
+//workbox.precaching.suppressWarnings();
+//workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+//
+//workbox.routing.registerNavigationRoute('/index.html');
+// install new service worker when ok, then reload page.
+self.addEventListener("message", msg => {
+  if (msg.data.action == 'skipWaiting') {
+      self.skipWaiting()
+  }
+})

@@ -10,10 +10,9 @@ module.exports = {
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'white',
     manifestPath:'manifest.json',
-    scope: '/',
     manifestOptions:{
       name: 'مرکز هوشمندسازی آموزش های رسانه ای',
-      short_name: 'مهار',
+      short_name: 'مهار عربی',
       start_url: '/',
       background_color: '#fff',
       description: 'مرکز هوشمندسازی آموزش های رسانه ای',
