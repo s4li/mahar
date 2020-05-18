@@ -17,7 +17,8 @@ Vue.prototype.$http = axios
 
 
 //axios.defaults.baseURL = 'http://localhost:5555/api'
-axios.defaults.baseURL = 'http://doplus.ir/api'
+//axios.defaults.baseURL = 'http://doplus.ir/api'
+axios.defaults.baseURL = '/api'
 axios.defaults.headers.get['Accepts'] = 'application/json'
 
 const token = localStorage.getItem('token')
