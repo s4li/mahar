@@ -1,12 +1,15 @@
 module.exports = {
   pwa: {
     workboxPluginMode:'InjectManifest',
-    workboxOptions: {swSrc: "public/service-worker.js"},
+    workboxOptions: {
+      swSrc: "service-worker.js",
+    },
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',
     themeColor: '#FFFFFF',
     msTileColor: '#FFFFFF',
-    appleMobileWebAppCapable:'no',
-    manifestPath:'manifest.json',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'white',
+    manifestPath:'public/manifest.json',
     manifestOptions:{
       name: 'مرکز هوشمندسازی آموزش های رسانه ای',
       short_name: 'مهار',
