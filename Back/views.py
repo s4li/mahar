@@ -56,7 +56,16 @@ def token_required(f):
             print(e)
             return jsonify(invalid_msg), 401
     return _verify
-  
+
+def check_user_access(user_id, lesson_id):
+    session = Session()
+    user_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == user_id).first()
+    purchased_lessons_list = user_purchased_lessons[0].split(',')
+    user_access_lesson = True if f'{lesson_id}' in purchased_lessons_list else False
+    session.commit()
+    session.close()
+    return user_access_lesson
+       
 def make_hashed_password(password):
     hashed_key= 'test1234567879'
     h = hashlib.blake2b(key= hashed_key.encode(), digest_size=16)
@@ -246,123 +255,143 @@ def lessons(cuser):
 @app.route('/api/get-status-question-user')     
 @token_required
 def status_question(cuser):
-    session = Session()
     lesson_id = int(request.args['lesson_id'])
     user_id = int(request.args['user_id'])
-    has_new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
-    check_new_question = 'True' if has_new_question else 'False'
-    enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
-    check_continue_previous_questions = 'False'
-    if enrol_user and enrol_user[0] != -1:
-        has_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > enrol_user[0], Question.lesson_id == lesson_id ).first()
-        check_continue_previous_questions = 'True' if has_continue_previous_question else 'False'
-    has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
-    check_wrong_questions = 'True' if has_wrong_questions else 'False'
-    result = {"check_new_question":check_new_question, "review_previous_questions":check_continue_previous_questions, "check_wrong_questions":check_wrong_questions}
-    session.commit()
-    session.close() 
+    has_access = check_user_access(user_id, lesson_id)
+    if has_access:
+        session = Session()
+        has_new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
+        check_new_question = 'True' if has_new_question else 'False'
+        enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
+        check_continue_previous_questions = 'False'
+        if enrol_user and enrol_user[0] != -1:
+            has_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > enrol_user[0], Question.lesson_id == lesson_id ).first()
+            check_continue_previous_questions = 'True' if has_continue_previous_question else 'False'
+        has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
+        check_wrong_questions = 'True' if has_wrong_questions else 'False'
+        result = {"check_new_question":check_new_question, "review_previous_questions":check_continue_previous_questions, "check_wrong_questions":check_wrong_questions}
+        session.commit()
+        session.close() 
+    else:
+        result = {"result" : "The user does not have access"}
     return jsonify(result)
 
 @app.route('/api/new-questions')     
 @token_required
 def all_questions(cuser): 
-    session = Session()
     lesson_id = int(request.args['lesson_id'])
-    index = int(request.args['index'])
     user_id = int(request.args['user_id'])
-    next_new_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
-    next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
-    next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
-    if index == -1 :
-        # delete all answer user and change status in enrol_user table
-        all_previous_answer = session.query(User_answer).filter(User_answer.lesson_id == lesson_id, User_answer.user_id == user_id).all()
-        if all_previous_answer:
-            for answer in all_previous_answer:
-                session.delete(answer)
+    has_access = check_user_access(user_id, lesson_id)
+    if has_access:
+        session = Session()
+        index = int(request.args['index'])
+        next_new_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
+        next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
+        next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
+        if index == -1 :
+            # delete all answer user and change status in enrol_user table
+            all_previous_answer = session.query(User_answer).filter(User_answer.lesson_id == lesson_id, User_answer.user_id == user_id).all()
+            if all_previous_answer:
+                for answer in all_previous_answer:
+                    session.delete(answer)
+                    session.commit()
+            has_enroll_user = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()   
+            first_lesson_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
+            if has_enroll_user:
+                session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.question_id: -1 })
                 session.commit()
-        has_enroll_user = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()   
-        first_lesson_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
-        if has_enroll_user:
-            session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.question_id: -1 })
-            session.commit()
-        else:
-            enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
-            session.add(enrol_user)  
-            session.commit()
-    lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()        
-    result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text, "lesson_title":lesson.title}
-    session.commit()
-    session.close() 
+            else:
+                enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
+                session.add(enrol_user)  
+                session.commit()
+        lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()        
+        result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text, "lesson_title":lesson.title}
+        session.commit()
+        session.close() 
+    else:
+        result = {"result" : "The user does not have access"}    
     return jsonify(result)    
 
 @app.route('/api/get-previous-questions')     
 @token_required
 def continue_previous_questions(cuser): 
-    session = Session()
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    index = int(request.args['index'])
-    enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
-    next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> enrol_user[0], Question.lesson_id == lesson_id ).first()
-    next_continue_previous_voice = session.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
-    next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
-    lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
-    result = {"question":next_continue_previous_question.text, "voice": f'{next_continue_previous_voice.path}', "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text,  "lesson_title":lesson.title}
-    session.commit()
-    session.close() 
+    has_access = check_user_access(user_id, lesson_id)
+    if has_access:
+        session = Session()
+        index = int(request.args['index'])
+        enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
+        next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> enrol_user[0], Question.lesson_id == lesson_id ).first()
+        next_continue_previous_voice = session.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
+        next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
+        lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
+        result = {"question":next_continue_previous_question.text, "voice": f'{next_continue_previous_voice.path}', "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text,  "lesson_title":lesson.title}
+        session.commit()
+        session.close() 
+    else:
+        result = {"result" : "The user does not have access"}     
     return jsonify(result)
 
 @app.route('/api/get-wrong-questions')     
 @token_required
 def wronge_questions(cuser): 
-    session = Session()
     user_id = int(request.args['user_id'])
     lesson_id = int(request.args['lesson_id'])
-    index = int(request.args['index'])
-    first_wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
-    next_wrong_question = session.query(Question).filter(Question.id == first_wrong_answer.question_id).first()
-    next_wrong_voice = session.query(Voice).filter(Voice.id == next_wrong_question.voice_id).first()
-    next_wrong_answer = session.query(Answer).filter(Answer.question_id == next_wrong_question.id).first()
-    lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
-    result = {"question":next_wrong_question.text, "voice": f'{next_wrong_voice.path}', "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text,  "lesson_title":lesson.title}
-    session.commit()
-    session.close() 
+    has_access = check_user_access(user_id, lesson_id)
+    if has_access:
+        session = Session()
+        index = int(request.args['index'])
+        first_wrong_answer = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
+        next_wrong_question = session.query(Question).filter(Question.id == first_wrong_answer.question_id).first()
+        next_wrong_voice = session.query(Voice).filter(Voice.id == next_wrong_question.voice_id).first()
+        next_wrong_answer = session.query(Answer).filter(Answer.question_id == next_wrong_question.id).first()
+        lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
+        result = {"question":next_wrong_question.text, "voice": f'{next_wrong_voice.path}', "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text,  "lesson_title":lesson.title}
+        session.commit()
+        session.close() 
+    else:
+        result = {"result" : "The user does not have access"}    
     return jsonify(result)
 
 
 @app.route('/api/set-user-answer', methods=('POST',))    
 @token_required
 def user_answer(cuser): 
-    session = Session()
     data = request.get_json()
-    user_previous_answer  = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
-    if not user_previous_answer :
-        user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
-        session.add(user_answer)
+    has_access = check_user_access(data['user_id'], data['lesson_id'])
+    if has_access:
+        session = Session()
+        user_previous_answer  = session.query(User_answer.id).filter(User_answer.user_id == data['user_id'], User_answer.question_id == data['question_id']).first()
+        if not user_previous_answer :
+            user_answer = User_answer(ans_no=data['ans_no'], user_id=data['user_id'], question_id=data['question_id'], lesson_id=data['lesson_id'])
+            session.add(user_answer)
+            session.commit()
+        else:
+            user_answer_update = session.query(User_answer).filter(User_answer.id == user_previous_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
+            session.commit()
+        if data['question_type'] == 1:
+            # update status in enrol user table
+            next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
+            session.commit()
+        elif data['question_type'] == 2:
+            # update status in enrol user table
+            next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> data['question_id'] , Question.lesson_id == data['lesson_id']).first()
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
+            session.commit()
+        else:
+            next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
+        if next_content:
+            result = {"has_next_new_question":"True"}
+        else:
+            wrong_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'] ,User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).scalar() 
+            true_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'],  User_answer.ans_no == '0', User_answer.lesson_id == data['lesson_id']).scalar() 
+            result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
         session.commit()
+        session.close()
     else:
-        user_answer_update = session.query(User_answer).filter(User_answer.id == user_previous_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
-        session.commit()
-    if data['question_type'] == 1:
-        # update status in enrol user table
-        next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
-        session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
-        session.commit()
-    elif data['question_type'] == 2:
-        # update status in enrol user table
-        next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> data['question_id'] , Question.lesson_id == data['lesson_id']).first()
-        session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
-        session.commit()
-    else:
-        next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
-    if next_content:
-        result = {"has_next_new_question":"True"}
-    else:
-        wrong_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'] ,User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).scalar() 
-        true_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'],  User_answer.ans_no == '0', User_answer.lesson_id == data['lesson_id']).scalar() 
-        result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
-    session.commit()
-    session.close()
+        result = {"result" : "The user does not have access"}    
     return  jsonify(result)
 
 @app.route('/api/zarinpal/<type>/<user_id>/<sale_plan_id>/<verify>')    
