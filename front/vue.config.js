@@ -2,7 +2,7 @@ module.exports = {
   pwa: {
     workboxPluginMode:'InjectManifest',
     workboxOptions: {
-      swSrc: "service-worker.js",
+      swSrc: 'public/service-worker.js',
     },
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',
     themeColor: '#FFFFFF',

@@ -1,5 +1,5 @@
 //importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-//
+
 if (workbox) {
   console.log(`Yay! Workbox is loaded 🎉`);
 } else {
@@ -35,7 +35,7 @@ self.addEventListener('install', async () => {
 
 workbox.core.setCacheNameDetails({ prefix: 'd4' })
 //Change this value every time before you build
-const LATEST_VERSION = 'v1.0'
+const LATEST_VERSION = 'v1.1'
 self.addEventListener('activate', () => {
 console.log(`%c ${LATEST_VERSION} `, 'background: #ddd; color: #0000ff')
 if (caches) {
