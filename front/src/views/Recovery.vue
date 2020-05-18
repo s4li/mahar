@@ -41,7 +41,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn enterBtn w-25 shadow" :disabled="$v.mobileNumber.$invalid" id="loginbtn" type="submit">ورود</button>
+                                <button class="btn box enterBtn w-25 shadow" :disabled="$v.mobileNumber.$invalid" id="loginbtn" type="submit">ورود</button>
                             </form>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn enterBtn w-25 shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
+                                <button class="btn box enterBtn w-25 shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
                             </form>
                         </div>
                     </div>

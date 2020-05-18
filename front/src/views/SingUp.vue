@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="btn-box1">
-                                <button class="btn shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
+                                <button class="btn box shadow" :disabled="$v.$invalid" type="submit">ثبت نام</button>
                             </div>
                         </form>
                     </div>

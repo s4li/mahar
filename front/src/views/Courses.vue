@@ -16,14 +16,14 @@
             <div class="flip-card-inner" :class="{isFlipped:flip}">
                 <div class="flip-card-front back">
                     <h3 class="mb-2">{{Courses.question}}</h3>
-                    <button class="btn play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
-                    <button class="btn btn-warning" @click.prevent="flip = true">معنی کلمه ؟</button>
+                    <button class="btn box play" @click.prevent="playSound()"><i class="fas fa-volume"></i></button>
+                    <button class="btn box btn-warning" @click.prevent="flip = true">معنی کلمه ؟</button>
                 </div>
                 <div class="flip-card-back back">
                     <h3 class="h4">{{answer}}</h3>
                     <div>
-                        <button @click.prevent="SendAnswer(0)" class="btn shadow true"><i class="far fa-check" style="width: 20px;"></i>درست</button>
-                        <button @click.prevent="SendAnswer(1)" class="btn shadow false"><i class="far fa-times"></i>غلط</button>
+                        <button @click.prevent="SendAnswer(0)" class="btn box shadow true"><i class="far fa-check" style="width: 20px;"></i>درست</button>
+                        <button @click.prevent="SendAnswer(1)" class="btn box shadow false"><i class="far fa-times"></i>غلط</button>
                     </div>
                 </div>
             </div>
@@ -310,5 +310,12 @@ export default {
 .flip-card-back h3 {
     min-height: 60px;
     padding-top: 10px;
+}
+.box {
+    transition: transform 0.1s;
+}
+
+.box:active {
+    transform: scale(0.9);
 }
 </style>

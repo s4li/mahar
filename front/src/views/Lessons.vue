@@ -24,7 +24,7 @@
             <div class="btnBoxParrent" v-if="!toggleShow" key="seconde">
                 <h1 class="d-block h5">درس مورد نظر خود را انتخاب نمایید.</h1>
                 <div class="btn-box">
-                    <b-button @click="unlockCheck(lesson.id)" variant="warning" v-for="(lesson, index) in lessons" :key="index">
+                    <b-button @click="unlockCheck(lesson.id)" class="box" variant="warning" v-for="(lesson, index) in lessons" :key="index">
                         <i class="far fa-lock icon" :class="{'d-none':lesson.show_lesson}"></i>{{lesson.title}}</b-button>
                 </div>
             </div>

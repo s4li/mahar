@@ -42,11 +42,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn enterBtn w-25 shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
+                            <button class="btn box enterBtn w-25 shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
                             <div class="btn-boxl">
-                                <router-link to="/Singup" id="singupbtn" class="btn btn-sm shadow">ثبت نام</router-link>
-                                <router-link to="/Recovery" class="btn btn-sm btn-outline-primary shadow">بازیابی رمز عبور</router-link>
-                                <router-link to="/Guids" class="btn btn-sm btn-outline-secondary shadow">راهنمای استفاده</router-link>
+                                <router-link to="/Singup" id="singupbtn" class="btn box btn-sm shadow">ثبت نام</router-link>
+                                <router-link to="/Recovery" class="btn box btn-sm btn-outline-primary shadow">بازیابی رمز عبور</router-link>
+                                <router-link to="/Guids" class="btn box btn-sm btn-outline-secondary shadow">راهنمای استفاده</router-link>
                             </div>
                         </form>
                     </div>
@@ -182,11 +182,13 @@ export default {
     min-width: 110px;
     margin-bottom: 15px;
 }
+
 @media (max-width: 991.8px) {
     .lgTitle {
         display: none;
     }
-    .inner{
+
+    .inner {
         margin-top: 25%;
     }
 }

@@ -32,7 +32,7 @@
                 <div class="btnBoxParrent" v-if="!extraData">
                     <h1 class="d-block h5">پایه ی تحصیلی مورد نظر خود را انتخاب نمایید.</h1>
                     <div class="btn-box">
-                        <router-link class="btn btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
+                        <router-link class="btn box btn-warning" :class="{disabled:!grad.has_content}" :to="'/Lessons/'+ grad.id" v-for="(grad, index) in grads" :key="index">
                             <i class="far fa-lock icon" :class="{'d-none':grad.has_content}"></i>
                             پایه {{grad.title}}
                         </router-link>
