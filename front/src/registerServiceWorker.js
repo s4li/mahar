@@ -21,6 +21,8 @@ if (process.env.NODE_ENV === 'production') {
     },
     updated (registration) {
       console.log('New content is available; Refresh...',registration)
+      let worker = registration.waiting
+      worker.postMessage({action: 'skipWaiting'})
       setTimeout(() => {
         window.location.reload(true)
       }, 1000)

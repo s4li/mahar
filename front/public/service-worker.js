@@ -1,3 +1,10 @@
+//importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+//
+if (workbox) {
+  console.log(`Yay! Workbox is loaded 🎉`);
+} else {
+  console.log(`Boo! Workbox didn't load 😬`);
+}
 const staticAssets = [
   '../src/assets/fonts/IRANSansWeb_100.woff',
   '../src/assets/fonts/IRANSansWeb_200.woff',
@@ -26,6 +33,7 @@ self.addEventListener('install', async () => {
   return self.skipWaiting();
 });
 
+workbox.core.setCacheNameDetails({ prefix: 'd4' })
 //Change this value every time before you build
 const LATEST_VERSION = 'v1.0'
 self.addEventListener('activate', () => {
@@ -79,22 +87,21 @@ async function networkAndCache(req) {
     return cached;
   }
 }
-//workbox.setConfig({
-//  debug: false,
-//});
-//
-//workbox.core.setCacheNameDetails({ prefix: 'd4' })
-//workbox.skipWaiting()
-//workbox.clientsClaim()
-//
-//self.__precacheManifest = [].concat(self.__precacheManifest || []);
-//workbox.precaching.suppressWarnings();
-//workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-//
-//workbox.routing.registerNavigationRoute('/index.html');
+workbox.setConfig({
+  debug: false,
+});
+
+
+workbox.skipWaiting()
+workbox.clientsClaim()
+
+self.__precacheManifest = [].concat(self.__precacheManifest || []);
+workbox.precaching.suppressWarnings();
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+workbox.routing.registerNavigationRoute('/index.html');
 // install new service worker when ok, then reload page.
-self.addEventListener("message", msg => {
-  if (msg.data.action == 'skipWaiting') {
-      self.skipWaiting()
-  }
+
+self.addEventListener("message", (e)=>{
+  if (e.data.action=='skipWaiting') self.skipWaiting()
 })

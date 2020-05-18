@@ -38,7 +38,7 @@
         <h4 class="my-4 text-center">تعداد جواب های غلط : {{wrongAnswer | faNum}}</h4>
         <div class="d-flex justify-content-center">
             <router-link class="btn btn-primary m-2" :to="'/Lessons/' + gradId">انتخاب درس</router-link>
-            <button class="btn btn-secondary m-2" @click.prevent="redirect()">ادامه تمرین</button>
+            <button class="btn btn-secondary m-2" @click.prevent="redirect()">مرور غلط ها</button>
         </div>
     </b-modal>
 </div>
@@ -125,7 +125,7 @@ export default {
             this.toolboxcondition = false
             setTimeout(() => {
                 this.toggleCondition()
-            }, 5000)
+            }, 10000)
         },
         redirect() {
             this.initForm();
