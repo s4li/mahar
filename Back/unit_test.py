@@ -63,7 +63,7 @@ def test_course_content_get_method(course_id, user_id, token):
         return False, response     
     return True, response 
 
-def test_lesson_content_get_method(lesson_id, user_id, token, print_error = False):
+def test_status_lesson_question_get_method(lesson_id, user_id, token, print_error = False):
     url = f'{BACK_URL}/api/get-status-question-user'
     headers = {'Authorization':f'Bearer: {token}'}
     params = {'lesson_id':lesson_id, 'user_id':user_id}
@@ -79,14 +79,14 @@ def find_target_lesson(courses, free_lesson = False):
     if free_lesson:
         for i in range(len(courses)):
             lesson_id = courses[i]['id']
-            is_passed, response = test_lesson_content_get_method(lesson_id, user_id, token)
+            is_passed, response = test_status_lesson_question_get_method(lesson_id, user_id, token)
             if response and response.status_code == 200 and is_passed == True:
                 target_lesson = courses[i]
                 break
     else:            
         for i in range(len(courses)):
             lesson_id = courses[i]['id']
-            is_passed, response = test_lesson_content_get_method(lesson_id, user_id, token)
+            is_passed, response = test_status_lesson_question_get_method(lesson_id, user_id, token)
             if response.status_code != 200 and is_passed == False:
                 target_lesson = courses[i]
                 break
@@ -114,32 +114,48 @@ def test_choice_lesson_process(user_id, token):
     all_courses = json_result['all_courses']  
     complete_information = json_result['complete_information']
     first_course_id = all_courses[0]['id']
-    is_passed, response = test_course_content_get_method(first_course_id, user_id, token) 
+    is_passed, response_course_content = test_course_content_get_method(first_course_id, user_id, token) 
     if is_passed == False:
         return False, response 
     json_result = response.json()
-    free_lesson = find_target_lesson(json_result, free_lesson = True)
-    if free_lesson == None:
-        print(f'Error, There is a problem to find free lesson content page.')
-        return False, response 
-    is_passed, response = test_lesson_content_get_method( free_lesson['id'], user_id, token, True)
-    if is_passed == False:
-        print(f'Error, There is a problem to get free lesson content page.\n response.status_code = {response.status_code}')
-        return False, response 
     premium_lesson = find_target_lesson(json_result, free_lesson = False) 
     if premium_lesson == None:
         print(f'Error, There is a problem to find premium lesson content page.')
         return False, response  
-    is_passed, response_premium_lesson = test_zarinpal_get_method(premium_lesson['id'], user_id, token)
+    is_passed, response = test_zarinpal_get_method(premium_lesson['id'], user_id, token)
     if is_passed == False:
         print(f'Error, There is a problem to get zarinpal page.\n response.status_code = {response.status_code}')
-        return False, response      
+        return False, response  
+    free_lesson = find_target_lesson(json_result, free_lesson = True)
+    if free_lesson == None:
+        print(f'Error, There is a problem to find free lesson content page.')
+        return False, response 
+    is_passed, response = test_status_lesson_question_get_method( free_lesson['id'], user_id, token, True)
+    if is_passed == False:
+        print(f'Error, There is a problem to get free lesson content page.\n response.status_code = {response.status_code}')
+        return False, response     
+    return True, response_course_content
+
+def test_new_question(lesson_id, user_id, index, token):
+    url = f'{BACK_URL}/api/new-questions'
+    headers = {'Authorization':f'Bearer: {token}'}
+    params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
+    response = requests.get(url, headers= headers, params= params)
+    if not (response and response.status_code == 200):
+        print(f'Error, There is a problem to get lesson content page.\n response.status_code = {response.status_code}')
+        return False, response 
+    return True, response 
+
+def test_set_answer():
     return True, response
 
-
-
-def test_content_lesson_process(user_id, token):
-    return True, response
+def test_content_lesson_process(user_id, token, lesson_id):
+    index = -1
+    is_passed, response = test_new_question(lesson_id, user_id, index, token)
+    if is_passed == False:
+        return False, response 
+    return True, response 
+ 
 
 
 if __name__ == "__main__":
@@ -154,7 +170,7 @@ if __name__ == "__main__":
         is_passed, response = test_choice_lesson_process(user_id, token)
         if is_passed == True:
             print('Choice choice lesson is successful.')
-            is_passed, response = test_content_lesson_process(user_id, token)
+            is_passed, response = test_content_lesson_process(user_id, token, response)
         else:
             print('Choice choice courses is failed!')    
     else:
