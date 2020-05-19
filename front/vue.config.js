@@ -1,10 +1,10 @@
 module.exports = {
   pwa: {
-    workboxPluginMode: 'InjectManifest',
-    //workboxPluginMode: 'GenerateSW',
+    //workboxPluginMode: 'InjectManifest',
+    workboxPluginMode: 'GenerateSW',
     workboxOptions: {
-        swSrc: 'public/service-worker.js',
-        //navigateFallback: 'index.html',
+        //swSrc: 'public/service-worker.js',
+        navigateFallback: 'index.html',
         //exclude: /\.js$/,
     },
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',
@@ -23,6 +23,14 @@ module.exports = {
       display: 'standalone',
       dir: 'rtl',
       lang: 'fa-ir',
+      scope: [
+        '/',
+        '/Guids',
+        '/login',
+        '/Singup',
+        '/Grades',
+        '/Recovery'
+      ],
     },
     iconPaths:{
       favicon32: 'img/icons/favicon-32x32.png',
