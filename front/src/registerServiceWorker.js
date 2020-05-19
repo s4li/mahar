@@ -2,7 +2,7 @@
 
 import { register } from 'register-service-worker'
 
-//if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   if ('serviceWorker' in navigator) {
     console.log('serviceWorker')
   register(`${process.env.BASE_URL}service-worker.js`, {
@@ -23,7 +23,7 @@ import { register } from 'register-service-worker'
     },
     updated (registration) {
       console.log('New content is available; please refresh.')
-      let confirmationResult = confirm("New content found! Do you want to reload the app?")
+      let confirmationResult = confirm("محتوای جدید یافت جدید یافت شد!آیا می خواهید صفحه را دوباره بارگذاری کنید؟")
       if (confirmationResult) registration.waiting.postMessage({action: "skipWaiting"})
     },
     offline () {
@@ -41,4 +41,4 @@ import { register } from 'register-service-worker'
     refreshing = true
   })
   }
-//}
+}

@@ -2,7 +2,7 @@
 
 workbox.core.setCacheNameDetails({ prefix: 'offline' })
 //Change this value every time before you build
-const LATEST_VERSION = 'v1.4'
+const LATEST_VERSION = 'v1.5'
 self.addEventListener('activate', () => {
   console.log(`%c ${LATEST_VERSION} `, 'background: #ddd; color: #0000ff')
   if (caches) {
@@ -39,35 +39,6 @@ self.addEventListener("message", msg => {
         self.skipWaiting()
     }
 })
-//if (workbox) {
-//  console.log(`Yay! Workbox is loaded 🎉`);
-//} else {
-//  console.log(`Boo! Workbox didn't load 😬`);
-//}
-//workbox.core.setCacheNameDetails({ prefix: 'offlinMode' })
-//self.__precacheManifest = [].concat(self.__precacheManifest || []);
-//workbox.precaching.suppressWarnings();
-//workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-//
-//// install new service worker when ok, then reload page.
-//self.addEventListener("message", msg=>{
-//    if (msg.data.action=='skipWaiting'){
-//        self.skipWaiting()
-//    }
-//})
-
-//workbox.routing.registerRoute('https://jsonplaceholder.typicode.com/todos/1', workbox.strategies.cacheFirst({
-//    cacheName: 'placeholder-cache',
-//}));
-
-
-
-//workbox.setConfig({
-//  debug: false,
-//});
-//workbox.routing.registerNavigationRoute('/index.html');
-//workbox.skipWaiting()
-//workbox.clientsClaim()
 //const staticAssets = [
 //  '../src/assets/fonts/IRANSansWeb_100.woff',
 //  '../src/assets/fonts/IRANSansWeb_200.woff',
