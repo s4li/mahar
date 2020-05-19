@@ -1,10 +1,10 @@
 module.exports = {
   pwa: {
-    workboxPluginMode: 'InjectManifest',
-    //workboxPluginMode: 'GenerateSW',
+    //workboxPluginMode: 'InjectManifest',
+    workboxPluginMode: 'GenerateSW',
     workboxOptions: {
-        swSrc: 'public/service-worker.js',
-        //navigateFallback: 'index.html',
+        //swSrc: 'public/service-worker.js',
+        navigateFallback: 'index.html',
         exclude: /\.mp3$/,
     },
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',

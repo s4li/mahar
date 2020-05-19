@@ -26,8 +26,8 @@ self.addEventListener('activate', () => {
   }
 })
 
-workbox.skipWaiting()
-workbox.clientsClaim()
+//workbox.skipWaiting()
+//workbox.clientsClaim()
 
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
