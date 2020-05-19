@@ -2,29 +2,29 @@
 
 import { register } from 'register-service-worker'
 
-if (process.env.NODE_ENV === 'production') {
-  register(`${process.env.BASE_URL}service-worker.js`, {
-    ready (registration) {
+//if (process.env.NODE_ENV === 'production') {
+  if ('serviceWorker' in navigator) {
+    console.log('serviceWorker')
+  register(`${process.env.BASE_URL}service-worker.js?v2`, {
+    ready () {
       console.log(
-        'App is being served from cache by a service worker.',registration
+        'App is being served from cache by a service worker.\n' +
+        'For more details, visit https://goo.gl/AFskqB'
       )
     },
-    registered (registration) {
-      console.log('Service worker has been registered.',registration)
+    registered () {
+      console.log('Service worker has been registered.')
     },
-    cached (registration) {
-      console.log('Content has been cached for offline use.',registration)
+    cached () {
+      console.log('Content has been cached for offline use.')
     },
-    updatefound (registration) {
-      console.log('New content is downloading.',registration)
+    updatefound () {
+      console.log('New content is downloading.')
     },
     updated (registration) {
-      console.log('New content is available; Refresh...',registration)
-      let worker = registration.waiting
-      worker.postMessage({action: 'skipWaiting'})
-      setTimeout(() => {
-        window.location.reload(true)
-      }, 1000)
+      console.log('New content is available; please refresh.')
+      let confirmationResult = confirm("New content found! Do you want to reload the app?")
+      if (confirmationResult) registration.waiting.postMessage({action: "skipWaiting"})
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.')
@@ -33,4 +33,12 @@ if (process.env.NODE_ENV === 'production') {
       console.error('Error during service worker registration:', error)
     }
   })
-}
+
+  let refreshing
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+    if (refreshing) return
+    window.location.reload()
+    refreshing = true
+  })
+  }
+//}

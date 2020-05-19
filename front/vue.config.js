@@ -1,8 +1,10 @@
 module.exports = {
   pwa: {
-    workboxPluginMode:'InjectManifest',
+    workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: 'public/service-worker.js',
+        swSrc: 'public/service-worker.js',
+        //navigateFallback: 'index.html',
+        //exclude: /\.js$/,
     },
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',
     themeColor: '#FFFFFF',
