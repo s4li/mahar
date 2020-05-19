@@ -5,7 +5,7 @@ module.exports = {
     workboxOptions: {
         swSrc: 'public/service-worker.js',
         //navigateFallback: 'index.html',
-        //exclude: /\.js$/,
+        exclude: /\.mp3$/,
     },
     name: 'مرکز هوشمندسازی آموزش های رسانه ای',
     themeColor: '#FFFFFF',
