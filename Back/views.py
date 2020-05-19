@@ -270,11 +270,13 @@ def status_question(cuser):
         has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
         check_wrong_questions = 'True' if has_wrong_questions else 'False'
         result = {"check_new_question":check_new_question, "review_previous_questions":check_continue_previous_questions, "check_wrong_questions":check_wrong_questions}
+        status_code = 200
         session.commit()
         session.close() 
     else:
+        status_code = 401
         result = {"result" : "The user does not have access"}
-    return jsonify(result)
+    return jsonify(result), status_code
 
 @app.route('/api/new-questions')     
 @token_required
@@ -306,11 +308,13 @@ def all_questions(cuser):
                 session.commit()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()        
         result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text, "lesson_title":lesson.title}
+        status_code = 200
         session.commit()
         session.close() 
     else:
+        status_code = 401
         result = {"result" : "The user does not have access"}    
-    return jsonify(result)    
+    return jsonify(result), status_code    
 
 @app.route('/api/get-previous-questions')     
 @token_required
@@ -327,11 +331,13 @@ def continue_previous_questions(cuser):
         next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
         result = {"question":next_continue_previous_question.text, "voice": f'{next_continue_previous_voice.path}', "next_index": next_continue_previous_question.id , "question_id": next_continue_previous_question.id, "answer": next_continue_previous_answer.ans_text,  "lesson_title":lesson.title}
+        status_code = 200
         session.commit()
         session.close() 
     else:
+        status_code = 401
         result = {"result" : "The user does not have access"}     
-    return jsonify(result)
+    return jsonify(result), status_code
 
 @app.route('/api/get-wrong-questions')     
 @token_required
@@ -348,11 +354,13 @@ def wronge_questions(cuser):
         next_wrong_answer = session.query(Answer).filter(Answer.question_id == next_wrong_question.id).first()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
         result = {"question":next_wrong_question.text, "voice": f'{next_wrong_voice.path}', "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text,  "lesson_title":lesson.title}
+        status_code = 200
         session.commit()
         session.close() 
     else:
+        status_code = 401
         result = {"result" : "The user does not have access"}    
-    return jsonify(result)
+    return jsonify(result), status_code
 
 
 @app.route('/api/set-user-answer', methods=('POST',))    
@@ -388,74 +396,52 @@ def user_answer(cuser):
             wrong_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'] ,User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).scalar() 
             true_answer_no = session.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == data['user_id'],  User_answer.ans_no == '0', User_answer.lesson_id == data['lesson_id']).scalar() 
             result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
+        status_code = 200
         session.commit()
         session.close()
     else:
+        status_code = 401
         result = {"result" : "The user does not have access"}    
-    return  jsonify(result)
+    return  jsonify(result), status_code
 
-@app.route('/api/zarinpal/<type>/<user_id>/<sale_plan_id>/<verify>')    
-def zarinpal(type, user_id, sale_plan_id, verify): 
+@app.route('/api/zarinpal/<type>/<user_id>/<sale_plan_id>/<course_id>')
+@token_required    
+def zarinpal(cuser, type, user_id, sale_plan_id, course_id): 
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
     MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     client = Client(ZARINPAL_WEBSERVICE)
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
-    if type == 'site':
-        course_id = verify
-        user = session.query(User).filter(User.id == user_id).first()
-        if not (sale_plan or user):
-            result = {"result":"user or sale plane id not found"}
-            status_code = 401
-        else:
-            callback_url = f'{back_url}/api/zarinpal-callback' 
-            result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
-                                               sale_plan.price,
-                                               sale_plan.title,
-                                               user.mobile,
-                                               'parastoo.rambarzini@gmail.com',
-                                               callback_url)
-            if result_zarinpal.Status == 100:
-                if sale_plan_id == '2' : 
-                    lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
-                    str_lesson = ''
-                    for lesson_id in lesson_ids:
-                        if str(lesson_id[0]) not in ['1','9','16','20','32','42']:
-                            str_lesson = str_lesson +str(lesson_id[0]) + ","
-                    lessons = str_lesson[:-1]
-                else:
-                    lessons = sale_plan.lessons        
-                invoice = Invoice( invoice_no = result_zarinpal.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lessons, verify= -1)
-                session.add(invoice)
-                session.commit()
-                session.close()
-                zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result_zarinpal.Authority}'
-                result = {"result":"success", "zarinpal_url":zarinpal_url}
-                status_code = 200
-            else:
-                result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
-                status_code = 401
+    user = session.query(User).filter(User.id == user_id).first()
+    if not (sale_plan or user):
+        result = {"result":"user or sale plane id not found"}
+        status_code = 401
     else:
-        #<type>/<user_id>/<sale_plan_id>/<verify>
-        mobile = user_id
         callback_url = f'{back_url}/api/zarinpal-callback' 
-        price = sale_plan.price
-        title = sale_plan.title
         result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
-                                                        sale_plan.price,
-                                                        sale_plan.title,
-                                                        mobile,
-                                                        'parastoo.rambarzini@gmail.com',
-                                                        callback_url)
+                                           sale_plan.price,
+                                           sale_plan.title,
+                                           user.mobile,
+                                           'parastoo.rambarzini@gmail.com',
+                                           callback_url)
         if result_zarinpal.Status == 100:
-            invoice = Invoice( invoice_no = result_zarinpal.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = -1, lessons = f'lessons {mobile}', verify= verify)
+            if sale_plan_id == '2' : 
+                lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
+                str_lesson = ''
+                for lesson_id in lesson_ids:
+                    if str(lesson_id[0]) not in ['1','9','16','20','32','42']:
+                        str_lesson = str_lesson +str(lesson_id[0]) + ","
+                lessons = str_lesson[:-1]
+            else:
+                lessons = sale_plan.lessons        
+            invoice = Invoice( invoice_no = result_zarinpal.Authority,  datetime = invoice_date , sale_plan_id = sale_plan_id, user_id = user_id, lessons = lessons, verify= -1)
             session.add(invoice)
             session.commit()
             session.close()
             zarinpal_url = f'https://www.zarinpal.com/pg/StartPay/{result_zarinpal.Authority}'
             result = {"result":"success", "zarinpal_url":zarinpal_url}
-            return render_template("pay.html", zarinpal_url = zarinpal_url, cost = price, phone = mobile, cource_name = title)
+            status_code = 200
         else:
             result = {"result":f'{user.full_name} عزیز، با عرض پوزش در هنگام اتصال به درگاه بانک خطایی رخ داده است.'}
             status_code = 401
