@@ -18,7 +18,7 @@
                 <div class="btn-box">
                     <router-link class="btn box btn-top" v-if="!previousStatus" :to="'/Courses/check_new_question/'+ lessonId + '/' + gradId">تمرین جدید</router-link>
                     <router-link class="btn box btn-top" v-if="previousStatus" :to="'/Courses/review_previous_questions/'+ lessonId + '/' + gradId">ادامه تمرین قبلی</router-link>
-                    <router-link class="btn box btn-bottom" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور تمرین های گذشته</router-link>
+                    <router-link class="btn box btn-bottom" :class="{disabled:!wrongStatus}" :to="'/Courses/check_wrong_questions/'+ lessonId + '/' + gradId">مرور غلط ها ی گذشته</router-link>
                 </div>
             </div>
         </transition>
