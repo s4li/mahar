@@ -1,7 +1,8 @@
 import requests
 
-BASE_URL = 'http://localhost:8080'
-BACK_URL = 'http://localhost:5555'
+#BASE_URL = 'http://localhost:8080'
+#BACK_URL = 'http://localhost:5555'
+BASE_URL = BACK_URL = 'https://doplus.ir'
 
 def test_home_get_method():
     url = f'{BASE_URL}/'
@@ -22,7 +23,7 @@ def test_login_get_method():
 def test_login_post_method():
     url = f'{BACK_URL}/api/login'
     data = {
-        'mobile'  :  '09200000000',
+        'mobile'  :  '09120000000',
         'password':  'unit_test'
     }    
     response = requests.post(url, json= data)
@@ -49,7 +50,7 @@ def test_courses_get_method(user_id, token):
     params = {'user_id':user_id}
     response = requests.get(url, headers= headers, params= params)
     if not (response and response.status_code == 200):
-        print(f'Error, There is a problem to get grade page.\n response.status_code = {response.status_code}')
+        print(f'Error, There is a problem to get courses page.\n response.status_code = {response.status_code}')
         return False, response     
     return True, response 
 
@@ -70,7 +71,7 @@ def test_status_lesson_question_get_method(lesson_id, user_id, token, print_erro
     response = requests.get(url, headers= headers, params= params)
     if not (response and response.status_code == 200):
         if print_error:
-            print(f'Error, There is a problem to get lesson content page.\n response.status_code = {response.status_code}')
+            print(f'Error, There is a problem to get status lesson question.\n response.status_code = {response.status_code}')
         return False, response     
     return True, response 
 
@@ -109,7 +110,7 @@ def test_choice_lesson_process(user_id, token):
         return False, response  
     json_result = response.json() 
     if not (json_result.get('all_courses') and len(json_result) > 0): 
-        print ('Error, There is a problem to get all_courses and complete_information from get grade page.')
+        print ('Error, There is a problem to get all_courses and complete_information from get courses page.')
         return False, response   
     all_courses = json_result['all_courses']  
     complete_information = json_result['complete_information']
@@ -121,7 +122,11 @@ def test_choice_lesson_process(user_id, token):
     premium_lesson = find_target_lesson(json_result, free_lesson = False) 
     if premium_lesson == None:
         print(f'Error, There is a problem to find premium lesson content page.')
-        return False, response  
+        return False, response
+    is_passed, response = test_status_lesson_question_get_method( premium_lesson['id'], user_id, token, False)
+    if is_passed == True:
+        print(f'Error, There is a problem to get premium lesson content page.\n response.status_code = {response.status_code}')
+        return False, response      
     is_passed, response = test_zarinpal_get_method(premium_lesson['id'], user_id, token)
     if is_passed == False:
         print(f'Error, There is a problem to get zarinpal page.\n response.status_code = {response.status_code}')
@@ -136,7 +141,7 @@ def test_choice_lesson_process(user_id, token):
         return False, response     
     return True, response_course_content
 
-def test_new_question(lesson_id, user_id, index, token):
+def test_new_question_get_method(lesson_id, user_id, index, token):
     url = f'{BACK_URL}/api/new-questions'
     headers = {'Authorization':f'Bearer: {token}'}
     params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
@@ -146,7 +151,7 @@ def test_new_question(lesson_id, user_id, index, token):
         return False, response 
     return True, response 
 
-def test_set_answer(lesson_id, user_id, question_id, ans_no, question_type, token):
+def test_set_answer_get_method(lesson_id, user_id, question_id, ans_no, question_type, token):
     url = f'{BACK_URL}/api/set-user-answer'
     headers = {'Authorization':f'Bearer: {token}'}
     json = {'lesson_id':lesson_id, 'user_id':user_id, 'question_id': question_id, 'ans_no':ans_no, 'question_type':question_type}
@@ -156,7 +161,7 @@ def test_set_answer(lesson_id, user_id, question_id, ans_no, question_type, toke
         return False, response
     return True, response
 
-def test_get_continue_previous_questions(lesson_id, user_id, index, token):
+def test_get_continue_previous_questions_get_method(lesson_id, user_id, index, token):
     url = f'{BACK_URL}/api/get-previous-questions'
     headers = {'Authorization':f'Bearer: {token}'}
     params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
@@ -166,7 +171,7 @@ def test_get_continue_previous_questions(lesson_id, user_id, index, token):
         return False, response 
     return True, response 
 
-def test_wronge_questions(lesson_id, user_id, index, token):
+def test_wronge_questions_get_method(lesson_id, user_id, index, token):
     url = f'{BACK_URL}/api/get-wrong-questions'
     headers = {'Authorization':f'Bearer: {token}'}
     params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
@@ -176,14 +181,14 @@ def test_wronge_questions(lesson_id, user_id, index, token):
         return False, response 
     return True, response     
 
-def test_content_lesson_process(user_id, token, response):
+def test_get_content_lesson_process(user_id, token, response):
     index = -1
     all_lessons = response.json()
     if not(len(all_lessons) > 0 and  all_lessons[0]['id']):
         print('Error, There is a problem to get lesson id.')
         return False, response
     lesson_id = all_lessons[0]['id']
-    is_passed, response = test_new_question(lesson_id, user_id, index, token)
+    is_passed, response = test_new_question_get_method(lesson_id, user_id, index, token)
     if is_passed == False:
         return False, response 
     question = response.json()    
@@ -193,20 +198,20 @@ def test_content_lesson_process(user_id, token, response):
     question_id = question['question_id']    
     question_type = 1
     ans_no = '1'
-    is_passed, response = test_set_answer(lesson_id, user_id, question_id, ans_no, question_type, token)
+    is_passed, response = test_set_answer_get_method(lesson_id, user_id, question_id, ans_no, question_type, token)
     if is_passed == False:
         return False, response
     answer_response = response.json()    
     if not answer_response.get('has_next_new_question'):
         print('Error, There is a problem to get has next new question answer response.')
         return False, response
-    is_passed, response = test_get_continue_previous_questions(lesson_id, user_id, index, token)
+    is_passed, response = test_get_continue_previous_questions_get_method(lesson_id, user_id, index, token)
     if is_passed == False:
         return False, response  
     if not(question.get('question_id')):
         print('Error, There is a problem to get question id in previous questions response.')
         return False, response 
-    is_passed, response = test_wronge_questions(lesson_id, user_id, index, token)
+    is_passed, response = test_wronge_questions_get_method(lesson_id, user_id, index, token)
     if is_passed == False:
         return False, response  
     if not(question.get('question_id')):
@@ -228,11 +233,11 @@ if __name__ == "__main__":
         is_passed, response = test_choice_lesson_process(user_id, token)
         if is_passed == True:
             print('Choice lesson process is successful.')
-            is_passed, response = test_content_lesson_process(user_id, token, response)
+            is_passed, response = test_get_content_lesson_process(user_id, token, response)
             if is_passed == True:
-                print('Content lesson process is successful.')
+                print('Get content lesson process is successful.')
             else:
-                print('Content lesson process is failed!')        
+                print('Get content lesson process is failed!')        
         else:
             print('Choice lesson process is failed!')    
     else:
