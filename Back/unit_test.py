@@ -95,11 +95,11 @@ def find_target_lesson(courses, free_lesson = False):
 def test_zarinpal_get_method(user_id, course_id, token):
     type_conction = 'site'
     sale_plan_id = '1'
-    url = f'{BACK_URL}/api/zarinpal/{type}/{user_id}/{sale_plan_id}/{course_id}'
+    url = f'{BACK_URL}/api/zarinpal/{type_conction}/{user_id}/{sale_plan_id}/{course_id}'
     headers = {'Authorization':f'Bearer: {token}'}
     response = requests.get(url, headers= headers)
     if not (response and response.status_code == 200):
-        print(f'Error, There is a problem to get lesson content page.\n response.status_code = {response.status_code}')
+        print(f'Error, There is a problem to get zarinpal page.\n response.status_code = {response.status_code}')
         return False, response     
     return True, response  
 
@@ -117,7 +117,7 @@ def test_choice_lesson_process(user_id, token):
     is_passed, response_course_content = test_course_content_get_method(first_course_id, user_id, token) 
     if is_passed == False:
         return False, response 
-    json_result = response.json()
+    json_result = response_course_content.json()
     premium_lesson = find_target_lesson(json_result, free_lesson = False) 
     if premium_lesson == None:
         print(f'Error, There is a problem to find premium lesson content page.')
@@ -142,18 +142,76 @@ def test_new_question(lesson_id, user_id, index, token):
     params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
     response = requests.get(url, headers= headers, params= params)
     if not (response and response.status_code == 200):
-        print(f'Error, There is a problem to get lesson content page.\n response.status_code = {response.status_code}')
+        print(f'Error, There is a problem to get new question lesson .\n response.status_code = {response.status_code}')
         return False, response 
     return True, response 
 
-def test_set_answer():
+def test_set_answer(lesson_id, user_id, question_id, ans_no, question_type, token):
+    url = f'{BACK_URL}/api/set-user-answer'
+    headers = {'Authorization':f'Bearer: {token}'}
+    json = {'lesson_id':lesson_id, 'user_id':user_id, 'question_id': question_id, 'ans_no':ans_no, 'question_type':question_type}
+    response = requests.post(url, headers= headers, json= json)
+    if not (response and response.status_code == 200):
+        print(f'Error, There is a problem to post answer page.\n response.status_code = {response.status_code}')
+        return False, response
     return True, response
 
-def test_content_lesson_process(user_id, token, lesson_id):
+def test_get_continue_previous_questions(lesson_id, user_id, index, token):
+    url = f'{BACK_URL}/api/get-previous-questions'
+    headers = {'Authorization':f'Bearer: {token}'}
+    params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
+    response = requests.get(url, headers= headers, params= params)
+    if not (response and response.status_code == 200):
+        print(f'Error, There is a problem to get previous question lesson.\n response.status_code = {response.status_code}')
+        return False, response 
+    return True, response 
+
+def test_wronge_questions(lesson_id, user_id, index, token):
+    url = f'{BACK_URL}/api/get-wrong-questions'
+    headers = {'Authorization':f'Bearer: {token}'}
+    params = {'lesson_id':lesson_id, 'user_id':user_id, 'index': index}
+    response = requests.get(url, headers= headers, params= params)
+    if not (response and response.status_code == 200):
+        print(f'Error, There is a problem to get wrong question lesson.\n response.status_code = {response.status_code}')
+        return False, response 
+    return True, response     
+
+def test_content_lesson_process(user_id, token, response):
     index = -1
+    all_lessons = response.json()
+    if not(len(all_lessons) > 0 and  all_lessons[0]['id']):
+        print('Error, There is a problem to get lesson id.')
+        return False, response
+    lesson_id = all_lessons[0]['id']
     is_passed, response = test_new_question(lesson_id, user_id, index, token)
     if is_passed == False:
         return False, response 
+    question = response.json()    
+    if not(question.get('question_id')):
+        print('Error, There is a problem to get question id in new question response.')
+        return False, response
+    question_id = question['question_id']    
+    question_type = 1
+    ans_no = '1'
+    is_passed, response = test_set_answer(lesson_id, user_id, question_id, ans_no, question_type, token)
+    if is_passed == False:
+        return False, response
+    answer_response = response.json()    
+    if not answer_response.get('has_next_new_question'):
+        print('Error, There is a problem to get has next new question answer response.')
+        return False, response
+    is_passed, response = test_get_continue_previous_questions(lesson_id, user_id, index, token)
+    if is_passed == False:
+        return False, response  
+    if not(question.get('question_id')):
+        print('Error, There is a problem to get question id in previous questions response.')
+        return False, response 
+    is_passed, response = test_wronge_questions(lesson_id, user_id, index, token)
+    if is_passed == False:
+        return False, response  
+    if not(question.get('question_id')):
+        print('Error, There is a problem to get question id in wrong questions response.')
+        return False, response                
     return True, response 
  
 
@@ -169,9 +227,13 @@ if __name__ == "__main__":
         user_id = json_result['id']
         is_passed, response = test_choice_lesson_process(user_id, token)
         if is_passed == True:
-            print('Choice choice lesson is successful.')
+            print('Choice lesson process is successful.')
             is_passed, response = test_content_lesson_process(user_id, token, response)
+            if is_passed == True:
+                print('Content lesson process is successful.')
+            else:
+                print('Content lesson process is failed!')        
         else:
-            print('Choice choice courses is failed!')    
+            print('Choice lesson process is failed!')    
     else:
         print('Login process is failed!')
