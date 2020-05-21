@@ -120,10 +120,12 @@
 }
 .box {
   transition: transform 0.1s;
+  -webkit-transition: transform 0.1s;
 }
 
 .box:active {
   transform: scale(0.9);
+  -webkit-transform: scale(0.9);
 }
 .shakeTop-enter-active {
 	-webkit-animation: shake-top 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
