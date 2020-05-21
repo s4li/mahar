@@ -15,13 +15,13 @@
                 <div class="col-12 col-lg-8 mx-lg-auto">
                     <div class="inner">
                         <h1 class="lgTitle">ورود</h1>
-                        <form @submit="onSubmit">
+                        <form @submit="onSubmit" autocomplete="off">
                             <div class="limiter">
                                 <div class="container-login100">
                                     <div class="wrap-login100">
                                         <div class="login100-form validate-form">
                                             <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.LoginForm.Mobile.$error}">
-                                                <input type="number" @blur="$v.LoginForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="LoginForm.Mobile" v-on:keyup="checkingValMobile">
+                                                <input name="Mobile" type="number" @blur="$v.LoginForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="LoginForm.Mobile" v-on:keyup="checkingValMobile" autofocus>
                                                 <span class="focus-input100" data-placeholder="شماره موبایل"></span>
                                             </div>
                                             <small class="form-text text-muted">هر شماره موبایل ۱۱ کاراکتر می باشد.</small>
@@ -34,7 +34,7 @@
                                     <div class="wrap-login100">
                                         <div class="login100-form validate-form">
                                             <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.LoginForm.Password.$error}">
-                                                <input type="password" @blur="$v.LoginForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="LoginForm.Password" v-on:keyup="checkingValPass">
+                                                <input name="Password" type="password" @blur="$v.LoginForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="LoginForm.Password" v-on:keyup="checkingValPass">
                                                 <span class="focus-input100" data-placeholder="کلمه عبور"></span>
                                             </div>
                                             <small class="form-text text-muted">تعداد کاراکتر های کلمه عبور ۵ تا یا بیشتر باشد.</small>

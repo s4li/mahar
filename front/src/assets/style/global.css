@@ -102,6 +102,7 @@
   background-color: #ffc107;
   border-color: #ffc107;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  font-weight: 600;
 }
 .btn-warning:focus, .btn-warning.focus {
   color: #2b2b28;
@@ -116,6 +117,13 @@
   box-shadow: 0 3px 10px #cccccc;
   text-align: center;
   max-width: 500px;
+}
+.box {
+  transition: transform 0.1s;
+}
+
+.box:active {
+  transform: scale(0.9);
 }
 .shakeTop-enter-active {
 	-webkit-animation: shake-top 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;

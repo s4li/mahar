@@ -5,53 +5,64 @@
             <div class="col-12">
                 <Navbar></Navbar>
                 <router-view />
-                <div class="installbanner" v-if="showaddBanner">
-                    <button class="btn btn-link btn-lg mx-3" @click="closeBanner()">&times;</button>
-                    <p> برنامه مهار در دسترس است </p>
-                    <button class="btn btn-primary mr-2 btn-sm" @click.prevent="open()">کلیک کنید</button>
-                </div>
+                <router-link v-if="InstallAppBtnMobile" class="InstallAppBtnMobile" to="/InstallApp">
+                    <Notification></Notification>
+                </router-link>
             </div>
         </div>
     </div>
+    <!---<div class="installbanner" v-if="showaddBanner">
+        <button class="btn btn-link btn-lg mx-3" @click="closeBanner()">&times;</button>
+        <p> برنامه مهار در دسترس است </p>
+        <button class="btn btn-primary mr-2 btn-sm" @click.prevent="open()">کلیک کنید</button>
+    </div>-->
 </div>
 </template>
 
 <script>
+import Notification from '@/components/Notification'
 import Navbar from '@/components/Navbar'
 export default {
-    components: {
-        Navbar
-    },
     data() {
         return {
-            showaddBanner: false,
-            data: ''
+            InstallAppBtnMobile: true
         }
     },
-    methods: {
-        closeBanner() {
-            this.showaddBanner = false
-        },
-        open() {
-            this.data.prompt();
-            this.showaddBanner = false
-            this.data.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the A2HS prompt');
-                } else {
-                    console.log('User dismissed the A2HS prompt');
-                }
-                this.data = null;
-            });
+    components: {
+        Navbar,
+        Notification
+    },
+    updated() {
+        if (this.$route.path == '/InstallApp' || this.$route.path == '/') {
+            this.InstallAppBtnMobile = false
+        } else {
+            this.InstallAppBtnMobile = true
         }
     },
     created() {
         this.$store.dispatch('tryAutoLogin')
-        this.showaddBanner = false
+        this.$store.state.InstallAppStatus = false
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
-            this.data = e
-            this.showaddBanner = true
+            if (this.$store.state.InstallAppFlag) {
+                this.$store.state.InstallAppData = e
+                this.$store.state.InstallAppStatus = true
+            } else {
+                this.$store.state.InstallAppData = null
+                this.$store.state.InstallAppStatus = false
+            }
+        });
+        window.addEventListener('appinstalled', () => {
+            console.log('a2hs installed');
+        });
+        window.addEventListener('load', () => {
+            if (navigator.standalone) {
+                console.log('Launched: Installed (iOS)');
+            } else if (matchMedia('(display-mode: standalone)').matches) {
+                console.log('Launched: Installed');
+            } else {
+                console.log('Launched: Browser Tab');
+            }
         });
     },
 }
@@ -61,32 +72,28 @@ export default {
 @import './assets/style/fontawesome.min.css';
 @import './assets/style/global.css';
 
-.installbanner {
-    background-color: #ffffffcc;
-    padding: 10px;
-    position: absolute;
-    top: 0;
-    left: 0px;
-    right: 0;
-    width: 100%;
+.InstallAppBtnMobile {
+    position: fixed;
+    bottom: 5px;
+    left: 10px;
 }
 
-.installbanner p {
-    display: inline-block;
-    margin: 0;
-}
-
-.installbanner span {
-    color: black;
-}
-
-.installbanner :hover {
-    text-decoration: none;
+.InstallAppBtnMobile img {
+    width: 60px;
+    height: auto;
+    border-radius: 50%;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.233);
 }
 
 @media (min-width: 992px) {
     .installbanner {
         text-align: center;
+    }
+
+    .InstallAppBtnMobile {
+        display: none;
     }
 }
 </style>

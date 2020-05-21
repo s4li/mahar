@@ -311,11 +311,4 @@ export default {
     min-height: 60px;
     padding-top: 10px;
 }
-.box {
-    transition: transform 0.1s;
-}
-
-.box:active {
-    transform: scale(0.9);
-}
 </style>

@@ -16,30 +16,17 @@
             <div class="row no-gutters">
                 <div class="col-12 col-lg-8 mx-lg-auto">
                     <div class="inner">
-                        <h1 class="lgTitle">ورود</h1>
-                        <form @submit="onSubmit">
+                        <h1 class="lgTitle">ثبت نام</h1>
+                        <form @submit="onSubmit" autocomplete="off">
                             <div class="limiter">
                                 <div class="container-login100">
                                     <div class="wrap-login100">
                                         <div class="login100-form validate-form">
                                             <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.FullName.$error}">
-                                                <input type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName">
-                                                <span class="focus-input100" data-placeholder="نام کاربری"></span>
+                                                <input name="FullName" type="text" @blur="$v.SingupForm.FullName.$touch()" :class="{'has-val':checkingName}" class="input100" v-model="SingupForm.FullName" v-on:keyup="checkingValName" autofocus>
+                                                <span class="focus-input100" data-placeholder="نام و نام خانوادگی"></span>
                                             </div>
-                                            <small class="form-text text-muted">تعداد کاراکتر های نام کاربری ۵ تا یا بیشتر باشد.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="limiter">
-                                <div class="container-login100">
-                                    <div class="wrap-login100">
-                                        <div class="login100-form validate-form">
-                                            <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Password.$error}">
-                                                <input type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
-                                                <span class="focus-input100" data-placeholder="کلمه عبور"></span>
-                                            </div>
-                                            <small class="form-text text-muted">تعداد کاراکتر های کلمه عبور ۵ تا یا بیشتر باشد.</small>
+                                            <small class="form-text text-muted">تعداد کاراکتر های این فیلد باید ۵ تا یا بیشتر باشد.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -49,10 +36,23 @@
                                     <div class="wrap-login100">
                                         <div class="login100-form validate-form">
                                             <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Mobile.$error}">
-                                                <input type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
+                                                <input name="Mobile" type="number" @blur="$v.SingupForm.Mobile.$touch()" :class="{'has-val':checkingMobile}" class="input100" v-model="SingupForm.Mobile" v-on:keyup="checkingValMobile">
                                                 <span class="focus-input100" data-placeholder="شماره موبایل"></span>
                                             </div>
                                             <small class="form-text text-muted">شماره موبایل با صفر نوشته شود.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="limiter">
+                                <div class="container-login100">
+                                    <div class="wrap-login100">
+                                        <div class="login100-form validate-form">
+                                            <div class="wrap-input100 validate-input my-2" data-validate="فیلد به درستی پر نشده است" :class="{'alert-validate':$v.SingupForm.Password.$error}">
+                                                <input name="Password" type="password" @blur="$v.SingupForm.Password.$touch()" :class="{'has-val':checkingPass}" class="input100" v-model="SingupForm.Password" v-on:keyup="checkingValPass">
+                                                <span class="focus-input100" data-placeholder="کلمه عبور"></span>
+                                            </div>
+                                            <small class="form-text text-muted">تعداد کاراکتر های کلمه عبور ۵ تا یا بیشتر باشد.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -196,12 +196,14 @@ export default {
     min-width: 120px;
     margin-bottom: 15px;
 }
+
 @media (max-width: 991.8px) {
     .lgTitle {
         display: none;
     }
+
     .inner {
-    margin-top: 20%;
-}
+        margin-top: 20%;
+    }
 }
 </style>

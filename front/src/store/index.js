@@ -13,6 +13,9 @@ export default new Vuex.Store({
     alerttext : '',
     showAlert:false,
     currenturl:'/Grades',
+    InstallAppData:null,
+    InstallAppStatus:false,
+    InstallAppFlag:true,
   },
   mutations: {
     authUser (state, userData) {

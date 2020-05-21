@@ -27,6 +27,11 @@ Vue.use(VueRouter)
     component: () => import('../views/SingUp.vue')
   },
   {
+    path: '/InstallApp',
+    name: 'InstallApp',
+    component: () => import('../views/InstallApp.vue')
+  },
+  {
     path: '/Grades',
     name: 'Grades',
     component: () => import('../views/Grades.vue'),
