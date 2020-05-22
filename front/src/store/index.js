@@ -65,12 +65,16 @@ export default new Vuex.Store({
           router.replace('/Grades')
         })
         .catch(error => {
-          this.state.showAlert = true
-          if (error.response.status == 401){
+          if (error.response === undefined){
+            this.state.alerttext = 'لطفا از ارتباط خود با اینترنت مطمئن شوید.'
+          }else if(error.response.data.result == "این نام کاربری قبلا ثبت نام نشده است!"){
+            this.state.alerttext = error.response.data.result
+          }else if(error.response.data.result == "رمز عبور خود را درست وارد نکرده اید"){
             this.state.alerttext = error.response.data.result
           }else{
             this.state.alerttext = 'خطای غیرمنتظره'
           }
+          this.state.showAlert = true
           localStorage.removeItem('FullName')
           localStorage.removeItem('token')
           localStorage.removeItem('userId')
@@ -97,12 +101,16 @@ export default new Vuex.Store({
           router.replace('/Grades')
         })
         .catch((error) =>{
-          this.state.showAlert = true
-          if (error.response.status == 401){
+          if (error.response === undefined){
+            this.state.alerttext = 'لطفا از ارتباط خود با اینترنت مطمئن شوید.'
+          }else if(error.response.data.result == "این نام کاربری قبلا ثبت نام نشده است!"){
+            this.state.alerttext = error.response.data.result
+          }else if(error.response.data.result == "رمز عبور خود را درست وارد نکرده اید"){
             this.state.alerttext = error.response.data.result
           }else{
             this.state.alerttext = 'خطای غیرمنتظره'
           }
+          this.state.showAlert = true
           localStorage.removeItem('FullName')
           localStorage.removeItem('token')
           localStorage.removeItem('userId')
