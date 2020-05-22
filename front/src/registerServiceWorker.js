@@ -5,7 +5,7 @@ import { register } from 'register-service-worker'
 if (process.env.NODE_ENV === 'production') {
   if ('serviceWorker' in navigator) {
     console.log('serviceWorker')
-  register(`${process.env.BASE_URL}service-worker.js`, {
+  register(`${process.env.BASE_URL}service-worker.js?v2`, {
     ready () {
       console.log(
         'App is being served from cache by a service worker.\n' +
@@ -21,10 +21,10 @@ if (process.env.NODE_ENV === 'production') {
     updatefound () {
       console.log('New content is downloading.')
     },
-    updated (registration) {
+    updated () {
       console.log('New content is available; please refresh.')
-      let confirmationResult = confirm("محتوای جدید یافت جدید یافت شد!آیا می خواهید صفحه را دوباره بارگذاری کنید؟")
-      if (confirmationResult) registration.waiting.postMessage({action: "skipWaiting"})
+      //let confirmationResult = confirm("محتوای جدید یافت جدید یافت شد!آیا می خواهید صفحه را دوباره بارگذاری کنید؟")
+      //if (confirmationResult) registration.waiting.postMessage({action: "skipWaiting"})
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.')
