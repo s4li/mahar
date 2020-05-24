@@ -34,14 +34,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    setLogoutTimer ({commit}, expirationTime) {
-      setTimeout(() => {
-        commit('clearAuthData')
-        localStorage.removeItem('FullName')
-        localStorage.removeItem('token')
-        localStorage.removeItem('userId')
-      }, expirationTime * 1000 )
-    },
     signup ({commit, dispatch}, authData) {
       axios.post('/register', {
         full_name : authData.FullName,
@@ -51,16 +43,17 @@ export default new Vuex.Store({
       })
         .then(res => {
           const token = res.data.token
+          const time = new Date().getTime();
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
+          localStorage.setItem('expire', time)
           axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
           commit('authUser', {
             token: res.data.token,
             userId: res.data.id
           });
           dispatch('storeUser', authData);
-          dispatch('setLogoutTimer', 86400)
           this.state.showAlert = false
           router.replace('/Grades')
         })
@@ -87,16 +80,18 @@ export default new Vuex.Store({
         returnSecureToken: true
       })
         .then(res => {
-          const token = res.data.token
+          const token = res.data.token;
+          const time = new Date().getTime();
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
+          localStorage.setItem('expire', time)
           axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
             commit('authUser', {
             token: res.data.token,
             userId: res.data.id
             });
-            dispatch('setLogoutTimer', 86400)
+            dispatch('storeUser', authData);
           this.state.showAlert = false
           router.replace('/Grades')
         })

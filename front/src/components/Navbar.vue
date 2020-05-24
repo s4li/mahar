@@ -15,7 +15,7 @@
                 <router-link class="nav-link" to="/Guids">راهنما</router-link>
             </li>
             <li class="nav-item">
-                <router-link class="nav-link" to="/InstallApp"><b-badge v-if="this.$store.state.InstallAppFlag" variant="danger">!</b-badge> آموزش نصب اپلیکیشن </router-link>
+                <router-link v-if="this.$store.state.InstallAppStatus" class="nav-link" to="/InstallApp"><b-badge variant="danger">!</b-badge> آموزش نصب اپلیکیشن </router-link>
             </li>
             <li v-if="auth" class="nav-item">
                 <button @click="show=true" class="btn btn-link nav-link">خروج</button>

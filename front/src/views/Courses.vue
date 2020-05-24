@@ -7,10 +7,6 @@
     <transition name="fadeIn" mode="out-in">
         <div class="spinnerbackground" v-if="toggleShow" key="first">
             <b-spinner type="grow" variant="warning" label="Text Centered"></b-spinner>
-            <div v-if="toolboxcondition" class="exitBtnaAnimate">
-                <h6 class="my-2">لطفا کمی صبر کنید</h6>
-                <button @click="onLogout" class="btn btn-danger mx-auto mt-3 shadow">خروج</button>
-            </div>
         </div>
         <div class="flip-card" v-if="!toggleShow" key="seconde">
             <div class="flip-card-inner" :class="{isFlipped:flip}">
@@ -38,7 +34,7 @@
         <h4 class="my-4 text-center">تعداد جواب های غلط : {{wrongAnswer | faNum}}</h4>
         <div class="d-flex justify-content-center">
             <router-link class="btn btn-primary m-2" :to="'/Lessons/' + gradId">انتخاب درس</router-link>
-            <button class="btn btn-secondary m-2" @click.prevent="redirect()">مرور غلط ها</button>
+            <button v-if="displaywrongbtn" class="btn btn-secondary m-2" @click.prevent="redirect()">مرور غلط ها</button>
         </div>
     </b-modal>
 </div>
@@ -65,15 +61,12 @@ export default {
             trueAnswer: '',
             toggleShow: true,
             lessonTitle: '',
-            toolboxcondition: false
+            displaywrongbtn:false
         }
     },
     methods: {
         onLogout() {
             this.$store.dispatch('logout')
-        },
-        toggleCondition() {
-            this.toolboxcondition = true
         },
         getCourses(URL) {
             this.path = URL
@@ -108,11 +101,16 @@ export default {
                     if (res.data.has_next_new_question == 'True') {
                         this.initForm();
                         this.getCourses(this.path)
-                        this.Preview()
+                        this.Preview(1)
                     } else {
-                        this.ModalShow = true
                         this.wrongAnswer = res.data.wrong_answer_no
                         this.trueAnswer = res.data.true_answer_no
+                        if (this.wrongAnswer != 0) {
+                            this.displaywrongbtn = true
+                        }else{
+                            this.displaywrongbtn = false
+                        }
+                        this.ModalShow = true
                     }
                 })
                 .catch((error) => {
@@ -122,24 +120,23 @@ export default {
         Preview() {
             this.toggleShow = true
             this.flip = false
-            this.toolboxcondition = false
-            setTimeout(() => {
-                this.toggleCondition()
-            }, 10000)
         },
         redirect() {
+            this.toggleShow = true
             this.initForm();
-            this.flip = true
-            this.$router.push('/ExamType/' + this.lessonId + '/' + this.gradId);
+            this.index = -1
+            this.flip = false
+            this.getCourses('/get-wrong-questions')
+            this.ModalShow = false
         },
         playSound() {
             var audio = new Audio(require(`../assets/${this.Courses.voice}`));
             audio.play();
         },
         initForm() {
-            this.Courses = [];
-            this.answer = '';
-            this.questionId = '';
+            this.Courses = []
+            this.answer = ''
+            this.questionId = ''
         },
     },
     created() {
@@ -153,9 +150,6 @@ export default {
             this.questionType = 3
             this.getCourses('/get-wrong-questions');
         }
-        setTimeout(() => {
-            this.toggleCondition()
-        }, 5000)
     },
 }
 </script>
