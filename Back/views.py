@@ -297,13 +297,12 @@ def all_questions(cuser):
             has_enroll_user = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()   
             first_lesson_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
             if has_enroll_user:
-                session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.question_id: -1 })
+                session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.question_id: -1 , Enrol_user.question_ids : None})
                 session.commit()
             else:
                 enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
                 session.add(enrol_user)  
                 session.commit()      
-        
         all_question = session.query(Question).filter(Question.lesson_id == lesson_id).all()
         question_len = session.query(Question).filter(Question.lesson_id == lesson_id).count()
         user_enrol = session.query(Enrol_user).filter(Enrol_user.user_id== user_id, Enrol_user.lesson_id == lesson_id).first()
@@ -322,7 +321,6 @@ def all_questions(cuser):
         next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
         next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()      
-
         result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text, "lesson_title":lesson.title}
         status_code = 200
         session.commit()
@@ -411,16 +409,21 @@ def user_answer(cuser):
         user_question_ids = session.query(Enrol_user.question_ids).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).first()  
         if user_question_ids[0] != None:
             complete_user_question_ids = user_question_ids[0] + ',' + str(data['question_id'])
+            user_question_ids_len = len(user_question_ids[0].split(','))
         else:
             complete_user_question_ids = str(data['question_id'])
+            user_question_ids_len = 1 
+        questions_len = session.query(Question).filter(Question.lesson_id == data['lesson_id']).count() 
         if data['question_type'] == 1:
-            # update status in enrol user table
-            next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
+            next_content = False
+            if user_question_ids_len + 1 < questions_len:
+                next_content = True 
             session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id'], Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         elif data['question_type'] == 2:
-            # update status in enrol user table
-            next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> data['question_id'] , Question.lesson_id == data['lesson_id']).first()
+            next_content = False
+            if user_question_ids_len + 1 < questions_len:
+                next_content = True 
             session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id'], Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         else:
@@ -444,7 +447,7 @@ def user_answer(cuser):
 def zarinpal(cuser, type, user_id, sale_plan_id, course_id): 
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
-    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
+    MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
     invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     client = Client(ZARINPAL_WEBSERVICE)
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
@@ -458,7 +461,7 @@ def zarinpal(cuser, type, user_id, sale_plan_id, course_id):
                                            sale_plan.price,
                                            sale_plan.title,
                                            user.mobile,
-                                           'parastoo.rambarzini@gmail.com',
+                                           'tajbakhsh.ut.ac@gmail.com',
                                            callback_url)
         if result_zarinpal.Status == 100:
             if sale_plan_id == '2' : 

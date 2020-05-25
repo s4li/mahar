@@ -69,7 +69,8 @@ class Answer(Base):
    
 class Enrol_user(Base): 
    __tablename__ = 'tbl_enrol_user'
-   id = Column(Integer, primary_key=True)  
+   id = Column(Integer, primary_key=True) 
+   question_ids = Column(String(1000))
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
    question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE')) 
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE')) 
