@@ -287,9 +287,6 @@ def all_questions(cuser):
     if has_access:
         session = Session()
         index = int(request.args['index'])
-        next_new_question = session.query(Question).order_by(Question.id.asc()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
-        next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
-        next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
         if index == -1 :
             # delete all answer user and change status in enrol_user table
             all_previous_answer = session.query(User_answer).filter(User_answer.lesson_id == lesson_id, User_answer.user_id == user_id).all()
@@ -305,8 +302,27 @@ def all_questions(cuser):
             else:
                 enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
                 session.add(enrol_user)  
-                session.commit()
-        lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()        
+                session.commit()      
+        
+        all_question = session.query(Question).filter(Question.lesson_id == lesson_id).all()
+        question_len = session.query(Question).filter(Question.lesson_id == lesson_id).count()
+        user_enrol = session.query(Enrol_user).filter(Enrol_user.user_id== user_id, Enrol_user.lesson_id == lesson_id).first()
+        if user_enrol.question_ids :
+            user_question_ids = user_enrol.question_ids.split(',')
+            user_question_ids_len = len(user_question_ids)
+        else:
+            user_question_ids = 'na'
+            user_question_ids_len = 0
+        while user_question_ids_len <= question_len:
+            random_question = session.query(Question).order_by(func.rand()).filter(Question.lesson_id == lesson_id).first()
+            if str(random_question.id) not in user_question_ids:
+                next_new_question = random_question
+                break
+        #next_new_question = session.query(Question).order_by(func.random()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
+        next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
+        next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
+        lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()      
+
         result = {"question":next_new_question.text, "voice":f'{next_new_voice.path}', "next_index":next_new_question.id, "question_id": next_new_question.id, "answer": next_new_answer.ans_text, "lesson_title":lesson.title}
         status_code = 200
         session.commit()
@@ -325,8 +341,22 @@ def continue_previous_questions(cuser):
     if has_access:
         session = Session()
         index = int(request.args['index'])
-        enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
-        next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id> enrol_user[0], Question.lesson_id == lesson_id ).first()
+        all_question = session.query(Question).filter(Question.lesson_id == lesson_id).all()
+        question_len = session.query(Question).filter(Question.lesson_id == lesson_id).count()
+        user_enrol = session.query(Enrol_user).filter(Enrol_user.user_id== user_id, Enrol_user.lesson_id == lesson_id).first()
+        if user_enrol.question_ids :
+            user_question_ids = user_enrol.question_ids.split(',')
+            user_question_ids_len = len(user_question_ids)
+        else:
+            user_question_ids = 'na'
+            user_question_ids_len = 0
+        while user_question_ids_len <= question_len:
+            random_question = session.query(Question).order_by(func.rand()).filter(Question.lesson_id == lesson_id).first()
+            if str(random_question.id) not in user_question_ids:
+                next_continue_previous_question = random_question
+                break
+        #enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
+        #next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > enrol_user[0], Question.lesson_id == lesson_id ).first()
         next_continue_previous_voice = session.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
         next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
@@ -378,15 +408,20 @@ def user_answer(cuser):
         else:
             user_answer_update = session.query(User_answer).filter(User_answer.id == user_previous_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
             session.commit()
+        user_question_ids = session.query(Enrol_user.question_ids).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).first()  
+        if user_question_ids[0] != None:
+            complete_user_question_ids = user_question_ids[0] + ',' + str(data['question_id'])
+        else:
+            complete_user_question_ids = str(data['question_id'])
         if data['question_type'] == 1:
             # update status in enrol user table
             next_content = session.query(Question).order_by(Question.id.asc()).filter(Question.id > data['question_id'], Question.lesson_id == data['lesson_id']).first()
-            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id'], Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         elif data['question_type'] == 2:
             # update status in enrol user table
             next_content = session.query(Question).order_by(Question.id.asc()).filter( Question.id> data['question_id'] , Question.lesson_id == data['lesson_id']).first()
-            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id']})
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id'], Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         else:
             next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
