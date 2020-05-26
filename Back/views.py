@@ -265,7 +265,7 @@ def status_question(cuser):
         enrol_user = session.query(Enrol_user.complete_question).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
         check_continue_previous_questions = 'False'
         if enrol_user and enrol_user[0] != True:
-            check_continue_previous_questions = True
+            check_continue_previous_questions = 'True'
         has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
         check_wrong_questions = 'True' if has_wrong_questions else 'False'
         result = {"check_new_question":check_new_question, "review_previous_questions":check_continue_previous_questions, "check_wrong_questions":check_wrong_questions}
