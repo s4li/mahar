@@ -264,7 +264,7 @@ def status_question(cuser):
         check_new_question = 'True' if has_new_question else 'False'
         enrol_user = session.query(Enrol_user.complete_question).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
         check_continue_previous_questions = 'False'
-        if enrol_user and enrol_user[0] != True:
+        if enrol_user and enrol_user[0] != 'True':
             check_continue_previous_questions = 'True'
         has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
         check_wrong_questions = 'True' if has_wrong_questions else 'False'
@@ -424,18 +424,18 @@ def user_answer(cuser):
         questions_len = session.query(Question).filter(Question.lesson_id == data['lesson_id']).count() 
         if data['question_type'] == 1:
             next_content = False
-            complete_question = True
+            complete_question = 'True'
             if user_question_ids_len + 1 < questions_len:
                 next_content = True
-                complete_question = False 
+                complete_question = 'False' 
             session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.complete_question: complete_question, Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         elif data['question_type'] == 2:
             next_content = False
-            complete_question = True
+            complete_question = 'True'
             if user_question_ids_len + 1 < questions_len:
                 next_content = True 
-                complete_question = False 
+                complete_question = 'False' 
             session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.complete_question: complete_question , Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         else:
