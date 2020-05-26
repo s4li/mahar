@@ -262,11 +262,10 @@ def status_question(cuser):
         session = Session()
         has_new_question = session.query(Question).filter(Question.lesson_id == lesson_id).first()
         check_new_question = 'True' if has_new_question else 'False'
-        enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
+        enrol_user = session.query(Enrol_user.complete_question).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
         check_continue_previous_questions = 'False'
-        if enrol_user and enrol_user[0] != -1:
-            has_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > enrol_user[0], Question.lesson_id == lesson_id ).first()
-            check_continue_previous_questions = 'True' if has_continue_previous_question else 'False'
+        if enrol_user and enrol_user[0] != True:
+            check_continue_previous_questions = True
         has_wrong_questions = session.query(User_answer.question_id).filter(User_answer.user_id == user_id, User_answer.ans_no == 1, User_answer.lesson_id == lesson_id).first()
         check_wrong_questions = 'True' if has_wrong_questions else 'False'
         result = {"check_new_question":check_new_question, "review_previous_questions":check_continue_previous_questions, "check_wrong_questions":check_wrong_questions}
@@ -280,7 +279,7 @@ def status_question(cuser):
 
 @app.route('/api/new-questions')     
 @token_required
-def all_questions(cuser): 
+def new_questions(cuser): 
     lesson_id = int(request.args['lesson_id'])
     user_id = int(request.args['user_id'])
     has_access = check_user_access(user_id, lesson_id)
@@ -288,36 +287,40 @@ def all_questions(cuser):
         session = Session()
         index = int(request.args['index'])
         if index == -1 :
-            # delete all answer user and change status in enrol_user table
             all_previous_answer = session.query(User_answer).filter(User_answer.lesson_id == lesson_id, User_answer.user_id == user_id).all()
             if all_previous_answer:
                 for answer in all_previous_answer:
                     session.delete(answer)
                     session.commit()
-            has_enroll_user = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()   
-            first_lesson_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
-            if has_enroll_user:
-                session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.question_id: -1 , Enrol_user.question_ids : None})
+            has_user_enrol = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()          
+            if has_user_enrol:
+                session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.complete_question: 'na' , Enrol_user.question_ids : 'na'})
                 session.commit()
             else:
-                enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, question_id =  -1)
+                enrol_user = Enrol_user(lesson_id = lesson_id, user_id=user_id, complete_question =  'na', question_ids = 'na')
                 session.add(enrol_user)  
-                session.commit()      
-        all_question = session.query(Question).filter(Question.lesson_id == lesson_id).all()
+                session.commit()   
+        user_enrol = session.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()             
         question_len = session.query(Question).filter(Question.lesson_id == lesson_id).count()
-        user_enrol = session.query(Enrol_user).filter(Enrol_user.user_id== user_id, Enrol_user.lesson_id == lesson_id).first()
-        if user_enrol.question_ids :
+        if user_enrol.question_ids != 'na' :
             user_question_ids = user_enrol.question_ids.split(',')
             user_question_ids_len = len(user_question_ids)
         else:
-            user_question_ids = 'na'
+            user_question_ids = [0]
             user_question_ids_len = 0
-        while user_question_ids_len <= question_len:
+        next_new_question = 'na' 
+        while user_question_ids_len + 1 < question_len:
             random_question = session.query(Question).order_by(func.rand()).filter(Question.lesson_id == lesson_id).first()
             if str(random_question.id) not in user_question_ids:
                 next_new_question = random_question
-                break
-        #next_new_question = session.query(Question).order_by(func.random()).filter(Question.id > f'{index}', Question.lesson_id == lesson_id).first()
+                break    
+        if next_new_question == 'na':
+            first_question_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
+            last_question_id = session.query(Question.id).order_by(Question.id.desc()).filter(Question.lesson_id == lesson_id).first()
+            for id in range(int(first_question_id[0]), int(last_question_id[0])):
+                if id not in user_question_ids:
+                    next_new_question = session.query(Question).filter(Question.id == id).first()
+                    break
         next_new_voice = session.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
         next_new_answer = session.query(Answer).filter(Answer.question_id == next_new_question.id).first()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()      
@@ -339,7 +342,6 @@ def continue_previous_questions(cuser):
     if has_access:
         session = Session()
         index = int(request.args['index'])
-        all_question = session.query(Question).filter(Question.lesson_id == lesson_id).all()
         question_len = session.query(Question).filter(Question.lesson_id == lesson_id).count()
         user_enrol = session.query(Enrol_user).filter(Enrol_user.user_id== user_id, Enrol_user.lesson_id == lesson_id).first()
         if user_enrol.question_ids :
@@ -348,13 +350,19 @@ def continue_previous_questions(cuser):
         else:
             user_question_ids = 'na'
             user_question_ids_len = 0
-        while user_question_ids_len <= question_len:
+        next_continue_previous_question = 'na'     
+        while user_question_ids_len + 1 < question_len:
             random_question = session.query(Question).order_by(func.rand()).filter(Question.lesson_id == lesson_id).first()
             if str(random_question.id) not in user_question_ids:
                 next_continue_previous_question = random_question
-                break
-        #enrol_user = session.query(Enrol_user.question_id).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
-        #next_continue_previous_question = session.query(Question).order_by(Question.id.asc()).filter( Question.id > enrol_user[0], Question.lesson_id == lesson_id ).first()
+                break   
+        if next_continue_previous_question == 'na':
+            first_question_id = session.query(Question.id).filter(Question.lesson_id == lesson_id).first()
+            last_question_id = session.query(Question.id).order_by(Question.id.desc()).filter(Question.lesson_id == lesson_id).first()
+            for id in range(int(first_question_id[0]), int(last_question_id[0])):
+                if id not in user_question_ids:
+                    next_continue_previous_question = session.query(Question).filter(Question.id == id).first()
+                    break    
         next_continue_previous_voice = session.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
         next_continue_previous_answer = session.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
         lesson = session.query(Lesson).filter(Lesson.id == lesson_id).first()
@@ -407,7 +415,7 @@ def user_answer(cuser):
             user_answer_update = session.query(User_answer).filter(User_answer.id == user_previous_answer[0]).update({User_answer.ans_no : data['ans_no']}) 
             session.commit()
         user_question_ids = session.query(Enrol_user.question_ids).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).first()  
-        if user_question_ids[0] != None:
+        if user_question_ids[0] != 'na':
             complete_user_question_ids = user_question_ids[0] + ',' + str(data['question_id'])
             user_question_ids_len = len(user_question_ids[0].split(','))
         else:
@@ -416,15 +424,19 @@ def user_answer(cuser):
         questions_len = session.query(Question).filter(Question.lesson_id == data['lesson_id']).count() 
         if data['question_type'] == 1:
             next_content = False
+            complete_question = True
             if user_question_ids_len + 1 < questions_len:
-                next_content = True 
-            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id'], Enrol_user.question_ids : complete_user_question_ids})
+                next_content = True
+                complete_question = False 
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.complete_question: complete_question, Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         elif data['question_type'] == 2:
             next_content = False
+            complete_question = True
             if user_question_ids_len + 1 < questions_len:
                 next_content = True 
-            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.question_id: data['question_id'], Enrol_user.question_ids : complete_user_question_ids})
+                complete_question = False 
+            session.query(Enrol_user).filter(Enrol_user.lesson_id == data['lesson_id'], Enrol_user.user_id == data['user_id']).update({ Enrol_user.complete_question: complete_question , Enrol_user.question_ids : complete_user_question_ids})
             session.commit()
         else:
             next_content = session.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == data['user_id'], User_answer.question_id> data['question_id'], User_answer.ans_no == '1', User_answer.lesson_id == data['lesson_id']).first()
@@ -610,8 +622,7 @@ def get_user_agent():
     elif is_pc:
         user_agent_type = 'pc'  
     else:
-        user_agent_type = 'bot' 
-    print(user_agent_type)         
+        user_agent_type = 'bot'         
     return jsonify(user_agent_type) 
 
 if __name__ == '__main__':

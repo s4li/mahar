@@ -58,7 +58,6 @@ class Question(Base):
    voice_id = Column(Integer,ForeignKey('tbl_voices.id', ondelete='CASCADE'))
    question = relationship('User_answer')
    answer = relationship('Answer') 
-   enrol_user = relationship('Enrol_user') 
 
 class Answer(Base):
    __tablename__ = 'tbl_answers'
@@ -71,8 +70,8 @@ class Enrol_user(Base):
    __tablename__ = 'tbl_enrol_user'
    id = Column(Integer, primary_key=True) 
    question_ids = Column(String(1000))
+   complete_question = Column(String(45), default='na')
    user_id = Column(Integer,ForeignKey('tbl_users.id', ondelete='CASCADE'))
-   question_id = Column(Integer,ForeignKey('tbl_questions.id', ondelete='CASCADE')) 
    lesson_id = Column(Integer,ForeignKey('tbl_lessons.id', ondelete='CASCADE')) 
 
 class User_answer(Base):
