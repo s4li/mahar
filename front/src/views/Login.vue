@@ -42,6 +42,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="limiter">
+                                <div class="container-login100">
+                                    <div class="wrap-login100">
+                                        <div class="login100-form validate-form">
+                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                            <label class="form-check-label pr-4 h6" for="exampleCheck1">مرا به خاطر بسپار</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <button class="btn box enterBtn w-25 shadow" :disabled="$v.$invalid" id="loginbtn" type="submit">ورود</button>
                             <div class="btn-boxl">
                                 <router-link to="/Singup" id="singupbtn" class="btn box btn-sm shadow">ثبت نام</router-link>

@@ -43,11 +43,11 @@ export default new Vuex.Store({
       })
         .then(res => {
           const token = res.data.token
-          const time = new Date().getTime();
+          //const time = new Date().getTime();
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
-          localStorage.setItem('expire', time)
+          //localStorage.setItem('expire', time)
           axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
           commit('authUser', {
             token: res.data.token,
@@ -81,11 +81,11 @@ export default new Vuex.Store({
       })
         .then(res => {
           const token = res.data.token;
-          const time = new Date().getTime();
+          //const time = new Date().getTime();
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
-          localStorage.setItem('expire', time)
+          //localStorage.setItem('expire', time)
           axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
             commit('authUser', {
             token: res.data.token,

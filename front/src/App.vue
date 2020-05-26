@@ -5,7 +5,7 @@
             <div class="col-12">
                 <Navbar></Navbar>
                 <router-view />
-                <router-link v-if="showinstallbtn" v-show="InstallAppBtnMobile" class="InstallAppBtnMobile" to="/InstallApp">
+                <router-link v-if="this.$store.state.InstallAppStatus" v-show="InstallAppBtnMobile" class="InstallAppBtnMobile" to="/InstallApp">
                     <Notification></Notification>
                 </router-link>
             </div>
@@ -26,7 +26,6 @@ export default {
     data() {
         return {
             InstallAppBtnMobile: true,
-            showinstallbtn:false
         }
     },
     components: {
@@ -34,16 +33,16 @@ export default {
         Notification
     },
     methods: {
-        LogoutTimer(){
-            const oldTime = localStorage.getItem('expire')
-            const currentTime = new Date().getTime();
-            const schedule = currentTime - oldTime
-            if (schedule > 60 * 60 * 24 * 1000){
-                console.log(`%c expire `, 'background: #343a40; color: #f8f9fa')
-                localStorage.removeItem('expire')
-                this.$store.dispatch('logout')
-            }
-        }
+        //LogoutTimer(){
+        //    const oldTime = localStorage.getItem('expire')
+        //    const currentTime = new Date().getTime();
+        //    const schedule = currentTime - oldTime
+        //    if (schedule > 60 * 60 * 24 * 1000){
+        //        console.log(`%c expire `, 'background: #343a40; color: #f8f9fa')
+        //        localStorage.removeItem('expire')
+        //        this.$store.dispatch('logout')
+        //    }
+        //}
     },
     updated() {
         if (this.$route.path == '/InstallApp' || this.$route.path == '/') {
@@ -60,7 +59,6 @@ export default {
             if (this.$store.state.InstallAppFlag) {
                 this.$store.state.InstallAppData = e
                 this.$store.state.InstallAppStatus = true
-                this.showinstallbtn = true
             } else {
                 this.$store.state.InstallAppData = null
                 this.$store.state.InstallAppStatus = false
@@ -78,7 +76,7 @@ export default {
                 console.log('Launched: Browser Tab');
             }
         });
-        this.LogoutTimer()
+        //this.LogoutTimer()
     },
 }
 </script>
