@@ -7,8 +7,6 @@ from sqlalchemy.sql import func
 import jwt, json, hashlib, hmac
 from random import randint
 from user_agents import parse
-import webbrowser
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from Back.conection_info import front_url, back_url
 from Back.models import  (Session, User, Course, Lesson, Answer, 
@@ -199,7 +197,7 @@ def login():
 @token_required
 def user_information(cuser):
     session = Session()
-    user_id = int(request.args['id']) 
+    user_id = int(request.args['id'])
     user = session.query(User).filter(User.id == user_id).first()
     if user:
         response = {'result': 'success', 'full_name': user.full_name, 'mobile': user.mobile}
@@ -395,7 +393,6 @@ def wronge_questions(cuser):
         status_code = 401
         result = {"result" : "The user does not have access"}    
     return jsonify(result), status_code
-
 
 @app.route('/api/set-user-answer', methods=('POST',))    
 @token_required
