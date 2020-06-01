@@ -454,7 +454,7 @@ def user_answer(cuser):
 def zarinpal(cuser, type, user_id, sale_plan_id, course_id): 
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
-    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
+    MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
     invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     client = Client(ZARINPAL_WEBSERVICE)
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
@@ -499,7 +499,7 @@ def zarinpal(cuser, type, user_id, sale_plan_id, course_id):
 def zarinpal_callback():
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
-    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
+    MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
     print(MMERCHANT_ID)
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.args['Status'] 
