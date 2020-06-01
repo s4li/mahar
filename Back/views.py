@@ -499,8 +499,10 @@ def zarinpal_callback():
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
     MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
+    print(MMERCHANT_ID)
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.args['Status'] 
+    print(f'{Status}')
     Authority = request.args['Authority']
     if Status == 'OK':
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
