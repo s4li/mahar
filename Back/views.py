@@ -7,8 +7,6 @@ from sqlalchemy.sql import func
 import jwt, json, hashlib, hmac
 from random import randint
 from user_agents import parse
-import webbrowser
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from Back.conection_info import front_url, back_url
 from Back.models import  (Session, User, Course, Lesson, Answer, 
@@ -155,8 +153,7 @@ def register():
         session.commit()
         token = jwt.encode({
                             'sub': user.mobile,
-                            'iat':datetime.utcnow(),  
-                            'exp': datetime.utcnow() + timedelta(days=1)},
+                            'iat':datetime.utcnow()},
                             app.secret_key)
         #iat: the time the jwt was issued at
         #exp : is the moment the jwt should expire  
@@ -180,8 +177,7 @@ def login():
         if  check_if_password_is_correct:
             token = jwt.encode({ 
                         'sub' : user.mobile,
-                        'iat' : datetime.utcnow(),
-                        'exp' : datetime.utcnow() + timedelta(days=1)
+                        'iat' : datetime.utcnow()
                             },
                             app.secret_key  
                           )
@@ -201,7 +197,7 @@ def login():
 @token_required
 def user_information(cuser):
     session = Session()
-    user_id = int(request.args['id']) 
+    user_id = int(request.args['id'])
     user = session.query(User).filter(User.id == user_id).first()
     if user:
         response = {'result': 'success', 'full_name': user.full_name, 'mobile': user.mobile}
@@ -398,7 +394,6 @@ def wronge_questions(cuser):
         result = {"result" : "The user does not have access"}    
     return jsonify(result), status_code
 
-
 @app.route('/api/set-user-answer', methods=('POST',))    
 @token_required
 def user_answer(cuser): 
@@ -475,6 +470,7 @@ def zarinpal(cuser, type, user_id, sale_plan_id, course_id):
                                            user.mobile,
                                            'tajbakhsh.ut.ac@gmail.com',
                                            callback_url)
+        print(callback_url)                                   
         if result_zarinpal.Status == 100:
             if sale_plan_id == '2' : 
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
@@ -503,11 +499,12 @@ def zarinpal(cuser, type, user_id, sale_plan_id, course_id):
 def zarinpal_callback():
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
-    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
+    MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
+    print(MMERCHANT_ID)
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.args['Status'] 
+    print(f'{Status}')
     Authority = request.args['Authority']
-    check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
     if Status == 'OK':
         check_invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).first()
         if check_invoice:
@@ -516,70 +513,50 @@ def zarinpal_callback():
                                                                 Authority,
                                                                 sale_plan[0])                                                                                                                                   
             if  result_zarinpal.Status == 100: 
-                if check_invoice.user_id != -1:
-                    zarinpal_result_status = result_zarinpal.Status
-                    user = session.query(User).filter(User.id == check_invoice.user_id).first()
-                    result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
-                    status_code = 200 
-                    old_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
-                    new_purchased_lessons = check_invoice.lessons 
-                    new_purchased_lessons_split = new_purchased_lessons.split(',')
-                    old_purchased_lessons_split = old_purchased_lessons[0].split(',')
-                    purchased_lessons = old_purchased_lessons[0]
-                    for lesson in new_purchased_lessons_split:
-                        if lesson not in old_purchased_lessons_split:
-                            purchased_lessons = purchased_lessons  + ',' + lesson
-                    update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
-                    session.commit()
-                else:
-                    zarinpal_result_status = 4000    
-                    #return 'Transaction success. RefID: ' + str(result.RefID)   
+                zarinpal_result_status = result_zarinpal.Status
+                user = session.query(User).filter(User.id == check_invoice.user_id).first()
+                result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
+                status_code = 200 
+                old_purchased_lessons = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
+                new_purchased_lessons = check_invoice.lessons 
+                new_purchased_lessons_split = new_purchased_lessons.split(',')
+                old_purchased_lessons_split = old_purchased_lessons[0].split(',')
+                purchased_lessons = old_purchased_lessons[0]
+                for lesson in new_purchased_lessons_split:
+                    if lesson not in old_purchased_lessons_split:
+                        purchased_lessons = purchased_lessons  + ',' + lesson
+                update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
+                session.commit()
+                #return 'Transaction success. RefID: ' + str(result.RefID)   
             elif result_zarinpal.Status == 101:
-                if check_invoice.user_id != -1:
-                    zarinpal_result_status = result_zarinpal.Status
-                    user = session.query(User).filter(User.id == check_invoice.user_id).first()
-                    result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
-                    status_code = 200 
-                    if check_invoice.sale_plan_id == 1:
-                        purchased_lessons = check_invoice.lessons
-                    else : 
-                        purchased_lessons_user = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
-                        purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
-                    update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
-                    session.commit()
-                else:
-                    zarinpal_result_status = 4000    
+                zarinpal_result_status = result_zarinpal.Status
+                user = session.query(User).filter(User.id == check_invoice.user_id).first()
+                result = {'result': f'{user.full_name}عزیز پرداخت شما موفق بوده است.'} 
+                status_code = 200
+                if check_invoice.sale_plan_id == 1:
+                    purchased_lessons = check_invoice.lessons
+                else : 
+                    purchased_lessons_user = session.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
+                    purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
+                update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
+                session.commit()
                 #return 'Transaction submitted : ' + str(result.Status)
             else:
-                if check_invoice.user_id != -1:
-                    zarinpal_result_status = result_zarinpal.Status
-                else:
-                    zarinpal_result_status = 3000  
+                zarinpal_result_status = result_zarinpal.Status
                 result = {'result': 'عملیات پرداخت ناموفق بود.'} 
                 status_code = 401 
                 #return 'Transaction failed. Status: ' + str(result.Status)
             invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : zarinpal_result_status, Invoice.transaction_reference_id: result_zarinpal.RefID})       
-            session.commit()
-    else:
-        if check_invoice.user_id != -1:
-            zarinpal_result_status = Status
-        else:
-            zarinpal_result_status = 3000  
+    else:  
         invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status})   
         session.commit()
         result = {'result': 'عملیات پرداخت توسط کاربر یا سیستم متوقف شد.'} 
         status_code = 401 
         #return 'Transaction failed or canceled by user'
-    if check_invoice.user_id != -1:
         session.commit()
         session.close()
-        return redirect("/Grades")
-    else:
-        session.commit()
-        session.close()
-        return render_template("afterPay.html", invoice_result = zarinpal_result_status)   
+    return jsonify(result), status_code  
         
-
 @app.route('/api/mobile/zarinpal-callback', methods=['GET',])
 def api_pasargad_callback():
     session = Session()
