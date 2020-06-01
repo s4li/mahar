@@ -222,9 +222,12 @@ def courses(cuser):
             has_content = True if lesson else False
             all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
     user = session.query(User).filter(User.id == user_id).first()
-    user_purchased_lessons = user.purchased_lessons.split(',')
+    len_user_purchased_lessons = 0
+    if user.purchased_lessons:
+        user_purchased_lessons = user.purchased_lessons.split(',')
+        len_user_purchased_lessons = len(user_purchased_lessons)
     complete_information = False
-    if len(user_purchased_lessons) > 6 and user.grade == 'na':
+    if len_user_purchased_lessons > 6 and user.grade == 'na':
         complete_information = True  
     response = {'all_courses' : all_courses, 'complete_information': complete_information}
     session.commit()
