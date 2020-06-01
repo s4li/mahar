@@ -454,7 +454,7 @@ def user_answer(cuser):
 def zarinpal(cuser, type, user_id, sale_plan_id, course_id): 
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
-    MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
+    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     invoice_date= datetime.now().strftime('%Y/%m/%d %H:%M:%S')
     client = Client(ZARINPAL_WEBSERVICE)
     sale_plan = session.query(Sale_plan).filter(Sale_plan.id == sale_plan_id).first()
@@ -498,7 +498,7 @@ def zarinpal(cuser, type, user_id, sale_plan_id, course_id):
 def zarinpal_callback():
     session = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'    
-    MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
+    MMERCHANT_ID = 'febd7482-570d-11e6-b65a-000c295eb8fc'
     print(MMERCHANT_ID)
     client = Client(ZARINPAL_WEBSERVICE)
     Status = request.args['Status'] 
@@ -526,8 +526,7 @@ def zarinpal_callback():
                         purchased_lessons = purchased_lessons  + ',' + lesson
                 update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                 session.commit()
-                 
-                    #return 'Transaction success. RefID: ' + str(result.RefID)   
+                #return 'Transaction success. RefID: ' + str(result.RefID)   
             elif result_zarinpal.Status == 101:
                 zarinpal_result_status = result_zarinpal.Status
                 user = session.query(User).filter(User.id == check_invoice.user_id).first()
@@ -540,7 +539,6 @@ def zarinpal_callback():
                     purchased_lessons = check_invoice.lessons + purchased_lessons_user[0] 
                 update_user = session.query(User).filter(User.id == check_invoice.user_id).update({User.purchased_lessons : purchased_lessons})  
                 session.commit()
-                  
                 #return 'Transaction submitted : ' + str(result.Status)
             else:
                 zarinpal_result_status = result_zarinpal.Status
@@ -556,9 +554,8 @@ def zarinpal_callback():
         #return 'Transaction failed or canceled by user'
         session.commit()
         session.close()
-        return jsonify(result), status_code  
+    return jsonify(result), status_code  
         
-
 @app.route('/api/mobile/zarinpal-callback', methods=['GET',])
 def api_pasargad_callback():
     session = Session()
