@@ -84,9 +84,9 @@ Vue.use(VueRouter)
       }
     }
   },
-  {
-    path: '*',redirect:'/'
-  }
+  //{
+  //  path: '*',redirect:'/'
+  //}
 ]
 
 const router = new VueRouter({
