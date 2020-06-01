@@ -470,6 +470,7 @@ def zarinpal(cuser, type, user_id, sale_plan_id, course_id):
                                            user.mobile,
                                            'tajbakhsh.ut.ac@gmail.com',
                                            callback_url)
+        print(callback_url)                                   
         if result_zarinpal.Status == 100:
             if sale_plan_id == '2' : 
                 lesson_ids = session.query(Lesson.id).filter(Lesson.course_id == course_id).all()
