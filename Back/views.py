@@ -558,7 +558,7 @@ def zarinpal_callback():
         #return 'Transaction failed or canceled by user'
     session.commit()
     session.close()
-    return redirect("/Grades") 
+    return redirect("/Guids") 
         
 @app.route('/api/mobile/zarinpal-callback', methods=['GET',])
 def api_pasargad_callback():
