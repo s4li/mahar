@@ -556,8 +556,8 @@ def zarinpal_callback():
         result = {'result': 'عملیات پرداخت توسط کاربر یا سیستم متوقف شد.'} 
         status_code = 401 
         #return 'Transaction failed or canceled by user'
-        session.commit()
-        session.close()
+    session.commit()
+    session.close()
     return redirect("/Grades") 
         
 @app.route('/api/mobile/zarinpal-callback', methods=['GET',])
