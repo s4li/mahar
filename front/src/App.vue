@@ -32,18 +32,6 @@ export default {
         Navbar,
         Notification
     },
-    methods: {
-        //LogoutTimer(){
-        //    const oldTime = localStorage.getItem('expire')
-        //    const currentTime = new Date().getTime();
-        //    const schedule = currentTime - oldTime
-        //    if (schedule > 60 * 60 * 24 * 1000){
-        //        console.log(`%c expire `, 'background: #343a40; color: #f8f9fa')
-        //        localStorage.removeItem('expire')
-        //        this.$store.dispatch('logout')
-        //    }
-        //}
-    },
     updated() {
         if (this.$route.path == '/InstallApp' || this.$route.path == '/') {
             this.InstallAppBtnMobile = false
@@ -76,7 +64,6 @@ export default {
                 console.log('Launched: Browser Tab');
             }
         });
-        //this.LogoutTimer()
     },
 }
 </script>

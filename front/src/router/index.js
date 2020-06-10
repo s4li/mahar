@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '../store/index';
+//import store from '../store/index';
 import Home from '../views/Landingpage.vue';
+const userId = localStorage.getItem('userId')
 
 Vue.use(VueRouter)
 
@@ -36,7 +37,7 @@ Vue.use(VueRouter)
     name: 'Grades',
     component: () => import('../views/Grades.vue'),
     beforeEnter (to, from, next) {
-      if (store.state.idToken) {
+      if (userId) {
         next();
       } else {
         next('/login');
@@ -53,7 +54,7 @@ Vue.use(VueRouter)
     name: 'Lessons',
     component: () => import('../views/Lessons.vue'),
     beforeEnter (to, from, next) {
-      if (store.state.idToken) {
+      if (userId) {
         next();
       } else {
         next('/login');
@@ -65,7 +66,7 @@ Vue.use(VueRouter)
     name: 'ExamType',
     component: () => import('../views/ExamType.vue'),
     beforeEnter (to, from, next) {
-      if (store.state.idToken) {
+      if (userId) {
         next();
       } else {
         next('/login');
@@ -77,16 +78,16 @@ Vue.use(VueRouter)
     name: 'Courses',
     component: () => import('../views/Courses.vue'),
     beforeEnter (to, from, next) {
-      if (store.state.idToken) {
+      if (userId) {
         next();
       } else {
         next('/login');
       }
     }
   },
-  //{
-  //  path: '*',redirect:'/'
-  //}
+  {
+    path: '*',redirect:'/'
+  }
 ]
 
 const router = new VueRouter({

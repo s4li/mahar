@@ -12,7 +12,6 @@ export default new Vuex.Store({
     user: null,
     alerttext : '',
     showAlert:false,
-    currenturl:'/Grades',
     InstallAppData:null,
     InstallAppStatus:false,
     InstallAppFlag:true,
@@ -28,9 +27,6 @@ export default new Vuex.Store({
     clearAuthData (state) {
       state.idToken = null
       state.userId = null
-    },
-    StoreCurrentUrl(state,url){
-      state.currenturl = url
     }
   },
   actions: {
@@ -43,11 +39,9 @@ export default new Vuex.Store({
       })
         .then(res => {
           const token = res.data.token
-          //const time = new Date().getTime();
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
-          //localStorage.setItem('expire', time)
           axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
           commit('authUser', {
             token: res.data.token,
@@ -81,11 +75,9 @@ export default new Vuex.Store({
       })
         .then(res => {
           const token = res.data.token;
-          //const time = new Date().getTime();
           localStorage.setItem('token', res.data.token)
           localStorage.setItem('userId', res.data.id)
           localStorage.setItem('FullName', res.data.full_name)
-          //localStorage.setItem('expire', time)
           axios.defaults.headers.common['Authorization'] = `Bearer: ${token}`
             commit('authUser', {
             token: res.data.token,
@@ -118,13 +110,8 @@ export default new Vuex.Store({
         return
       }else{
         commit('authUser', {token: token,userId: userId})
-        const myurl = this.getters.geturl
-        router.push(myurl)
       }
-    },
-    saveurl({commit},url){
-      commit('StoreCurrentUrl',url)
-    },
+    }
     logout ({commit}) {
       commit('clearAuthData')
       localStorage.removeItem('FullName')
@@ -160,9 +147,6 @@ export default new Vuex.Store({
     },
     isAuthenticated (state) {
       return state.idToken !== null
-    },
-    geturl(state){
-      return state.currenturl
     }
   }
 })
