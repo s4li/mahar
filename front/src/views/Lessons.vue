@@ -142,7 +142,7 @@ export default {
                 .then((res) => {
                     this.lessons = res.data;
                     const URL = res.data.zarinpal_url
-                    window.location = URL
+                    window.open(URL, '_blank');
                 })
                 .catch((error) => {
                     if (error.response.status == 401) {

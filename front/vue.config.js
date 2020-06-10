@@ -23,7 +23,7 @@ module.exports = {
       display: 'standalone',
       dir: 'rtl',
       lang: 'fa-ir',
-      scope: '/'
+      scope: ['/','/Guids','/login','/Singup','/InstallApp','/Grades','/Recovery','/Lessons/','/ExamType/','/Courses/']
     },
     iconPaths:{
       favicon32: 'img/icons/favicon-32x32.png',
