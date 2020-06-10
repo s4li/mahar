@@ -553,7 +553,7 @@ def zarinpal_callback():
     else:  
         invoice = session.query(Invoice).filter(Invoice.invoice_no == Authority).update({Invoice.status : Status})   
         session.commit()
-        result = {'result': 'عملیات پرداخت توسط کاربر یا سیستم متوقف شد.'} 
+        result = {'Authority': Authority} 
         status_code = 401 
         #return 'Transaction failed or canceled by user'
     session.commit()
