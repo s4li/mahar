@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>مهار - آشنایی</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="shortcut icon" href="../static/image/amar.ico">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="../static/css/fontawesome.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/animate.css">
+    <link rel="stylesheet" href="../static/css/fisrt-login.css">
+    <!--===============================================================================================-->
+</head>
+
+<body>
+
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
+                <div class="pages">
+                    <div class="page">
+                        <img class="animate-box" data-animate-effect="fadeIn" src="../static/image/book_lover.png" alt="image-book-lover">
+                        <h2 class="animate-box" data-animate-effect="fadeIn">مطالعه</h2>
+                        <p class="animate-box" data-animate-effect="fadeIn">با استفاده از این اپلیکیشن میتوانید دایره‌ی لغات عربی خود را ارتقا داده و پیشرفت کنید.</p>
+                        <ul class="control animate-box" data-animate-effect="fadeIn">
+                            <li class="active"></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                        <button class="primary-btn2 mb-3 next animate-box" data-animate-effect="fadeIn">بعدی</button>
+                    </div>
+                    <div class="page d-none">
+                        <img class="animate-box" data-animate-effect="fadeIn" src="../static/image/success.png" alt="image-success">
+                        <h2 class="animate-box" data-animate-effect="fadeIn">موفقیت</h2>
+                        <p class="animate-box" data-animate-effect="fadeIn">و‌ در نهایت با چندین بار پرسش و پاسخ از خودتان میتوانید حس یادگیری بهتر را تجربه کنید.</p>
+                        <ul class="control animate-box" data-animate-effect="fadeIn">
+                            <li></li>
+                            <li class="active"></li>
+                            <li></li>
+                        </ul>
+                        <button class="primary-btn2 mb-3 next animate-box" data-animate-effect="fadeIn">بعدی</button>
+                    </div>
+                    <div class="page d-none">
+                        <img class="animate-box" data-animate-effect="fadeIn" src="../static/image/question.png" alt="image-question">
+                        <h2 class="animate-box" data-animate-effect="fadeIn">راهنمای استفاده از اپلیکیشن</h2>
+                        <p class="animate-box" data-animate-effect="fadeIn">جهت استفاده راحت تر از این برنامه راهنمای استفاده را مطالعه کنید.</p>
+                        <ul class="control animate-box" data-animate-effect="fadeIn">
+                            <li></li>
+                            <li></li>
+                            <li class="active"></li>
+                        </ul>
+                        <a class="primary-btn2 mb-3 animate-box" href="#" data-animate-effect="fadeIn">ورود</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../static/js/jquery-2.2.4.min.js"></script>
+    <script src="../static/js/jquery.waypoints.min.js"></script>
+    <script src="../static/js/login.js"></script>
+    <script>
+        $(function() {
+            $(".next").click(function() {
+                $(this).parent().addClass("d-none");
+                $(this).parent().next().removeClass("d-none");
+            })
+        })
+    </script>
+</body>
+
+</html>
