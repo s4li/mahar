@@ -338,7 +338,7 @@ iframe {
 .label-input100 {
     font-size: 14px;
     color: #405a75;
-    line-height: 1.2;
+    line-height: 1.4;
     text-align: right;
     position: absolute;
     top: 14px;
@@ -496,6 +496,9 @@ input.input100 {
 @media (max-width: 576px) {
     .login100-form {
         padding: 43px 15px 57px 117px;
+    }
+    .label-input100 br {
+        display: none;
     }
 }
 
