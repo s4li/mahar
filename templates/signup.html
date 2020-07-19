@@ -24,13 +24,18 @@
                     <span class="login100-form-title-1">ثبت نام</span>
                 </div>
 
-                <form class="login100-form validate-form" action="/register" method="post">
+                <form class="login100-form validate-form">
+
                     <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
                         <span class="label-input100">شماره موبایل</span>
                         <input class="input100" type="tel" name="mobile" pattern="[0-9]*" inputmode="numeric" minlength="11" maxlength="11" placeholder="شماره موبایل خود را وارد کنید" required>
                         <span class="focus-input100"></span>
                     </div>
-
+                    <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="نام و نام خانوادگی مورد نیاز است">
+                        <span class="label-input100">نام و<br> نام خانوادگی</span>
+                        <input class="input100" type="text" name="name" placeholder="نام و نام خانوادگی خود را وارد کنید" required>
+                        <span class="focus-input100"></span>
+                    </div>
                     <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="رمز عبور مورد نیاز است">
                         <span class="label-input100">رمز عبور</span>
                         <input class="input100" type="password" name="pass" placeholder="رمز عبور خود را وارد کنید" required>

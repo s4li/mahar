@@ -54,6 +54,18 @@ def send_sms(mobile, sms_text):
         result= True
     return result
 
+@app.route('/')
+def index():
+    return  render_template('first-login.html') 
+
+@app.route('/guids')
+def guids():
+    return  render_template('guids.html')
+
+@app.route('/install-guids')
+def install_guids():
+    return  render_template('install-guids.html')
+
 @app.route('/confirm-mobile')
 def confirm_mobile(): 
     s = Session()
@@ -67,16 +79,16 @@ def confirm_mobile():
             response = {'result':'success'}
             s.query(User).filter(User.id == user.id).update({ User.confirm_code: code})
             s.commit()
-            status_code = 200
+            return redirect("reset_password")
         else:
-            response = {'result':'ارسال پیامک ناموفق بود!'} 
-            status_code = 401  
+            flash('ارسال پیامک ناموفق بود!','danger') 
+            return redirect("confirm_mobile")
     else:
-        response = {'result':'کاربر گرامی، اطلاعاتی با این شماره موبایل ثبت نشده است!'} 
-        status_code = 401 
+        flash('کاربر گرامی، اطلاعاتی با این شماره موبایل ثبت نشده است!','danger')
+        return redirect("register")
     s.commit()      
     s.close()      
-    return  render_template('signup.html')
+    return  render_template('password-recovey.html')
 
 @app.route('/reset-password', methods=('POST',))
 def reset_password(): 
@@ -203,15 +215,16 @@ def status_question(lesson_id):
         check_wrong_questions = 'True' if has_wrong_questions else 'False'
         s.commit()
         s.close() 
-        render_template('train-type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id) 
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))
+    return render_template('test_train_type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id) 
     
 @app.route('/new-questions/<lesson_id>')
 @app.route('/new-questions/<lesson_id>/<index>')     
 def new_questions(lesson_id, index = 0): 
-    user_id = int(session_f['user_id'])
+    page_name = 'new_questions'
+    user_id = 17
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
@@ -254,16 +267,22 @@ def new_questions(lesson_id, index = 0):
         next_new_voice = s.query(Voice).filter(Voice.id == next_new_question.voice_id).first()
         next_new_answer = s.query(Answer).filter(Answer.question_id == next_new_question.id).first()
         lesson = s.query(Lesson).filter(Lesson.id == lesson_id).first()  
-        s.commit()
-        s.close() 
     else:
         flash('این درس برای شما باز نشده است!','danger')  
-        return redirect(url_for("grade"))    
-    render_template('train.html', question = next_new_question.text, voice = f'{next_new_voice.path}', question_id = next_new_question.id, answer = next_new_answer.ans_text, lesson_title = lesson.title, lesson_id = lesson_id)    
+        return redirect(url_for("grade"))   
+    question = next_new_question.text
+    voice = f'{next_new_voice.path}' 
+    question_id = next_new_question.id
+    answer = next_new_answer.ans_text
+    lesson_title = lesson.title
+    s.commit()
+    s.close() 
+    return render_template('test_train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name)    
 
 @app.route('/continue-questions/<lesson_id>')     
 def continue_questions(lesson_id): 
-    user_id = int(session_f['user_id'])
+    page_name = 'continue_questions'
+    user_id = 17
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
@@ -291,17 +310,22 @@ def continue_questions(lesson_id):
         next_continue_previous_voice = s.query(Voice).filter(Voice.id == next_continue_previous_question.voice_id).first()
         next_continue_previous_answer = s.query(Answer).filter(Answer.question_id == next_continue_previous_question.id).first()
         lesson = s.query(Lesson).filter(Lesson.id == lesson_id).first()
-        status_code = 200
+        question = next_continue_previous_question.text
+        voice = f'{next_continue_previous_voice.path}'
+        question_id = next_continue_previous_question.id
+        answer = next_continue_previous_answer.ans_text
+        lesson_title = lesson.title
         s.commit()
         s.close() 
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))     
-    render_template('train.html', question = next_continue_previous_question.text, voice = f'{next_continue_previous_voice.path}', question_id = next_continue_previous_question.id, answer = next_continue_previous_answer.ans_text, lesson_title = lesson.title, lesson_id = lesson_id) 
+    return render_template('test_train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name) 
 
 @app.route('/wrong-questions/<lesson_id>/<index>')     
 def wronge_questions(lesson_id, index): 
-    user_id = int(session_f['user_id'])
+    page_name = 'wronge_questions'
+    user_id = 17
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
@@ -311,13 +335,17 @@ def wronge_questions(lesson_id, index):
         next_wrong_answer = s.query(Answer).filter(Answer.question_id == next_wrong_question.id).first()
         lesson = s.query(Lesson).filter(Lesson.id == lesson_id).first()
         result = {"question":next_wrong_question.text, "voice": f'{next_wrong_voice.path}', "next_index": next_wrong_answer.question_id , "question_id": next_wrong_question.id, "answer": next_wrong_answer.ans_text,  "lesson_title":lesson.title}
-        status_code = 200
+        question = next_wrong_question.text 
+        voice = f'{next_wrong_voice.path}' 
+        question_id = next_wrong_question.id 
+        answer = next_wrong_answer.ans_text 
+        lesson_title = lesson.title
         s.commit()
         s.close() 
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))    
-    render_template('train.html', question = next_wrong_question.text, voice = f'{next_wrong_voice.path}', question_id = next_wrong_question.id, answer = next_wrong_answer.ans_text, lesson_title = lesson.title, lesson_id = lesson_id)
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name)
 
 @app.route('/ajax-set-user-answer', methods=['POST'])    
 def user_answer():
@@ -385,8 +413,10 @@ def user_answer():
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))  
 
-@app.route('/zarinpal/<type>/<user_id>/<sale_plan_id>/<course_id>')
-def zarinpal( type, user_id, sale_plan_id, course_id): 
+@app.route('/zarinpal/<sale_plan_id>')
+@app.route('/zarinpal/<sale_plan_id>/<course_id>')
+def zarinpal( sale_plan_id, course_id = 0): 
+    user_id = int(session_f['user_id']) 
     s = Session()
     ZARINPAL_WEBSERVICE  = 'https://www.zarinpal.com/pg/services/WebGate/wsdl'
     MMERCHANT_ID = '46c993a0-9bed-11ea-8c18-000c295eb8fc'
