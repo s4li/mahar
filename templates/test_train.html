@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <audio controls>
+        <source src="../static/{{ voice }}" type="audio/mpeg">
+      </audio>
+    <div class="flip-card-front background">
+        <button class="btn play click"><i class="fas fa-volume"></i></button>
+        <p>آیا معنی کلمه زیر را به خاطر دارید؟</p>
+        <h3>{{ question }}</h3>
+        <button class="btn click continue d-block mx-auto btn-warning">ادامه</button>
+    </div>
+    <div class="flip-card-back background">
+        <div>
+            <h3 class="h4">{{ answer }}</h3>
+            <p>معنی کلمه را بلد بودید؟</p>
+            <button data-value="1" class="btn select click shadow true">بله<span>&#128512;</span></button>
+            <button data-value="0" class="btn select click shadow false">خیر<span>&#128529;</span></button>
+        </div>
+</body>
+</html>
