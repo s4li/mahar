@@ -1,70 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %} {% block title %}ورود{% endblock %} {% block style %}
+<link rel="stylesheet" href="../static/css/animate.css">
+<link rel="stylesheet" type="text/css" href="../static/css/login.css"> {% endblock %} {% block content %}
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
+            <div class="login100-form-title" style="background-image: url(../static/image/bg-01.jpg);">
+                <span class="login100-form-title-1">ورود</span>
+            </div>
 
-<head>
-    <title>مهار - ورود</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="shortcut icon" href="../static/image/amar.ico">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" href="../static/css/fontawesome.min.css">
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/animate.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/login.css">
-    <!--===============================================================================================-->
-</head>
-
-<body>
-
-    <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
-                <div class="login100-form-title" style="background-image: url(../static/image/bg-01.jpg);">
-                    <span class="login100-form-title-1">ورود</span>
+            <form class="login100-form validate-form" method="POST" action="/login">
+                <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
+                    <span class="label-input100">شماره موبایل</span>
+                    <input class="input100" type="tel" name="mobile" pattern="[0-9]*" inputmode="numeric" minlength="11" maxlength="11" placeholder="شماره موبایل خود را وارد کنید" required>
+                    <span class="focus-input100"></span>
                 </div>
 
-                <form class="login100-form validate-form">
-                    <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
-                        <span class="label-input100">شماره موبایل</span>
-                        <input class="input100" type="tel" name="mobile" pattern="[0-9]*" inputmode="numeric" minlength="11" maxlength="11" placeholder="شماره موبایل خود را وارد کنید" required>
-                        <span class="focus-input100"></span>
-                    </div>
-
-                    <div class="wrap-input100 validate-input mb-2 animate-box" data-animate-effect="fadeIn" data-validate="رمز عبور مورد نیاز است">
-                        <span class="label-input100">رمز عبور</span>
-                        <input class="input100" type="password" name="pass" placeholder="رمز عبور خود را وارد کنید" required>
-                        <span class="focus-input100"></span>
-                    </div>
-
-                    <div class="d-flex justify-content-between py-3 w-100 align-items-center">
-                        <div class="contact100-form-checkbox">
-                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-                            <label class="label-checkbox100" for="ckb1">مرا به خاطر بسپار</label>
-                        </div>
-
-                        <div>
-                            <a href="#" class="txt1">رمز عبور خود را فراموش کردید؟</a>
-                        </div>
-                    </div>
-
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn">ورود</button>
-                    </div>
-                </form>
-                <div class="guide">
-                    <ul>
-                        <li><span> حساب کاربری ندارید؟ </span><a href="signup.html"> ثبت نام </a></li>
-                        <li><span> نیاز به راهنمایی دارید؟ </span><a href="#"> راهنما </a></li>
-                    </ul>
+                <div class="wrap-input100 validate-input mb-2 animate-box" data-animate-effect="fadeIn" data-validate="رمز عبور مورد نیاز است">
+                    <span class="label-input100">رمز عبور</span>
+                    <input class="input100" type="password" name="password" placeholder="رمز عبور خود را وارد کنید" required>
+                    <span class="focus-input100"></span>
                 </div>
+
+                <div class="d-flex justify-content-between py-3 w-100 align-items-center">
+                    <div class="contact100-form-checkbox">
+                        <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                        <label class="label-checkbox100" for="ckb1">مرا به خاطر بسپار</label>
+                    </div>
+
+                    <div>
+                        <a href="#" class="txt1">رمز عبور خود را فراموش کردید؟</a>
+                    </div>
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn">ورود</button>
+                </div>
+            </form>
+            <div class="guide">
+                <ul>
+                    <li><span> حساب کاربری ندارید؟ </span><a href="signup.html"> ثبت نام </a></li>
+                    <li><span> نیاز به راهنمایی دارید؟ </span><a href="#"> راهنما </a></li>
+                </ul>
             </div>
         </div>
     </div>
-    <script src="../static/js/jquery-2.2.4.min.js"></script>
-    <script src="../static/js/jquery.waypoints.min.js"></script>
-    <script src="../static/js/login.js"></script>
-
-</body>
-
-</html>
+</div>
+{% endblock %} {% block script %}
+<script src="../static/js/jquery.waypoints.min.js"></script>
+<script src="../static/js/login.js"></script>
+{% endblock %}
