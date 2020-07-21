@@ -30,6 +30,7 @@ class Course(Base):
    id = Column(Integer, primary_key=True)  
    title = Column(String(45))
    lesson = relationship('Lesson')
+   image = Column(String(45))
 
 class Lesson(Base):
    __tablename__ = 'tbl_lessons'
