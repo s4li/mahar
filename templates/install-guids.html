@@ -1,22 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>مهار - راهنما نصب</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="shortcut icon" href="../static/image/amar.ico">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" href="../static/css/fontawesome.min.css">
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/animate.css">
-    <link rel="stylesheet" href="../static/css/install-guids.css">
-    <!--===============================================================================================-->
-</head>
-
-<body>
-
+{% extends "layout.html" %}
+{% block title %}راهنما نصب{% endblock %}
+{% block style %}<link rel="stylesheet" href="../static/css/install-guids.css">{% endblock %}
+{% block content %}
+<!--================ Start Home Banner Area =================-->
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
@@ -88,8 +74,8 @@
             </div>
         </div>
     </div>
-    <script src="../static/js/jquery-2.2.4.min.js"></script>
-    <script src="../static/js/jquery.waypoints.min.js"></script>
+{% endblock %}
+{% block script %}
     <script src="../static/js/login.js"></script>
     <script>
         $(".scroll").on("click", function(e) {
@@ -101,6 +87,4 @@
             );
         });
     </script>
-</body>
-
-</html>
+{% endblock %}

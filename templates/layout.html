@@ -18,7 +18,9 @@
     <title>مهار - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="../static/css/fontawesome.min.css">
     <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/main.css"> {% block style %}{% endblock %}
+    <link rel="stylesheet" href="../static/css/animate.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    {% block style %}{% endblock %}
 </head>
 
 <body>
@@ -28,7 +30,7 @@
             <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container">
                     <!-- Brand and toggle get grouped for better mobile display -->
-                    <a class="navbar-brand logo_h" href="index.html"><img src="../static/image/mahar-logo.png" alt="" title="مهار" /></a>
+                    <a class="navbar-brand logo_h" href="/"><img src="../static/image/mahar-logo.png" alt="mahar-logo" title="مهار" /></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="icon-bar"></span> <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -40,16 +42,16 @@
                                 <a class="nav-link" href="/">خانه</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="login.html">ورود</a>
+                                <a class="nav-link" href="/login">ورود</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="signup.html">ثبت نام</a>
+                                <a class="nav-link" href="/register">ثبت نام</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">راهنما</a>
+                                <a class="nav-link" href="/guids">راهنما</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="contact.html">آموزش نصب اپلیکیشن</a>
+                                <a class="nav-link" href="/install-guids">آموزش نصب اپلیکیشن</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="contact.html">خروج</a>
@@ -61,12 +63,20 @@
         </div>
     </header>
     <!--================ End Header Menu Area =================-->
+    <!--================ start alert Area =================-->
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="flash">
+            <div class="alert alert-{{ category }}" role="alert">{{ message|safe }}</div>
+        </div>
+    {% endfor %}
+    <!--================ End alert Area =================-->
     <!--================ Start Content =================-->
     {% block content %}{% endblock %}
     <!--================ End Content =================-->
     <script src="../static/js/jquery-2.2.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/jquery.waypoints.min.js"></script>
     <script src="../static/js/main.js"></script>
     {% block script %}{% endblock %}
 </body>

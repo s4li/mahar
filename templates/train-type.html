@@ -1,22 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>مهار - پایه ها</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="shortcut icon" href="../static/image/amar.ico">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" href="../static/css/fontawesome.min.css">
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/animate.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/grads.css">
-    <!--===============================================================================================-->
-</head>
-
-<body>
-
+{% extends "layout.html" %}
+{% block title %}تمرین ها{% endblock %}
+{% block style %}<link rel="stylesheet" type="text/css" href="../static/css/grads.css">{% endblock %}
+{% block content %}
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
@@ -26,7 +11,7 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                            <a href="#">
+                            <a class="btn {% if new_question != 'True' %}disabled{% endif %}" href="/new-questions/{{lesson_id}}/-1">
                                 <div class="grad-box click">
                                     <div class="img">
                                         <img src="../static/image/play-button.png" alt="play-button">
@@ -36,7 +21,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                            <a href="#">
+                            <a class="btn {% if previous_questions != 'True' %}disabled{% endif %}" href="/continue-questions/{{lesson_id}}">
                                 <div class="grad-box click">
                                     <div class="img">
                                         <img src="../static/image/Pause-button.png" alt="Pause-button">
@@ -46,7 +31,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                            <a href="#">
+                            <a class="btn {% if wrong_questions != 'True' %}disabled{% endif %}" href="/wrong-questions/{{lesson_id}}/-1">
                                 <div class="grad-box click">
                                     <div class="img">
                                         <img src="../static/image/refresh-button.png" alt="refresh-button">
@@ -60,10 +45,5 @@
             </div>
         </div>
     </div>
-    <script src="../static/js/jquery-2.2.4.min.js"></script>
-    <script src="../static/js/jquery.waypoints.min.js"></script>
-    <script src="../static/js/login.js"></script>
-
-</body>
-
-</html>
+{% endblock %}
+{% block script %}<script src="../static/js/login.js"></script>{% endblock %}

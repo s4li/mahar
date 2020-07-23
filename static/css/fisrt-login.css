@@ -1,93 +1,93 @@
 @font-face {
-    font-family: "IRANSans-web";
-    src: url("../fonts/IRANSansWeb_800.woff") format("woff");
-    font-weight: 800;
-    font-display: auto;
+  font-family: "IRANSans-web";
+  src: url("../fonts/IRANSansWeb_800.woff") format("woff");
+  font-weight: 800;
+  font-display: auto;
 }
 
 @font-face {
-    font-family: "IRANSans-web";
-    src: url("../fonts/IRANSansWeb_600.woff") format("woff");
-    font-weight: 600;
-    font-display: auto;
+  font-family: "IRANSans-web";
+  src: url("../fonts/IRANSansWeb_600.woff") format("woff");
+  font-weight: 600;
+  font-display: auto;
 }
 
 @font-face {
-    font-family: "IRANSans-web";
-    src: url("../fonts/IRANSansWeb_400.woff") format("woff");
-    font-weight: 400;
-    font-display: auto;
+  font-family: "IRANSans-web";
+  src: url("../fonts/IRANSansWeb_400.woff") format("woff");
+  font-weight: 400;
+  font-display: auto;
 }
 
 @font-face {
-    font-family: "IRANSans-web";
-    src: url("../fonts/IRANSansWeb_200.woff") format("woff");
-    font-weight: 200;
-    font-display: auto;
+  font-family: "IRANSans-web";
+  src: url("../fonts/IRANSansWeb_200.woff") format("woff");
+  font-weight: 200;
+  font-display: auto;
 }
 
 @font-face {
-    font-family: "IRANSans-web";
-    src: url("../fonts/IRANSansWeb_100.woff") format("woff");
-    font-weight: 100;
-    font-display: auto;
+  font-family: "IRANSans-web";
+  src: url("../fonts/IRANSansWeb_100.woff") format("woff");
+  font-weight: 100;
+  font-display: auto;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .animate-box {
-    opacity: 0;
+  opacity: 0;
 }
 
 ::-moz-selection {
-    /* Code for Firefox */
-    background-color: #fab700;
-    color: #fff;
+  /* Code for Firefox */
+  background-color: #fab700;
+  color: #fff;
 }
 
 ::selection {
-    background-color: #fab700;
-    color: #fff;
+  background-color: #fab700;
+  color: #fff;
 }
 
 ::-webkit-input-placeholder {
-    /* WebKit, Blink, Edge */
-    color: #bebebe;
-    font-weight: 300;
+  /* WebKit, Blink, Edge */
+  color: #bebebe;
+  font-weight: 300;
 }
 
 :-moz-placeholder {
-    /* Mozilla Firefox 4 to 18 */
-    color: #bebebe;
-    opacity: 1;
-    font-weight: 300;
+  /* Mozilla Firefox 4 to 18 */
+  color: #bebebe;
+  opacity: 1;
+  font-weight: 300;
 }
 
 ::-moz-placeholder {
-    /* Mozilla Firefox 19+ */
-    color: #bebebe;
-    opacity: 1;
-    font-weight: 300;
+  /* Mozilla Firefox 19+ */
+  color: #bebebe;
+  opacity: 1;
+  font-weight: 300;
 }
 
 :-ms-input-placeholder {
-    /* Internet Explorer 10-11 */
-    color: #bebebe;
-    font-weight: 300;
+  /* Internet Explorer 10-11 */
+  color: #bebebe;
+  font-weight: 300;
 }
 
 ::-ms-input-placeholder {
-    /* Microsoft Edge */
-    color: #bebebe;
-    font-weight: 300;
+  /* Microsoft Edge */
+  color: #bebebe;
+  font-weight: 300;
 }
 
 .btn:focus,
 .btn.focus {
-    outline: 0;
-    box-shadow: none;
+  outline: 0;
+  box-shadow: none;
 }
 
 html,
@@ -98,42 +98,40 @@ body,
 textarea,
 .button,
 button {
-    font-family: "IRANSans-web", sans-serif;
+  font-family: "IRANSans-web", sans-serif;
 }
 
 body {
-    line-height: 25px;
-    font-size: 16px;
-    font-family: "IRANSans-web", sans-serif;
-    font-weight: 400;
-    color: #002347;
-    direction: rtl;
-    text-align: right;
+  line-height: 25px;
+  font-size: 16px;
+  font-family: "IRANSans-web", sans-serif;
+  font-weight: 400;
+  color: #002347;
+  direction: rtl;
+  text-align: right;
 }
-
 
 /*---------------------------------------------*/
 
 a {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #002347;
-    margin: 0px;
-    transition: all 0.4s;
-    -webkit-transition: all 0.4s;
-    -o-transition: all 0.4s;
-    -moz-transition: all 0.4s;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #002347;
+  margin: 0px;
+  transition: all 0.4s;
+  -webkit-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  -moz-transition: all 0.4s;
 }
 
 a:focus {
-    outline: none !important;
+  outline: none !important;
 }
 
 a:hover {
-    text-decoration: none;
-    color: #fdc632;
+  text-decoration: none;
+  color: #fdc632;
 }
-
 
 /*---------------------------------------------*/
 
@@ -143,139 +141,126 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0px;
+  margin: 0px;
 }
 
 p {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #002347;
-    margin: 0px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #002347;
+  margin: 0px;
 }
 
 .primary-btn2 {
-    display: inline-block;
-    background: #002347;
-    padding: 0px 50px;
-    color: #fdc632;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 40px;
-    border-radius: 5px;
-    border: 1px solid transparent;
-    outline: none !important;
-    text-align: center;
-    text-transform: uppercase;
-    cursor: pointer;
-    -webkit-transition: all 0.4s ease 0s;
-    -moz-transition: all 0.4s ease 0s;
-    -o-transition: all 0.4s ease 0s;
-    transition: all 0.4s ease 0s;
+  display: inline-block;
+  background: #002347;
+  padding: 0px 50px;
+  color: #fdc632;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 40px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  outline: none !important;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-transition: all 0.4s ease 0s;
+  -moz-transition: all 0.4s ease 0s;
+  -o-transition: all 0.4s ease 0s;
+  transition: all 0.4s ease 0s;
 }
 
 .primary-btn2:hover {
-    background: transparent;
-    color: #002347;
-    border: 1px solid #002347;
+  background: transparent;
+  color: #002347;
+  border: 1px solid #002347;
 }
-
 
 /*////////////////////////////////////////////////////////////////// [ login ]*/
 
 .limiter {
-    width: 100%;
-    margin: 0 auto;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .container-login100 {
-    width: 100%;
-    min-height: 100vh;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-    background: #ebeeef;
+  width: 100%;
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background: #ebeeef;
 }
 
 .wrap-login100 {
-    width: 500px;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
+  width: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
 }
 
 @media (max-width: 576px) {
-    .container-login100 {
-        padding: 0;
-    }
+  .container-login100 {
+    padding: 0;
+  }
 }
-
-.container {
-    padding: 15px;
-}
-
-@media (min-width: 577px) {
-    .container {
-        padding: 50px;
-    }
-}
-
-
 /*********************************************/
 
 .pages {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
 }
 
 .pages .page img {
-    width: 100%;
-    height: auto;
-    max-width: 400px;
-    display: block;
-    margin: 20px auto;
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  display: block;
+  margin: 20px auto;
 }
 
 .pages .page h2 {
-    font-size: 24px;
-    margin: 20px;
-    font-weight: 600;
+  font-size: 24px;
+  margin: 20px;
+  font-weight: 600;
 }
 
 .pages .page p {
-    font-size: 14px;
-    line-height: 30px;
-    margin: 20px;
-    font-weight: 400;
+  font-size: 14px;
+  line-height: 30px;
+  margin: 20px;
+  font-weight: 400;
 }
 
 .pages .page .control {
-    padding: 0;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  list-style: none;
 }
 
 .pages .page .control li {
-    width: 12px;
-    height: 12px;
-    background-color: #e6e6e6;
-    border-radius: 50%;
-    margin: 5px;
+  width: 12px;
+  height: 12px;
+  background-color: #e6e6e6;
+  border-radius: 50%;
+  margin: 5px;
 }
 
 .pages .page .control li.active {
-    width: 24px;
-    background-color: #002347;
-    border-radius: 10px;
+  width: 24px;
+  background-color: #002347;
+  border-radius: 10px;
 }

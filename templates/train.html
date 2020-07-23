@@ -1,35 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <title>مهار - پایه ها</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--===============================================================================================-->
-    <link rel="shortcut icon" href="../static/image/amar.ico">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" href="../static/css/fontawesome.min.css">
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../static/css/train.css">
-    <!--===============================================================================================-->
-</head>
-
-<body>
-
+{% extends "layout.html" %}
+{% block title %}تمرین{% endblock %}
+{% block style %}<link rel="stylesheet" type="text/css" href="../static/css/train.css">{% endblock %}
+{% block content %}
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front background">
-                            <button class="btn play click"><i class="fas fa-volume"></i></button>
+                            <button class="btn play click" data-voice="{{ voice }}"><i class="fas fa-volume"></i></button>
                             <p>آیا معنی کلمه زیر را به خاطر دارید؟</p>
-                            <h3>" الکوثر "</h3>
+                            <h3>" {{ question }} "</h3>
                             <button class="btn click continue d-block mx-auto btn-warning">ادامه</button>
                         </div>
                         <div class="flip-card-back background">
                             <div>
-                                <h3 class="h4">" جابر "</h3>
+                                <h3 class="h4">" {{ answer }} "</h3>
                                 <p>معنی کلمه را بلد بودید؟</p>
                                 <button data-value="1" class="btn select click shadow true">بله<span>&#128512;</span></button>
                                 <button data-value="0" class="btn select click shadow false">خیر<span>&#128529;</span></button>
@@ -61,8 +47,8 @@
             </div>
         </div>
     </div>
-    <script src="../static/js/jquery-2.2.4.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+{% endblock %}
+{% block script %}
     <script>
         $(function() {
             $(".continue").click(function() {
@@ -85,8 +71,8 @@
                     //});
             })
             $(".play").click(function() {
-                //var audio = new Audio(require(`../assets/${this.Courses.voice}`));
-                var audio = new Audio(`../static/1.mp3`);
+                let voice = $(this).attr("data-voice")
+                var audio = new Audio(`../static/${voice}`);
                 audio.play();
             })
             $(".Launch").click(function() {
@@ -94,7 +80,4 @@
             })
         })
     </script>
-
-</body>
-
-</html>
+{% endblock %}
