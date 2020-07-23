@@ -13,7 +13,7 @@
                         {% if all_courses %}
                         {% for grad in all_courses %}
                             <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                                <a class="btn {% if grad.has_content != 'True' %}disabled{% endif %}" href="/grade/{{grad.id}}">
+                                <a class="btn d-block mx-auto {% if grad.has_content != 'True' %}disabled{% endif %}" href="/grade/{{grad.id}}">
                                     <div class="grad-box click">
                                         <div class="img">
                                             <img src="../static/image/{{ grad.image }}" alt="{{ grad.image }}">
