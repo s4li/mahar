@@ -11,7 +11,7 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                            <a class="btn {% if new_question != 'True' %}disabled{% endif %}" href="/new-questions/{{lesson_id}}/-1">
+                            <a class="btn d-block mx-auto p-0 {% if new_question != 'True' %}disabled{% endif %}" href="/new-questions/{{lesson_id}}/-1">
                                 <div class="grad-box click">
                                     <div class="img">
                                         <img src="../static/image/play-button.png" alt="play-button">
@@ -21,7 +21,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                            <a class="btn {% if previous_questions != 'True' %}disabled{% endif %}" href="/continue-questions/{{lesson_id}}">
+                            <a class="btn d-block mx-auto p-0 {% if previous_questions != 'True' %}disabled{% endif %}" href="/continue-questions/{{lesson_id}}">
                                 <div class="grad-box click">
                                     <div class="img">
                                         <img src="../static/image/Pause-button.png" alt="Pause-button">
@@ -31,7 +31,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-4 animate-box" data-animate-effect="fadeIn">
-                            <a class="btn {% if wrong_questions != 'True' %}disabled{% endif %}" href="/wrong-questions/{{lesson_id}}/-1">
+                            <a class="btn d-block mx-auto p-0 {% if wrong_questions != 'True' %}disabled{% endif %}" href="/wrong-questions/{{lesson_id}}/-1">
                                 <div class="grad-box click">
                                     <div class="img">
                                         <img src="../static/image/refresh-button.png" alt="refresh-button">
