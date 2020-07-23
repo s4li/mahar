@@ -186,7 +186,6 @@ p {
 
 .container-login100 {
   width: 100%;
-  min-height: 100vh;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -201,7 +200,6 @@ p {
 
 .wrap-login100 {
   width: 500px;
-  border-radius: 10px;
   overflow: hidden;
   position: relative;
 }
@@ -215,7 +213,6 @@ p {
 
 .pages {
   background-color: #fff;
-  border-radius: 10px;
   padding: 15px;
   text-align: center;
 }
@@ -263,4 +260,16 @@ p {
   width: 24px;
   background-color: #002347;
   border-radius: 10px;
+}
+@media (min-width: 576px) {
+  .pages {
+    border-radius: 10px;
+  }
+  .container-login100 {
+    min-height: 100vh;
+  }
+
+  .wrap-login100 {
+    border-radius: 10px;
+  }
 }
