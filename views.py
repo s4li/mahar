@@ -12,7 +12,7 @@ from models import  (Session, User, Course, Lesson, Answer,
 
 
 app = Flask(__name__)
-
+app.secret_key = 'some secret key'
 
 def check_user_access(user_id, lesson_id):
     s = Session()
@@ -119,20 +119,21 @@ def register():
         mobile = request.form.get('mobile')
         user = s.query(User).filter(User.mobile == mobile).first()
         if user == None :
-            full_name = request.form.get('full_name')
-            password = request.form.get('password')
+            full_name = request.form.get('name')
+            password = request.form.get('pass')
             hash_password = make_hashed_password(password)
             user = User(full_name = full_name, mobile =mobile, password = hash_password)
+            session_f['user_id'] = user.id
             s.add(user)
             s.commit()
-            session_f['user_id'] = user.id
             flash(f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.','success')
+            s.close() 
             return redirect(url_for("grades"))
         else:
             flash('کاربر عزیز، با این شماره موبایل قبلا ثبت نام شده، در صورت فراموشی رمز "فراموشی کلمه عبور" را لمس نمایید. ','danger')
-            return redirect(url_for("login"))
-        s.commit()      
-        s.close()                           
+            s.commit()      
+            s.close() 
+            return redirect(url_for("login"))                          
     return render_template('signup.html')
 
 @app.route('/login', methods=["GET","POST"])
@@ -161,9 +162,9 @@ def login():
    
 
 @app.route('/grades')     
-def gradeSession():
+def grades():
     s = Session()
-    user_id = 17
+    user_id = int(session_f['user_id'])
     all_courses = []
     courses = s.query(Course).all()
     if courses:
@@ -186,7 +187,7 @@ def gradeSession():
 def grade(grade_id):
     s = Session()
     course_id = int(grade_id)
-    user_id = 17
+    user_id = int(session_f['user_id'])
     all_lessons = []
     lessons = s.query(Lesson).filter(Lesson.course_id == course_id).all()
     user_purchased_lessons = s.query(User.purchased_lessons).filter(User.id == user_id).first()
@@ -201,7 +202,7 @@ def grade(grade_id):
 @app.route('/lesson/<lesson_id>')     
 def status_question(lesson_id):
     lesson_id = int(lesson_id)
-    user_id = 17
+    user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
@@ -224,7 +225,7 @@ def status_question(lesson_id):
 @app.route('/new-questions/<lesson_id>/<index>')     
 def new_questions(lesson_id, index = 0): 
     page_name = 'new_questions'
-    user_id = 17
+    user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
@@ -282,7 +283,7 @@ def new_questions(lesson_id, index = 0):
 @app.route('/continue-questions/<lesson_id>')     
 def continue_questions(lesson_id): 
     page_name = 'continue_questions'
-    user_id = 17
+    user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
@@ -325,7 +326,7 @@ def continue_questions(lesson_id):
 @app.route('/wrong-questions/<lesson_id>/<index>')     
 def wronge_questions(lesson_id, index): 
     page_name = 'wronge_questions'
-    user_id = 17
+    user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
