@@ -39,16 +39,16 @@ $(function () {
       ) {
         return false;
       }
-    } else if ($(input).attr("type") == "tel") {
-      if (
-        $(input)
-          .val()
-          .trim()
-          .match(/09(0[1-2]|1[0-9]|3[0-9]|2[0-1])-?[0-9]{3}-?[0-9]{4}$/) == null
-      ) {
-        return false;
-      }
-    } //else if ($(input).attr("type") == "password") {
+    } //else if ($(input).attr("type") == "tel") {
+    //if (
+    //  $(input)
+    //    .val()
+    //    .trim()
+    //    .match(/09(0[1-2]|1[0-9]|3[0-9]|2[0-1])-?[0-9]{3}-?[0-9]{4}$/) == null
+    //) {
+    //  return false;
+    //}
+    //} //else if ($(input).attr("type") == "password") {
     //if (
     //  $(input)
     //    .val()
