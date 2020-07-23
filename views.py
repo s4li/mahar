@@ -170,7 +170,7 @@ def gradeSession():
         for course in courses:
             lesson = s.query(Lesson).filter(Lesson.course_id == course.id).first()
             has_content = 'True' if lesson else 'False'
-            all_courses.append({"id": course.id, "title":course.title, "has_content": has_content})
+            all_courses.append({"id": course.id, "title":course.title, "image": course.image, "has_content": has_content})
     user = s.query(User).filter(User.id == user_id).first()
     len_user_purchased_lessons = 0
     if user and user.purchased_lessons:
