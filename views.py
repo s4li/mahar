@@ -56,7 +56,16 @@ def send_sms(mobile, sms_text):
 
 @app.route('/')
 def index():
+    if 'first_login' in session_f:
+        return redirect(url_for("index_f"))
+    session_f['first_login'] = True
     return  render_template('first-login.html') 
+
+@app.route('/index')
+def index_f():
+    if 'login' in session_f:
+        return redirect(url_for("grades"))
+    return  render_template('index.html') 
 
 @app.route('/guids')
 def guids():
@@ -126,6 +135,7 @@ def register():
             s.add(user)
             s.commit()
             session_f['user_id'] = user.id
+            session_f['login'] = True
             flash(f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.','success')
             s.close() 
             return redirect(url_for("grades"))
