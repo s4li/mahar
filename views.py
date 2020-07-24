@@ -123,9 +123,9 @@ def register():
             password = request.form.get('pass')
             hash_password = make_hashed_password(password)
             user = User(full_name = full_name, mobile =mobile, password = hash_password)
-            session_f['user_id'] = user.id
             s.add(user)
             s.commit()
+            session_f['user_id'] = user.id
             flash(f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.','success')
             s.close() 
             return redirect(url_for("grades"))
@@ -181,7 +181,7 @@ def grades():
         return redirect(url_for("information_completion_status")) 
     s.commit()
     s.close()     
-    return  render_template('test_grades.html', all_courses = all_courses)
+    return  render_template('grades.html', all_courses = all_courses)
 
 @app.route('/grade/<grade_id>')     
 def grade(grade_id):
@@ -197,7 +197,7 @@ def grade(grade_id):
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson}) 
     s.commit()
     s.close()        
-    return  render_template('test_lessons.html', all_lessons = all_lessons)    
+    return  render_template('lessons.html', all_lessons = all_lessons)    
 
 @app.route('/lesson/<lesson_id>')     
 def status_question(lesson_id):
@@ -219,7 +219,7 @@ def status_question(lesson_id):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))
-    return render_template('test_train_type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id) 
+    return render_template('train_type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id) 
     
 @app.route('/new-questions/<lesson_id>')
 @app.route('/new-questions/<lesson_id>/<index>')     
@@ -278,7 +278,7 @@ def new_questions(lesson_id, index = 0):
     lesson_title = lesson.title
     s.commit()
     s.close() 
-    return render_template('test_train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name)    
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name)    
 
 @app.route('/continue-questions/<lesson_id>')     
 def continue_questions(lesson_id): 
@@ -321,7 +321,7 @@ def continue_questions(lesson_id):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))     
-    return render_template('test_train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name) 
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name) 
 
 @app.route('/wrong-questions/<lesson_id>/<index>')     
 def wronge_questions(lesson_id, index): 
