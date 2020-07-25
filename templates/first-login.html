@@ -1,6 +1,71 @@
 {% extends "layout.html" %}
 {% block title %}آشنایی{% endblock %}
-{% block style %}<link rel="stylesheet" href="../static/css/fisrt-login.css">{% endblock %}
+{% block style %}
+<style>
+.pages {
+  background-color: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+.pages .page img {
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  display: block;
+  margin: 20px auto;
+}
+
+.pages .page h2 {
+  font-size: 24px;
+  margin: 20px;
+  font-weight: 600;
+}
+
+.pages .page p {
+  font-size: 14px;
+  line-height: 30px;
+  margin: 20px;
+  font-weight: 400;
+}
+
+.pages .page .control {
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  list-style: none;
+}
+
+.pages .page .control li {
+  width: 12px;
+  height: 12px;
+  background-color: #e6e6e6;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.pages .page .control li.active {
+  width: 24px;
+  background-color: #002347;
+  border-radius: 10px;
+}
+@media (min-width: 576px) {
+  .pages {
+    border-radius: 10px;
+  }
+  .container-login100 {
+    min-height: 100vh;
+  }
+
+  .wrap-login100 {
+    border-radius: 10px;
+  }
+}
+</style>
+{% endblock %}
 {% block content %}
     <div class="limiter">
         <div class="container-login100">
