@@ -63,13 +63,6 @@
         </div>
     </header>
     <!--================ End Header Menu Area =================-->
-    <!--================ start alert Area =================-->
-    {#{% for category, message in get_flashed_messages(with_categories=true) %}
-        <div class="flash">
-            <div class="alert alert-{{ category }}" role="alert">{{ message|safe }}</div>
-        </div>
-    {% endfor %}#}
-    <!--================ End alert Area =================-->
     <!--================ Start Content =================-->
     {% block content %}{% endblock %}
     <!--================ End Content =================-->

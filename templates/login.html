@@ -7,6 +7,13 @@
 <div class="limiter">
     <div class="container-login100">
         <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
+            <!--================ start alert Area =================-->
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="flash">
+                    <div class="alert alert-{{ category }}" role="alert">{{ message|safe }}</div>
+                </div>
+            {% endfor %}
+            <!--================ End alert Area =================-->
             <div class="login100-form-title" style="background-image: url(../static/image/bg-01.jpg);">
                 <span class="login100-form-title-1">ورود</span>
             </div>
