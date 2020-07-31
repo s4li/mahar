@@ -71,7 +71,7 @@
                 <!--================ start alert Area =================-->
                 {% for category, message in get_flashed_messages(with_categories=true) %}
                     <div class="flash">
-                        <div class="alert alert-{{ category }} m-0" role="alert">{{ message|safe }}</div>
+                        <div class="alert alert-{{ category }} m-0" role="alert"> {{ message|safe }} </div>
                     </div>
                 {% endfor %}
                 <!--================ End alert Area =================-->
