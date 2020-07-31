@@ -199,6 +199,8 @@ def grade(grade_id):
     course_id = int(grade_id)
     user_id = int(session_f['user_id'])
     all_lessons = []
+    course = s.query(Course).filter(Course.id == course_id).first()
+    grade = course.title
     lessons = s.query(Lesson).filter(Lesson.course_id == course_id).all()
     user_purchased_lessons = s.query(User.purchased_lessons).filter(User.id == user_id).first()
     purchased_lessons_list = user_purchased_lessons[0].split(',')
@@ -207,7 +209,7 @@ def grade(grade_id):
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson}) 
     s.commit()
     s.close()        
-    return  render_template('lessons.html', all_lessons = all_lessons)    
+    return  render_template('lessons.html', all_lessons = all_lessons, grade_id = grade_id, grade = grade)    
 
 @app.route('/lesson/<lesson_id>')     
 def status_question(lesson_id):
