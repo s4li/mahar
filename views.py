@@ -10,6 +10,7 @@ from conection_info import front_url, back_url
 from models import  (Session, User, Course, Lesson, Answer, 
                      Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user)
 
+BASE_URL = 'http://localhost:5000'
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -290,7 +291,7 @@ def new_questions(lesson_id, index = 0):
     lesson_title = lesson.title
     s.commit()
     s.close() 
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name)    
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, base_url = BASE_URL)    
 
 @app.route('/continue-questions/<lesson_id>')     
 def continue_questions(lesson_id): 
