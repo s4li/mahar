@@ -105,7 +105,7 @@
                                         <h2>{{ lesson.title }}</h2>
                                     </div>
                                     <div class="link">
-                                        <a class="btn lesson-btn {% if lesson.show_lesson != 'True' %}deactive{% endif %}" href="/lesson/{{lesson.id}}"><i class="fas fa-caret-left"></i></a>
+                                        <a class="btn lesson-btn {% if lesson.show_lesson != 'True' %}deactive{% endif %}" data-grad="{{ grade }}" data-gradId="{{ grade_id }}" href="/lesson/{{lesson.id}}"><i class="fas fa-caret-left"></i></a>
                                     </div>
                                 </li>
                             {% endfor %}
@@ -124,15 +124,17 @@
                     <h5 class="modal-title ml-auto" id="ModalLabel">توجه!</h5>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center h6">کاربر عزیز شما پایه<span style="font-weight:bold"></span> را انتخاب کرده اید پس از خرید آن دسترسی به دروس باز می شود. </h4>
+                    <h4 class="text-center h6">کاربر عزیز شما پایه <span class="grad" style="font-weight:bold"></span> را انتخاب کرده اید پس از خرید آن دسترسی به دروس باز می شود. </h4>
                     <div class="buy-box">
                         <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
                             <h5>فعالسازی این پایه</h5>
-                            <button class="btn shadow btn-primary">۲۰۰۰ تومان</button>
+                            <button class="btn shadow btn-primary single-buy">۲۰۰۰ تومان</button>
+                            <a href="#" class="single-link d-none"><span>test</span></a>
                         </div>
                         <div class="buy-box-child">
-                            <h5>فعالسازی gradname</h5>
-                            <button class="btn shadow btn-success">۵۰۰۰ تومان</button>
+                            <h5>فعالسازی پایه <span class="grad"></span></h5>
+                            <button class="btn shadow btn-success all-buy">۵۰۰۰ تومان</button>
+                            <a href="#" class="all-link d-none"><span>test</span></a>
                         </div>
                     </div>
                 </div>
@@ -141,13 +143,25 @@
     </div>
 {% endblock %}
 {% block script %}
-<script src="../static/js/login.js"></script>
-    <script>
-        $(".lesson-btn").click(function(event){
-            if($(this).hasClass("deactive")){
-              event.preventDefault();
-              $(".modal").modal("show");
-            }
-        })
-    </script>
+  <script>
+    $(".lesson-btn").click(function(event){
+      let gradText = $(this).attr("data-grad")
+      let gradId = $(this).attr("data-gradId")
+      $(".grad").text(gradText)
+        if($(this).hasClass("deactive")){
+          event.preventDefault();
+          $(".modal").modal("show");
+        }
+      $(".single-buy").click(function(){
+        $(".single-link").attr('href',"/zarinpal/" + 3 + "/" + gradId)
+        $('.single-link span').trigger('click');
+      })
+      $(".all-buy").click(function(){
+        let plan
+        if(gradId == 1 || gradId == 2 || gradId == 3 ){plan = 1}else{plan = 2}
+        $(".all-link").attr('href',"/zarinpal/" + plan)
+        $('.all-link span').trigger('click');
+      })
+    })
+  </script>
 {% endblock %}

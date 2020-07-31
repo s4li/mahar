@@ -110,13 +110,12 @@
     </div>
 {% endblock %}
 {% block script %}
-<script src="../static/js/login.js"></script>
-    <script>
-        $(function() {
-            $(".next").click(function() {
-                $(this).parent().addClass("d-none");
-                $(this).parent().next().removeClass("d-none");
-            })
-        })
-    </script>
+  <script>
+      $(function() {
+          $(".next").click(function() {
+              $(this).parent().addClass("d-none");
+              $(this).parent().next().removeClass("d-none");
+          })
+      })
+  </script>
 {% endblock %}
