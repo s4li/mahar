@@ -159,6 +159,7 @@ def login():
             check_if_password_is_correct = hmac.compare_digest(good_sig, bytes(user.password , encoding= 'utf-8'))
             if  check_if_password_is_correct:
                 session_f['user_id'] = user.id
+                session_f['login'] = True
                 flash(f'{user.full_name}عزیز خوش آمدید.','success')                 
                 return redirect(url_for("grades"))
             else:
@@ -174,6 +175,9 @@ def login():
 
 @app.route('/grades')     
 def grades():
+    if not session_f.get('user_id'):
+        return redirect(url_for("login"))
+    user_login = True
     s = Session()
     user_id = int(session_f['user_id'])
     all_courses = []
@@ -192,10 +196,13 @@ def grades():
         return redirect(url_for("information_completion_status")) 
     s.commit()
     s.close()     
-    return  render_template('grades.html', all_courses = all_courses)
+    return  render_template('grades.html', all_courses = all_courses, user_login = user_login)
 
 @app.route('/grade/<grade_id>')     
 def grade(grade_id):
+    if not session_f.get('user_id'):
+        return redirect(url_for("login"))
+    user_login = True
     s = Session()
     course_id = int(grade_id)
     user_id = int(session_f['user_id'])
@@ -210,10 +217,13 @@ def grade(grade_id):
         all_lessons.append({"id": lesson.id, "title":lesson.title, "show_lesson":show_lesson}) 
     s.commit()
     s.close()        
-    return  render_template('lessons.html', all_lessons = all_lessons, grade_id = grade_id, grade = grade)    
+    return  render_template('lessons.html', all_lessons = all_lessons, grade_id = grade_id, grade = grade, user_login = user_login)    
 
 @app.route('/lesson/<lesson_id>')     
 def status_question(lesson_id):
+    if not session_f.get('user_id'):
+        return redirect(url_for("login"))
+    user_login = True
     lesson_id = int(lesson_id)
     user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
@@ -232,11 +242,14 @@ def status_question(lesson_id):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))
-    return render_template('train_type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id) 
+    return render_template('train_type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id, user_login = user_login) 
     
 @app.route('/new-questions/<lesson_id>')
 @app.route('/new-questions/<lesson_id>/<index>')     
 def new_questions(lesson_id, index = 0): 
+    if not session_f.get('user_id'):
+        return redirect(url_for("login"))
+    user_login = True
     page_name = 'new_questions'
     user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
@@ -291,10 +304,13 @@ def new_questions(lesson_id, index = 0):
     lesson_title = lesson.title
     s.commit()
     s.close() 
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, base_url = BASE_URL)    
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, base_url = BASE_URL, user_login = user_login)    
 
 @app.route('/continue-questions/<lesson_id>')     
 def continue_questions(lesson_id): 
+    if not session_f.get('user_id'):
+        return redirect(url_for("login"))
+    user_login = True
     page_name = 'continue_questions'
     user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
@@ -334,10 +350,13 @@ def continue_questions(lesson_id):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))     
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name) 
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, user_login = user_login) 
 
 @app.route('/wrong-questions/<lesson_id>/<index>')     
 def wronge_questions(lesson_id, index): 
+    if not session_f.get('user_id'):
+        return redirect(url_for("login"))
+    user_login = True
     page_name = 'wronge_questions'
     user_id = int(session_f['user_id'])
     has_access = check_user_access(user_id, lesson_id)
@@ -359,7 +378,7 @@ def wronge_questions(lesson_id, index):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))    
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name)
+    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, user_login = user_login)
 
 @app.route('/ajax-set-user-answer', methods=['POST'])    
 def user_answer():
@@ -565,26 +584,10 @@ def information_completion_statuSession():
         return redirect("grades")
     return render_template("Complete-info.html")
 
-@app.route('/get-user-agent')    
-def get_user_agent():
-    ua_string = request.headers.get('User-Agent')
-    user_agent = parse(ua_string)
-    is_mobile = user_agent.is_mobile # returns True or false
-    is_tablet = user_agent.is_tablet 
-    is_touch_capable = user_agent.is_touch_capable 
-    is_pc = user_agent.is_pc 
-    is_bot = user_agent.is_bot 
-    if is_mobile:
-        user_agent_type = 'mobile'  
-    elif is_tablet:
-        user_agent_type = 'tablet'
-    elif is_touch_capable:
-        user_agent_type = 'touch_capable'
-    elif is_pc:
-        user_agent_type = 'pc'  
-    else:
-        user_agent_type = 'bot'         
-    return jsonify(user_agent_type) 
+@app.route('/logout')    
+def logout():
+    session_f.clear()
+    return redirect(url_for("login"))
 
 if __name__ == '__main__':
     app.run(debug=True) 
