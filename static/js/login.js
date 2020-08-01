@@ -28,36 +28,25 @@ $(function () {
   });
 
   function validate(input) {
-    if ($(input).attr("type") == "email" || $(input).attr("name") == "email") {
+    let value = $(input).val().trim();
+    if ($(input).attr("type") == "tel") {
       if (
         $(input)
           .val()
           .trim()
-          .match(
-            /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
-          ) == null
+          .match(/09([0-9])\d{8}$/) == null
       ) {
         return false;
       }
-    } //else if ($(input).attr("type") == "tel") {
-    //if (
-    //  $(input)
-    //    .val()
-    //    .trim()
-    //    .match(/09(0[1-2]|1[0-9]|3[0-9]|2[0-1])-?[0-9]{3}-?[0-9]{4}$/) == null
-    //) {
-    //  return false;
-    //}
-    //} //else if ($(input).attr("type") == "password") {
-    //if (
-    //  $(input)
-    //    .val()
-    //    .trim()
-    //    .match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$/) == null
-    //) {
-    //  return false;
-    //}
+    }
+    //else if ($(input).attr("type") == "password") {
+    //  var strongRegex = new RegExp(
+    //    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+    //  );
+    //  if (!strongRegex.test(value)) {
+    //    return false;
     //  }
+    //}
     else {
       if ($(input).val().trim() == "") {
         return false;

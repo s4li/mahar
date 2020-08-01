@@ -101,7 +101,7 @@
                             {% for lesson in all_lessons %}
                                 <li class="animate-box" data-animate-effect="fadeIn">
                                     <div class="text">
-                                        <span>{{loop.index}}</span>
+                                        <span>{{loop.index|fa_num}}</span>
                                         <h2>{{ lesson.title }}</h2>
                                     </div>
                                     <div class="link">

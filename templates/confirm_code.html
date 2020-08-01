@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}تایید شماره موبایل{% endblock %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="../static/css/login.min.css">
+{% endblock %}
+{% block content %}
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
+            <!--================ start alert Area =================-->
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <div class="flash">
+                    <div class="alert alert-{{ category }} m-0" role="alert">{{ message|safe }}</div>
+                </div>
+            {% endfor %}
+            <!--================ End alert Area =================-->
+            <div class="login100-form-title" style="background-image: url(../static/image/bg-01.jpg);">
+                <span class="login100-form-title-1">تایید شماره موبایل</span>
+            </div>
+            <form class="login100-form validate-form" method="POST" action="/register">
+                <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="کد مشکل دارد">
+                    <span class="label-input100">کد دریافتی</span>
+                    <input class="input100" type="number" name="code" pattern="[0-9]*" inputmode="numeric" placeholder="کد دریافتی خود را وارد کنید" required>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn">تایید</button>
+                </div>
+            </form>
+            <div class="guide">
+                <ul>
+                    <li><span>کد ارسال شده به شمراه موبایلی که مرحله قبل وارد کردید را وارد کنید و دکمه تایید را بزنید.</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script src="../static/js/login.js"></script>
+{% endblock %}
