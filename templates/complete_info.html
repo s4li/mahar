@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}تکمیل اطلاهات{% endblock %}
+{% block content %}
+{% set regions = [
+                    "زنجان","خوزستان","خوزستان","خراسان شمالی","خراسان رضوی","خراسان جنوبی","چهارمحال و بختیاری","تهران","بوشهر","ایلام","البرز","اصفهان","اردبیل"
+                    ,"آذربایجان شرقی","آذربایجان غربی","سمنان","سیستان و بلوچستان","فارس","قزوین","قم","کردستان","کرمان","کرمانشاه","کهگیلویه
+                    و بویراحمد","گلستان","گیلان","لرستان","مازندران","مرکزی","هرمزگان","همدان","یزد","آذربایجان غربی"
+                ] %}
+{% set degrees = ["هفتم","هشتم","نهم","دهم","یازدهم","دوازدهم"] %}
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100 animate-box" data-animate-effect="fadeIn">
+                <div class="login100-form-title" style="background-image: url(../static/image/bg-01.jpg);">
+                    <span class="login100-form-title-1">تکمیل اطلاعات</span>
+                </div>
+                <div class="first-step">
+                    <form class="login100-form validate-form">
+                        <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
+                            <span class="label-input100">پایه تحصیلی</span>
+                            <select class="input100 border-0" id="exampleFormControlSelect1" required>
+                                <option value="-1" selected disabled>منطقه...</option>
+                                {% for region in regions %}
+                                <option>{{region}}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="focus-input100"></span>
+                        </div>
+                        <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
+                            <span class="label-input100">شهر</span>
+                            <select class="input100 border-0" id="exampleFormControlSelect1" required>
+                                <option value="-1" selected disabled>منطقه...</option>
+                                {% for degree in degrees %}
+                                <option>{{degree}}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="focus-input100"></span>
+                        </div>
+                        <div class="container-login100-form-btn">
+                            <button type="submit" class="login100-form-btn send">ذخیره</button>
+                        </div>
+                    </form>
+                    <div class="guide">
+                        <ul>
+                            <li><span>لطفا جهت تکمیل اطلاعات پایه تحصیلی و شهر خود را مشخص نمایید.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
