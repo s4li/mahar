@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/train.min.css">
 {% endblock %}
 {% block content %}
-    <div class="limiter">
+    <div class="limiter" data-questionId="{{question_id}}" data-lessonId="{{lesson_id}}" data-pageName="{{page_name}}">
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="flip-card">
@@ -53,24 +53,29 @@
 {% block script %}
     <script>
         $(function() {
+            let questionId = $('.limiter').data("questionId")
+            let lessonId = $('.limiter').data("lessonId")
+            let pageName = $('.limiter').data("pageName")
             $(".continue").click(function() {
                 $(".flip-card-inner").addClass("isFlipped");
             })
             $(".select").click(function() {
-                let type = $(this).data("value")
+                let answerId = $(this).data("value")
                 $(".flip-card-inner").removeClass("isFlipped");
-                console.log(type)
-                    //$.ajax({
-                    //    type: "POST",
-                    //    url: "/ajax-set-like",
-                    //    data: {
-                    //        answer_id: type
-                    //    },
-                    //    success: function(response) {
-                    //        alert(response);
-                    //        $(".flip-card-inner").removeClass("isFlipped");
-                    //    }
-                    //});
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax-set-user-answer",
+                    data: {
+                        ans_no :answerId,
+                        question_id:questionId,
+                        lesson_id:lessonId,
+                        question_type:pageName,
+                    },
+                    success: function(response) {
+                        alert(response);
+                        $(".flip-card-inner").removeClass("isFlipped");
+                    }
+                });
             })
             $(".play").click(function() {
                 let voice = $(this).attr("data-voice")
