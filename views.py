@@ -15,6 +15,18 @@ BASE_URL = 'http://localhost:5000'
 app = Flask(__name__)
 app.secret_key = 'some secret key'
 
+@app.template_filter()
+def fa_num(input_string):
+    output_string = []
+    for character in str(input_string):
+        chr_code = ord(character)
+        if(chr_code > 47 and chr_code < 58):
+            output_chr = chr(chr_code+1728)
+        else:
+            output_chr = character
+        output_string.append(output_chr)
+    return ''.join(output_string)
+
 def check_user_access(user_id, lesson_id):
     s = Session()
     user_purchased_lessons = s.query(User.purchased_lessons).filter(User.id == user_id).first()
@@ -76,51 +88,57 @@ def guids():
 def install_guids():
     return  render_template('install-guids.html')
 
-@app.route('/confirm-mobile')
+@app.route('/confirm-mobile', methods=["GET","POST"])
 def confirm_mobile(): 
-    s = Session()
-    mobile = request.args['mobile']
-    user = s.query(User).filter(User.mobile == mobile).first()
-    if user:
-        code = randint(10000, 99999)
-        text = f' {code} : کد تایید مهار'
-        confirm_sms = send_sms(mobile, text)
-        if confirm_sms:
-            response = {'result':'success'}
-            s.query(User).filter(User.id == user.id).update({ User.confirm_code: code})
-            s.commit()
-            return redirect("reset_password")
+    if request.method == "POST":
+        s = Session()
+        mobile = request.form.get('mobile')
+        user = s.query(User).filter(User.mobile == mobile).first()
+        if user:
+            code = randint(10000, 99999)
+            text = f' {code} : کد تایید مهار'
+            confirm_sms = send_sms(mobile, text)
+            if confirm_sms:
+                s.query(User).filter(User.id == user.id).update({ User.confirm_code: code})
+                s.commit()
+                s.close() 
+                return redirect(url_for("reset_password"))
+            else:
+                flash('ارسال پیامک ناموفق بود!','danger') 
+                return redirect("confirm_mobile")
         else:
-            flash('ارسال پیامک ناموفق بود!','danger') 
-            return redirect("confirm_mobile")
-    else:
-        flash('کاربر گرامی، اطلاعاتی با این شماره موبایل ثبت نشده است!','danger')
-        return redirect("register")
-    s.commit()      
-    s.close()      
-    return  render_template('password-recovey.html')
+            s.commit()      
+            s.close() 
+            flash('کاربر گرامی، اطلاعاتی با این شماره موبایل ثبت نشده است!','danger')
+            return redirect("register")     
+    return  render_template('confirm_mobile.html')
 
-@app.route('/reset-password', methods=('POST',))
+@app.route('/reset-password', methods=["GET","POST"])
 def reset_password(): 
-    s = Session()
-    data = request.get_json()
-    user = s.query(User).filter(User.mobile == data['mobile']).first()
-    if user and user.confirm_code == data['confirm_code']:
-        if data['password'] == data['re_password']:
-            hash_password = make_hashed_password(data['password'])
-            s.query(User).filter(User.id == user.id).update({ User.password : hash_password})
-            s.commit()
-            status_code = 200
-            response = {'result': 'رمزعبور با موفقیت تغییر یافت.'}
+    if request.method == "POST":
+        s = Session()
+        data = request.get_json()
+        user = s.query(User).filter(User.mobile == data['mobile']).first()
+        if user and user.confirm_code == data['confirm_code']:
+            if data['password'] == data['re_password']:
+                hash_password = make_hashed_password(data['password'])
+                s.query(User).filter(User.id == user.id).update({ User.password : hash_password})
+                s.commit()
+                flash( 'رمزعبور با موفقیت تغییر یافت.','success')
+                s.commit()
+                s.close() 
+                return redirect(url_for("grades"))
+            else:
+                flash('رمزهای ورودی با هم مطاقبت ندارد!', 'danger')
+                s.commit()
+                s.close() 
+                return redirect(url_for("reset_password"))
         else:
-            response = {'result': 'رمزهای ورودی با هم مطاقبت ندارد!'} 
-            status_code = 401
-    else:
-        response = {'result': 'کد تایید مطابقت ندارد!'} 
-        status_code = 401  
-    s.commit()      
-    s.close()           
-    return  render_template('signup.html')
+            flash('کد تایید مطابقت ندارد!', 'danger') 
+            s.commit()
+            s.close() 
+            return redirect(url_for("reset_password"))
+    return  render_template('confirm_code.html')
 
 @app.route('/register', methods=["GET","POST"])
 def register():
@@ -137,6 +155,7 @@ def register():
             s.commit()
             session_f['user_id'] = user.id
             session_f['login'] = True
+            session_f.permanent  = True
             flash(f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.','success')
             s.close() 
             return redirect(url_for("grades"))
@@ -160,6 +179,7 @@ def login():
             if  check_if_password_is_correct:
                 session_f['user_id'] = user.id
                 session_f['login'] = True
+                session_f.permanent  = True
                 flash(f'{user.full_name}عزیز خوش آمدید.','success')                 
                 return redirect(url_for("grades"))
             else:
@@ -406,7 +426,7 @@ def user_answer():
             complete_user_question_ids = str(question_id)
             user_question_ids_len = 1 
         questions_len = s.query(Question).filter(Question.lesson_id == lesson_id).count() 
-        if question_type == 1:
+        if question_type == 'new_questions':
             next_content = False
             complete_question = 'True'
             if user_question_ids_len + 1 < questions_len:
@@ -418,7 +438,7 @@ def user_answer():
                 s.commit()
                 s.close()
                 return redirect(url_for('new_questions', lesson_id=lesson_id))
-        elif question_type == 2:
+        elif question_type == 'continue_questions':
             complete_question = 'True'
             if user_question_ids_len + 1 < questions_len:
                 next_content = True 
@@ -444,7 +464,7 @@ def user_answer():
         return  jsonify(result)
     else:
         flash('این درس برای شما باز نشده است!','danger')  
-        return redirect(url_for("grade"))  
+        return redirect(url_for("grades"))  
 
 @app.route('/zarinpal/<sale_plan_id>')
 @app.route('/zarinpal/<sale_plan_id>/<course_id>')
@@ -572,17 +592,26 @@ def api_pasargad_callback():
     return dict_data
 
 @app.route('/information-completion-status' , methods=['GET','POST'])    
-def information_completion_statuSession():
+def information_completion_status():
+    s = Session()
+    user_id = session_f['user_id']
+    user = s.query(User).filter(User.id == user_id).first()
+    len_user_purchased_lessons = 0
+    if user and user.purchased_lessons:
+        user_purchased_lessons = user.purchased_lessons.split(',')
+        len_user_purchased_lessons = len(user_purchased_lessons)
+    if  user.city != 'na' and user.grade != 'na':
+        s.commit()
+        s.close()
+        return redirect(url_for("grades")) 
     if request.method =="POST":
-        s = Session()
-        user_id = session_f['user_id']
         grade = request.form.get('grade')
         city = request.form.get('city')
         user = s.query(User).filter(User.id == user_id).update({User.grade : grade, User.city : city})   
         s.commit()
         s.close()
         return redirect("grades")
-    return render_template("Complete-info.html")
+    return render_template("complete_info.html")
 
 @app.route('/logout')    
 def logout():
