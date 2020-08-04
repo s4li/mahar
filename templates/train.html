@@ -53,9 +53,9 @@
 {% block script %}
     <script>
         $(function() {
-            let questionId = $('.limiter').data("questionId")
-            let lessonId = $('.limiter').data("lessonId")
-            let pageName = $('.limiter').data("pageName")
+            let questionId = $('.limiter').attr("data-questionId")
+            let lessonId = $('.limiter').attr("data-lessonId")
+            let pageName = $('.limiter').attr("data-pageName")
             $(".continue").click(function() {
                 $(".flip-card-inner").addClass("isFlipped");
             })
