@@ -432,33 +432,27 @@ def user_answer():
             if user_question_ids_len + 1 < questions_len:
                 next_content = True
                 complete_question = 'False' 
+                return_url = f'/new_questions/{lesson_id}'
             s.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.complete_question: complete_question, Enrol_user.question_ids : complete_user_question_ids})
             s.commit()
-            if next_content:
-                s.commit()
-                s.close()
-                return redirect(url_for('new_questions', lesson_id=lesson_id))
         elif question_type == 'continue_questions':
             complete_question = 'True'
             if user_question_ids_len + 1 < questions_len:
                 next_content = True 
                 complete_question = 'False' 
+                return_url = f'/continue_questions/{lesson_id}'
             s.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.complete_question: complete_question , Enrol_user.question_ids : complete_user_question_ids})
             s.commit()
-            if next_content:
-                s.commit()
-                s.close()
-                return redirect(url_for('continue_questions', lesson_id=lesson_id))
         else:
-            return_fun = 'wronge_questions'
             next_content = s.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> question_id, User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
             if next_content:
-                s.commit()
-                s.close()
-                return redirect(url_for('wronge_questions', lesson_id=lesson_id, index = question_id))
-        wrong_answer_no = s.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == user_id ,User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).scalar() 
-        true_answer_no = s.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == user_id,  User_answer.ans_no == '0', User_answer.lesson_id == lesson_id).scalar() 
-        result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
+                return_url = f'/wronge_questions/{lesson_id}/{question_id}'
+        if new_questions:
+            result = {'has_next_new_question': "True", "return_url" : return_url}
+        else:
+            wrong_answer_no = s.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == user_id ,User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).scalar() 
+            true_answer_no = s.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == user_id,  User_answer.ans_no == '0', User_answer.lesson_id == lesson_id).scalar() 
+            result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
         s.commit()
         s.close()
         return  jsonify(result)
