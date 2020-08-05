@@ -435,13 +435,14 @@ def user_answer():
             complete_user_question_ids = str(question_id)
             user_question_ids_len = 1 
         questions_len = s.query(Question).filter(Question.lesson_id == lesson_id).count() 
+        next_content = None
         if question_type == 'new_questions':
             next_content = False
             complete_question = 'True'
             if user_question_ids_len + 1 < questions_len:
                 next_content = True
                 complete_question = 'False' 
-                return_url = f'/new_questions/{lesson_id}'
+                return_url = f'/new-questions/{lesson_id}'
             s.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.complete_question: complete_question, Enrol_user.question_ids : complete_user_question_ids})
             s.commit()
         elif question_type == 'continue_questions':
@@ -449,14 +450,14 @@ def user_answer():
             if user_question_ids_len + 1 < questions_len:
                 next_content = True 
                 complete_question = 'False' 
-                return_url = f'/continue_questions/{lesson_id}'
+                return_url = f'/continue-questions/{lesson_id}'
             s.query(Enrol_user).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).update({ Enrol_user.complete_question: complete_question , Enrol_user.question_ids : complete_user_question_ids})
             s.commit()
         else:
             next_content = s.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> question_id, User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
             if next_content:
-                return_url = f'/wronge_questions/{lesson_id}/{question_id}'
-        if new_questions:
+                return_url = f'/wrong-questions/{lesson_id}/{question_id}'
+        if next_content:
             result = {'has_next_new_question': "True", "return_url" : return_url}
         else:
             wrong_answer_no = s.query(func.count(User_answer.id)).order_by(User_answer.lesson_id).filter(User_answer.user_id == user_id ,User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).scalar() 
