@@ -19,14 +19,12 @@
                             <div>
                                 <h3 class="h4">" {{ answer }} "</h3>
                                 <p>معنی کلمه را بلد بودید؟</p>
-                                <button data-value="1" class="btn select click shadow true">بله<span>&#128512;</span></button>
-                                <button data-value="0" class="btn select click shadow false">خیر<span>&#128529;</span></button>
+                                <button data-value="0" class="btn select click shadow true">بله<span>&#128512;</span></button>
+                                <button data-value="1" class="btn select click shadow false">خیر<span>&#128529;</span></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary Launch">Launch demo modal</button>
                 <!-- Modal -->
                 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -36,8 +34,8 @@
                                 <h5 class="modal-title ml-auto" id="ModalLabel">شما به پایان تمرین درس انتخابی رسیدید</h5>
                             </div>
                             <div class="modal-body">
-                                <h4 class="my-4 text-center"> تعداد جواب های درست : <span>۲۳</span></h4>
-                                <h4 class="my-4 text-center">تعداد جواب های اشتباه : <span>۲</span></h4>
+                                <h4 class="my-4 text-center"> تعداد جواب های درست : <span id="right-answer">۲۳</span></h4>
+                                <h4 class="my-4 text-center">تعداد جواب های اشتباه : <span id="wrong-answer">۲</span></h4>
                             </div>
                             <div class="modal-footer justify-content-center">
                                 <a class="btn m-2" href="'/Lessons/' + gradId">انتخاب درس</a>
@@ -49,6 +47,7 @@
             </div>
         </div>
     </div>
+    <a href="#" class="d-none next-test"><span>next</span></a>
 {% endblock %}
 {% block script %}
     <script>
@@ -72,7 +71,16 @@
                         question_type:pageName,
                     },
                     success: function(response) {
-                        alert(response);
+                        let status = response.has_next_new_question
+                        let url = response.return_url
+                        if(status){
+                            $(".next-test").attr('href',url)
+                            $('.next-test span').trigger('click');
+                        }else{
+                            $("#right-answer").text(resp.wrong_answer_no);
+                            $("#wrong-answer").text(resp.true_answer_no);
+                            $(".modal").modal("show");
+                        }
                         $(".flip-card-inner").removeClass("isFlipped");
                     }
                 });
@@ -81,9 +89,6 @@
                 let voice = $(this).attr("data-voice")
                 var audio = new Audio(`/static/${voice}`);
                 audio.play();
-            })
-            $(".Launch").click(function() {
-                $(".modal").modal("show");
             })
         })
     </script>
