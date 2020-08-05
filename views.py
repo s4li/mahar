@@ -455,10 +455,11 @@ def user_answer():
             result = {"has_next_new_question":"False", "wrong_answer_no":wrong_answer_no, "true_answer_no":true_answer_no}    
         s.commit()
         s.close()
-        return  jsonify(result)
     else:
-        flash('این درس برای شما باز نشده است!','danger')  
-        return redirect(url_for("grades"))  
+        #flash('این درس برای شما باز نشده است!','danger')  
+        #return redirect(url_for("grades")) 
+        result = {'has_next_new_question': "True", "return_url" : None} 
+    return  jsonify(result)
 
 @app.route('/zarinpal/<sale_plan_id>')
 @app.route('/zarinpal/<sale_plan_id>/<course_id>')
