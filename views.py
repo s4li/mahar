@@ -82,11 +82,17 @@ def index_f():
 
 @app.route('/guids')
 def guids():
-    return  render_template('guids.html')
+    user_login = False
+    if session_f.get("login"):
+        user_login = True
+    return  render_template('guids.html', user_login = user_login)
 
 @app.route('/install-guids')
 def install_guids():
-    return  render_template('install-guids.html')
+    user_login = False
+    if session_f.get("login"):
+        user_login = True
+    return  render_template('install-guids.html', user_login = user_login)
 
 @app.route('/confirm-mobile', methods=["GET","POST"])
 def confirm_mobile(): 
@@ -125,6 +131,9 @@ def reset_password():
                 s.query(User).filter(User.id == user.id).update({ User.password : hash_password})
                 s.commit()
                 flash( 'رمزعبور با موفقیت تغییر یافت.','success')
+                session_f['user_id'] = user.id
+                session_f['login'] = True
+                session_f.permanent  = True
                 s.commit()
                 s.close() 
                 return redirect(url_for("grades"))
