@@ -77,8 +77,8 @@
                             $(".next-test").attr('href',url)
                             $('.next-test span').trigger('click');
                         }else{
-                            $("#right-answer").text(resp.wrong_answer_no);
-                            $("#wrong-answer").text(resp.true_answer_no);
+                            $("#right-answer").text(status.wrong_answer_no);
+                            $("#wrong-answer").text(status.true_answer_no);
                             $(".modal").modal("show");
                         }
                         $(".flip-card-inner").removeClass("isFlipped");
