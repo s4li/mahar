@@ -166,7 +166,7 @@
   font-size: 16px;
 }
 
-.modal-footer a {
+.modal-footer .lessons {
   display: inline-block;
   background: #fdc632;
   padding: 0px 30px;
@@ -185,12 +185,12 @@
   transition: all 0.4s ease 0s;
 }
 
-.modal-footer a:hover {
+.modal-footer .lessons:hover {
   background: #002347;
   color: #fdc632;
 }
 
-.modal-footer button {
+.modal-footer .trains {
   display: inline-block;
   background: #002347;
   padding: 0px 30px;
@@ -210,7 +210,7 @@
   transition: all 0.4s ease 0s;
 }
 
-.modal-footer button:hover {
+.modal-footer .trains:hover {
   background: transparent;
   color: #002347;
   border: 1px solid #002347;

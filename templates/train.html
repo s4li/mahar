@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/train.min.css">
 {% endblock %}
 {% block content %}
-    <div class="limiter" data-questionId="{{question_id}}" data-lessonId="{{lesson_id}}" data-pageName="{{page_name}}">
+    <div class="limiter" data-questionId="{{question_id}}" data-lessonId="{{lesson_id}}" data-pageName="{{page_name}}" data-gradeId="{{grade_id}}">
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="flip-card">
@@ -53,6 +53,7 @@
     <script>
         $(function() {
             let questionId = $('.limiter').attr("data-questionId")
+            let gradeId = $('.limiter').attr("data-gradeId")
             let lessonId = $('.limiter').attr("data-lessonId")
             let pageName = $('.limiter').attr("data-pageName")
             $(".continue").click(function() {
@@ -76,11 +77,10 @@
                             $(".next-test").attr('href',url)
                             $('.next-test span').trigger('click');
                         }else{
-                            $("#right-answer").text(response.wrong_answer_no);
-                            $("#wrong-answer").text(response.true_answer_no);
+                            $("#right-answer").text(response.true_answer_no);
+                            $("#wrong-answer").text(response.wrong_answer_no);
                             $(".modal").modal("show");
                         }
-                        //$(".flip-card-inner").removeClass("isFlipped");
                     }
                 });
             })
@@ -90,7 +90,7 @@
                 audio.play();
             })
 
-            let trainUrl = '/grade/' + 1
+            let trainUrl = '/grade/' + gradeId
             $(".lessons").attr('href',trainUrl)
 
             let lessonUrl = '/lesson/' + lessonId
