@@ -38,8 +38,8 @@
                                 <h4 class="my-4 text-center">تعداد جواب های اشتباه : <span id="wrong-answer">۲</span></h4>
                             </div>
                             <div class="modal-footer justify-content-center">
-                                <a class="btn m-2" href="'/Lessons/' + gradId">انتخاب درس</a>
-                                <button class="btn btn-secondary m-2">مرور اشتباهات</button>
+                                <a class="btn m-2 lessons" href="#">انتخاب درس</a>
+                                <a class="btn trains btn-secondary m-2" href="#">مرور اشتباهات</a>
                             </div>
                         </div>
                     </div>
@@ -71,9 +71,9 @@
                         question_type:pageName,
                     },
                     success: function(response) {
-                        let status = response.has_next_new_question
+                        let status = response.has_next_new_question.toLowerCase()
                         let url = response.return_url
-                        if(status == true){
+                        if(status == 'true'){
                             $(".next-test").attr('href',url)
                             $('.next-test span').trigger('click');
                         }else{
@@ -90,6 +90,12 @@
                 var audio = new Audio(`/static/${voice}`);
                 audio.play();
             })
+
+            let trainUrl = '/grade/' + 1
+            $(".lessons").attr('href',trainUrl)
+
+            let lessonUrl = '/lesson/' + lessonId
+            $(".trains").attr('href',lessonUrl)
         })
     </script>
 {% endblock %}
