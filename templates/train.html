@@ -73,7 +73,7 @@
                     success: function(response) {
                         let status = response.has_next_new_question
                         let url = response.return_url
-                        if(status){
+                        if(status == true){
                             $(".next-test").attr('href',url)
                             $('.next-test span').trigger('click');
                         }else{
