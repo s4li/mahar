@@ -124,7 +124,7 @@
                     <h5 class="modal-title ml-auto" id="ModalLabel">توجه!</h5>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center h6">کاربر عزیز شما پایه <span class="grad" style="font-weight:bold"></span> را انتخاب کرده اید پس از خرید آن دسترسی به دروس باز می شود. </h4>
+                    <h4 class="text-center h6">کاربر عزیز شما پایه <span class="gradNum" style="font-weight:bold"></span> را انتخاب کرده اید پس از خرید آن دسترسی به دروس باز می شود. </h4>
                     <div class="buy-box">
                         <div class="buy-box-child" style="border-left: 1px solid #d8d8d8;">
                             <h5>فعالسازی این پایه</h5>
@@ -145,9 +145,15 @@
 {% block script %}
   <script>
     $(".lesson-btn").click(function(event){
-      let gradText = $(this).attr("data-grad")
       let gradId = $(this).attr("data-gradId")
+
+      let gradTextNum = $(this).attr("data-grad")
+      $(".gradNum").text(gradTextNum)
+
+      let gradText
+      if(gradId == 1 || gradId == 2 || gradId == 3 ){gradText = 'متوسطه اول'}else{gradText = 'متوسطه دوم'}
       $(".grad").text(gradText)
+
         if($(this).hasClass("deactive")){
           event.preventDefault();
           $(".modal").modal("show");
