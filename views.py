@@ -37,7 +37,7 @@ def check_user_access(user_id, lesson_id):
     return user_access_lesson
        
 def make_hashed_password(password):
-    hashed_key= 'test1234567879'
+    hashed_key= 'arabi_mahar'
     h = hashlib.blake2b(key= hashed_key.encode(), digest_size=16)
     h.update(password[:512].encode()) # limit password to 512 characters. 
     hash_password = h.hexdigest().encode('utf-8')
@@ -284,6 +284,8 @@ def new_questions(lesson_id, index = 0):
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
+        grade = s.query(Lesson.course_id).filter(Lesson.id == lesson_id).first()
+        grade_id = grade[0]
         index = int(index)
         if index == -1 :
             all_previous_answer = s.query(User_answer).filter(User_answer.lesson_id == lesson_id, User_answer.user_id == user_id).all()
@@ -333,7 +335,7 @@ def new_questions(lesson_id, index = 0):
     lesson_title = lesson.title
     s.commit()
     s.close() 
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, base_url = BASE_URL, user_login = user_login)    
+    return render_template('train.html',grade_id = grade_id, question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, base_url = BASE_URL, user_login = user_login)    
 
 @app.route('/continue-questions/<lesson_id>')     
 def continue_questions(lesson_id): 
@@ -345,6 +347,8 @@ def continue_questions(lesson_id):
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
+        grade = s.query(Lesson.course_id).filter(Lesson.id == lesson_id).first()
+        grade_id = grade[0]
         question_len = s.query(Question).filter(Question.lesson_id == lesson_id).count()
         user_enrol = s.query(Enrol_user).filter(Enrol_user.user_id== user_id, Enrol_user.lesson_id == lesson_id).first()
         if user_enrol.question_ids :
@@ -379,7 +383,7 @@ def continue_questions(lesson_id):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))     
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, user_login = user_login) 
+    return render_template('train.html',grade_id = grade_id, question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, user_login = user_login) 
 
 @app.route('/wrong-questions/<lesson_id>/<index>')     
 def wronge_questions(lesson_id, index): 
@@ -391,6 +395,8 @@ def wronge_questions(lesson_id, index):
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
+        grade = s.query(Lesson.course_id).filter(Lesson.id == lesson_id).first()
+        grade_id = grade[0]
         first_wrong_answer = s.query(User_answer).order_by(User_answer.question_id.asc()).filter(User_answer.user_id == user_id, User_answer.question_id> f'{index}', User_answer.ans_no == '1', User_answer.lesson_id == lesson_id).first()
         next_wrong_question = s.query(Question).filter(Question.id == first_wrong_answer.question_id).first()
         next_wrong_voice = s.query(Voice).filter(Voice.id == next_wrong_question.voice_id).first()
@@ -407,7 +413,7 @@ def wronge_questions(lesson_id, index):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))    
-    return render_template('train.html', question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, user_login = user_login)
+    return render_template('train.html',grade_id = grade_id, question = question, voice = voice, question_id = question_id, answer = answer, lesson_title = lesson_title, lesson_id = lesson_id, page_name = page_name, user_login = user_login)
 
 @app.route('/ajax-set-user-answer', methods=['POST'])    
 def user_answer():
@@ -492,10 +498,9 @@ def zarinpal( sale_plan_id, course_id = 0):
                                            sale_plan.title,
                                            user.mobile,
                                            'tajbakhsh.ut.ac@gmail.com',
-                                           callback_url)
-        print(callback_url)                                   
+                                           callback_url)                                 
         if result_zarinpal.Status == 100:
-            if sale_plan_id == '2' : 
+            if sale_plan_id == '3' : 
                 lesson_ids = s.query(Lesson.id).filter(Lesson.course_id == course_id).all()
                 str_lesson = ''
                 for lesson_id in lesson_ids:
@@ -580,7 +585,7 @@ def zarinpal_callback():
     s.commit()
     s.close()
     flash(result, type)
-    return redirect(url_for("grade"))
+    return redirect(url_for("grades"))
         
 @app.route('/mobile/zarinpal-callback', methods=['GET',])
 def api_pasargad_callback():
@@ -624,4 +629,5 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    password = make_hashed_password('13751123p') 
+    print(password)
