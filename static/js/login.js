@@ -38,16 +38,14 @@ $(function () {
       ) {
         return false;
       }
-    }
-    //else if ($(input).attr("type") == "password") {
-    //  var strongRegex = new RegExp(
-    //    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
-    //  );
-    //  if (!strongRegex.test(value)) {
-    //    return false;
-    //  }
-    //}
-    else {
+    } else if ($(input).attr("type") == "password") {
+      var strongRegex = new RegExp(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})"
+      );
+      if (!strongRegex.test(value)) {
+        return false;
+      }
+    } else {
       if ($(input).val().trim() == "") {
         return false;
       }
