@@ -60,7 +60,6 @@
             })
             $(".select").click(function() {
                 let answerId = $(this).data("value")
-                $(".flip-card-inner").removeClass("isFlipped");
                 $.ajax({
                     type: "POST",
                     url: "/ajax-set-user-answer",
@@ -81,7 +80,7 @@
                             $("#wrong-answer").text(response.true_answer_no);
                             $(".modal").modal("show");
                         }
-                        $(".flip-card-inner").removeClass("isFlipped");
+                        //$(".flip-card-inner").removeClass("isFlipped");
                     }
                 });
             })
