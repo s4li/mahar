@@ -15,12 +15,22 @@
             {% endfor %}
             <!--================ End alert Area =================-->
             <div class="login100-form-title" style="background-image: url(../static/image/bg-01.jpg);">
-                <span class="login100-form-title-1">تایید شماره موبایل</span>
+                <span class="login100-form-title-1">تایید شماره موبایل و <br> انتخاب رمز عبور</span>
             </div>
             <form class="login100-form validate-form" method="POST" action="/reset-password">
                 <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="کد مشکل دارد">
                     <span class="label-input100">کد دریافتی</span>
                     <input class="input100" type="number" name="code" pattern="[0-9]*" inputmode="numeric" placeholder="کد دریافتی خود را وارد کنید" required>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="رمز عبور مورد نیاز است">
+                    <span class="label-input100">رمز عبور</span>
+                    <input class="input100" type="password" name="pass" placeholder="رمز عبور خود را وارد کنید" required>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="تکرار رمز عبور مورد نیاز است">
+                    <span class="label-input100">تکرار رمز عبور</span>
+                    <input class="input100" type="password" name="pass" placeholder="تکرار رمز عبور خود را وارد کنید" required>
                     <span class="focus-input100"></span>
                 </div>
                 <div class="container-login100-form-btn">
@@ -30,6 +40,8 @@
             <div class="guide">
                 <ul>
                     <li><span>کد ارسال شده به شمراه موبایلی که مرحله قبل وارد کردید را وارد کنید و دکمه تایید را بزنید.</span></li>
+                    <li><span>رمز عبور باید بین ۴ تا ۸ رقم باشد.</span></li>
+                    <li><span>رمز عبور باید شامل یک حرف بزرگ انگلیسی ،یک حرف کوچک انگلیسی و اعداد باشد.</span></li>
                 </ul>
             </div>
         </div>
