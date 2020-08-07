@@ -4,13 +4,14 @@
     <link rel="stylesheet" type="text/css" href="/static/css/train.min.css">
 {% endblock %}
 {% block content %}
-    <div class="limiter" data-questionId="{{question_id}}" data-lessonId="{{lesson_id}}" data-pageName="{{page_name}}" data-gradeId="{{grade_id}}">
+    <div class="limiter vh-100" data-questionId="{{question_id}}" data-lessonId="{{lesson_id}}" data-pageName="{{page_name}}" data-gradeId="{{grade_id}}">
         <div class="container-login100">
             <div class="wrap-login100">
                 <div class="flip-card">
                     <div class="flip-card-inner">
                         <div class="flip-card-front background">
                             <button class="btn play click" data-voice="{{ voice }}"><i class="fas fa-volume"></i></button>
+                            <a class="train-return" href="#"><i class="fas fa-arrow-left"></i></a>
                             <p>آیا معنی کلمه زیر را به خاطر دارید؟</p>
                             <h3>" {{ question }} "</h3>
                             <button class="btn click continue d-block mx-auto btn-warning">ادامه</button>
@@ -95,6 +96,7 @@
 
             let lessonUrl = '/lesson/' + lessonId
             $(".trains").attr('href',lessonUrl)
+            $(".train-return").attr('href',lessonUrl)
         })
     </script>
 {% endblock %}

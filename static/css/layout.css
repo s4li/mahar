@@ -525,6 +525,11 @@ button:focus {
   background-position: center;
   padding: 70px 15px 74px 15px;
 }
+.with-return-btn {
+  justify-content: center;
+  flex-direction: row;
+  padding: 70px 30px 74px;
+}
 
 .login100-form-title-1 {
   font-size: 30px;
@@ -564,6 +569,12 @@ button:focus {
   -ms-transform: transform 0.1s;
   -moz-transform: transform 0.1s;
   transition: transform 0.1s;
+}
+
+.return {
+  color: #fff;
+  font-size: 20px;
+  margin-right: auto;
 }
 
 .click:active {

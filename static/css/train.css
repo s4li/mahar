@@ -1,3 +1,15 @@
+.container-login100 {
+  height: 100%;
+}
+
+.train-return {
+  font-size: 20px;
+  color: #616c79;
+  position: absolute;
+  left: 30px;
+  top: 55px;
+}
+
 .background {
   padding: 15px;
   background-color: #fdfdfd;
