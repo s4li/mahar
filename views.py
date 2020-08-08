@@ -198,7 +198,7 @@ def login():
                 session_f['user_id'] = user.id
                 session_f['login'] = True
                 session_f.permanent  = True
-                flash(f'{user.full_name}عزیز خوش آمدید.','success')                 
+                flash(f'{user.full_name} عزیز خوش آمدید.','success')                 
                 return redirect(url_for("grades"))
             else:
                 flash('رمز عبور خود را درست وارد نکرده اید!','danger')  
@@ -267,6 +267,8 @@ def status_question(lesson_id):
     has_access = check_user_access(user_id, lesson_id)
     if has_access:
         s = Session()
+        grade = s.query(Lesson.course_id).filter(Lesson.id == lesson_id).first()
+        grade_id = grade[0]
         has_new_question = s.query(Question).filter(Question.lesson_id == lesson_id).first()
         check_new_question = 'True' if has_new_question else 'False'
         enrol_user = s.query(Enrol_user.complete_question).filter(Enrol_user.lesson_id == lesson_id, Enrol_user.user_id == user_id).first()
@@ -280,7 +282,7 @@ def status_question(lesson_id):
     else:
         flash('این درس برای شما باز نشده است!','danger')  
         return redirect(url_for("grade"))
-    return render_template('train_type.html', new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id, user_login = user_login) 
+    return render_template('train_type.html', grade_id = grade_id, new_question = check_new_question, previous_questions = check_continue_previous_questions, wrong_questions = check_wrong_questions, lesson_id = lesson_id, user_login = user_login) 
     
 @app.route('/new-questions/<lesson_id>')
 @app.route('/new-questions/<lesson_id>/<index>')     
@@ -551,7 +553,7 @@ def zarinpal_callback():
             if  result_zarinpal.Status == 100: 
                 zarinpal_result_status = result_zarinpal.Status
                 user = s.query(User).filter(User.id == check_invoice.user_id).first()
-                result =  f'{user.full_name}عزیز پرداخت شما موفق بوده است.'
+                result =  f'{user.full_name} عزیز پرداخت شما موفق بوده است.'
                 type = 'success'
                 status_code = 200 
                 old_purchased_lessons = s.query(User.purchased_lessons).filter(User.id == check_invoice.user_id).first()
@@ -568,7 +570,7 @@ def zarinpal_callback():
             elif result_zarinpal.Status == 101:
                 zarinpal_result_status = result_zarinpal.Status
                 user = s.query(User).filter(User.id == check_invoice.user_id).first()
-                result =  f'{user.full_name}عزیز پرداخت شما موفق بوده است.'
+                result =  f'{user.full_name} عزیز پرداخت شما موفق بوده است.'
                 type = 'success'
                 status_code = 200
                 if check_invoice.sale_plan_id == 1:
