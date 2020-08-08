@@ -157,6 +157,8 @@ def reset_password():
 
 @app.route('/register', methods=["GET","POST"])
 def register():
+    if session_f.get("login") == True:
+        return redirect(url_for("grades"))
     if request.method == "POST":
         s = Session()
         mobile = request.form.get('mobile')
@@ -171,7 +173,7 @@ def register():
             session_f['user_id'] = user.id
             session_f['login'] = True
             session_f.permanent  = True
-            flash(f'{user.full_name}عزیز شما با موفقیت ثبت نام شدید.','success')
+            flash(f'{user.full_name} عزیز شما با موفقیت ثبت نام شدید.','success')
             s.close() 
             return redirect(url_for("grades"))
         else:
@@ -183,6 +185,8 @@ def register():
 
 @app.route('/login', methods=["GET","POST"])
 def login():
+    if session_f.get("login") == True:
+        return redirect(url_for("grades"))
     if request.method == "POST":
         s = Session() 
         mobile = request.form.get('mobile')
@@ -635,5 +639,5 @@ def logout():
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
-    password = make_hashed_password('13751123p') 
+    password = make_hashed_password('123456Az') 
     print(password)
