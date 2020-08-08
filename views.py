@@ -6,11 +6,10 @@ import jwt, json, hashlib, hmac
 from random import randint
 from user_agents import parse
 from flask_bcrypt import Bcrypt
-from conection_info import front_url, back_url
 from models import  (Session, User, Course, Lesson, Answer, 
                      Question, User_answer, Voice, Sale_plan, Invoice, Enrol_user)
 
-BASE_URL = 'http://localhost:5000'
+BASE_URL = 'http://doplus.ir'
 
 app = Flask(__name__)
 app.secret_key = 'some secret key'
@@ -502,7 +501,7 @@ def zarinpal( sale_plan_id, course_id = 0):
         result = {"result":"user or sale plane id not found"}
         status_code = 401
     else:
-        callback_url = f'{back_url}/zarinpal-callback' 
+        callback_url = f'{BASE_URL}/zarinpal-callback' 
         result_zarinpal = client.service.PaymentRequest(MMERCHANT_ID,
                                            sale_plan.price,
                                            sale_plan.title,
