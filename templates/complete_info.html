@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block title %}تکمیل اطلاهات{% endblock %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="../static/css/login.min.css">
+{% endblock %}
 {% block content %}
 {% set regions = [
                     "زنجان","خوزستان","خوزستان","خراسان شمالی","خراسان رضوی","خراسان جنوبی","چهارمحال و بختیاری","تهران","بوشهر","ایلام","البرز","اصفهان","اردبیل"
@@ -17,20 +20,20 @@
                     <form class="login100-form validate-form" action="/information-completion-status" method="POST">
                         <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
                             <span class="label-input100">پایه تحصیلی</span>
-                            <select class="input100 border-0" id="exampleFormControlSelect1" required>
+                            <select class="input100 border-0" name="grade" id="exampleFormControlSelect1" required>
                                 <option value="-1" selected disabled>پایه...</option>
-                                {% for region in regions %}
-                                <option>{{region}}</option>
+                                {% for degree in degrees %}
+                                <option>{{degree}}</option>
                                 {% endfor %}
                             </select>
                             <span class="focus-input100"></span>
                         </div>
                         <div class="wrap-input100 validate-input mb-4 animate-box" data-animate-effect="fadeIn" data-validate="شماره موبایل مورد نیاز است">
                             <span class="label-input100">شهر محل سکونت</span>
-                            <select class="input100 border-0" id="exampleFormControlSelect1" required>
+                            <select class="input100 border-0" name="city" id="exampleFormControlSelect1" required>
                                 <option value="-1" selected disabled>شهر...</option>
-                                {% for degree in degrees %}
-                                <option>{{degree}}</option>
+                                {% for region in regions %}
+                                <option>{{region}}</option>
                                 {% endfor %}
                             </select>
                             <span class="focus-input100"></span>
