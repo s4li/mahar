@@ -72,6 +72,7 @@ def index():
     if 'first_login' in session_f:
         return redirect(url_for("index_f"))
     session_f['first_login'] = True
+    session_f.permanent  = True
     return  render_template('first-login.html') 
 
 @app.route('/index')
@@ -106,6 +107,7 @@ def confirm_mobile():
             confirm_sms = send_sms(mobile, text)
             if confirm_sms:
                 s.query(User).filter(User.id == user.id).update({ User.confirm_code: code})
+                session_f['mobile'] = mobile
                 s.commit()
                 s.close() 
                 return redirect(url_for("reset_password"))
@@ -122,12 +124,16 @@ def confirm_mobile():
 @app.route('/reset-password', methods=["GET","POST"])
 def reset_password(): 
     if request.method == "POST":
+        if not session_f.get("mobile"):
+            return redirect(url_for("confirm_mobile"))
         s = Session()
-        data = request.get_json()
-        user = s.query(User).filter(User.mobile == data['mobile']).first()
-        if user and user.confirm_code == data['confirm_code']:
-            if data['password'] == data['re_password']:
-                hash_password = make_hashed_password(data['password'])
+        confirm_code = request.form.get('code')
+        password = request.form.get('password')
+        re_password = request.form.get('re_password')
+        user = s.query(User).filter(User.mobile == session_f.get("mobile")).first()
+        if user and user.confirm_code == confirm_code:
+            if password and password == re_password:
+                hash_password = make_hashed_password(password)
                 s.query(User).filter(User.id == user.id).update({ User.password : hash_password})
                 s.commit()
                 flash( 'رمزعبور با موفقیت تغییر یافت.','success')
