@@ -74,12 +74,10 @@
   color: #ffffff;
 }
 
-.true span,
-.false span {
-  font-size: 20px;
-  line-height: 19px;
-  padding-right: 5px;
-  vertical-align: sub;
+.true img,
+.false img {
+  max-width: 22px;
+  height: auto;
 }
 
 .false {
