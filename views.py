@@ -68,10 +68,6 @@ def send_sms(mobile, sms_text):
 
 @app.route('/')
 def index():
-    if 'first_login' in session_f:
-        return redirect(url_for("login"))
-    session_f['first_login'] = True
-    session_f.permanent  = True
     return  render_template('index.html') 
 
 @app.route('/first-login')
@@ -172,7 +168,7 @@ def register():
             session_f.permanent  = True
             flash(f'{user.full_name} عزیز شما با موفقیت ثبت نام شدید.','success')
             s.close() 
-            return redirect(url_for("first_login"))
+            return redirect(url_for("grades"))
         else:
             flash('کاربر عزیز، با این شماره موبایل قبلا ثبت نام شده، در صورت فراموشی رمز "فراموشی کلمه عبور" را لمس نمایید. ','danger')
             s.commit()      
