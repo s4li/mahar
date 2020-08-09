@@ -68,17 +68,11 @@ def send_sms(mobile, sms_text):
 
 @app.route('/')
 def index():
-    if 'first_login' in session_f:
-        return redirect(url_for("index_f"))
-    session_f['first_login'] = True
-    session_f.permanent  = True
-    return  render_template('first-login.html') 
-
-@app.route('/index')
-def index_f():
-    if 'login' in session_f:
-        return redirect(url_for("grades"))
     return  render_template('index.html') 
+
+@app.route('/first-login')
+def first_login():
+    return  render_template('first-login.html') 
 
 @app.route('/guids')
 def guids():
@@ -637,7 +631,7 @@ def information_completion_status():
 @app.route('/logout')    
 def logout():
     session_f.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 if __name__ == '__main__':
     password = make_hashed_password('123456Az') 
