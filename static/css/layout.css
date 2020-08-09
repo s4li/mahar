@@ -493,7 +493,20 @@ button:focus {
   display: -ms-flexbox;
   display: flex;
   flex-wrap: wrap;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
   align-items: center;
   padding: 15px;
   background: #ebeeef;
@@ -519,6 +532,10 @@ button:focus {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
   align-items: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -526,6 +543,10 @@ button:focus {
   padding: 70px 15px 74px 15px;
 }
 .with-return-btn {
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
   justify-content: center;
   flex-direction: row;
   padding: 70px 30px 74px;
