@@ -68,7 +68,10 @@ def send_sms(mobile, sms_text):
 
 @app.route('/')
 def index():
-    return  render_template('index.html') 
+    user_login = False
+    if session_f.get("login"):
+        user_login = True
+    return  render_template('index.html', user_login = user_login) 
 
 @app.route('/first-login')
 def first_login():
